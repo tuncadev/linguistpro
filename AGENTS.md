@@ -5,7 +5,7 @@ These instructions are project-local and apply to future Codex sessions in this 
 ## Project Identity
 
 - Project type: frontend prototype
-- Runtime: Vite + React + TypeScript
+- Runtime: Next.js App Router + React + TypeScript (legacy Vite shell still present)
 - Primary goal: demonstrate language-course platform UX and role-based flows
 - Current data source: API-first course reads via `services/courseApiService.ts` with `constants.ts` fallback
 - AI integration: Gemini draft course generation for tutor dashboard
@@ -61,9 +61,9 @@ Before making edits, read in this order:
 
 ## Architecture Reality Check
 
-- This is not a Next.js app yet.
+- Default runtime is now Next.js App Router (`app/`).
 - Files `prisma-schema.txt`, `folder-structure.txt`, and `rbac-strategy.txt` are planning artifacts.
-- Navigation is app-state based (`view` string in `App.tsx`), not URL-route based.
+- Legacy Vite navigation is app-state based (`view` string in `App.tsx`), while Next routes live under `app/`.
 
 ## Critical State Contracts
 

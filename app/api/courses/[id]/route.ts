@@ -22,12 +22,13 @@ const updateCourseSchema = z.object({
 });
 
 type Params = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export const GET = withApiHandler(async (req: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const course = await prisma.course.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: courseInclude,
   });
 
@@ -49,13 +50,14 @@ export const GET = withApiHandler(async (req: NextRequest, { params }: Params) =
 });
 
 export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 
   const existing = await prisma.course.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true, tutorId: true, status: true },
   });
   if (!existing) {
@@ -107,17 +109,17 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
   const updated = await prisma.$transaction(async (tx) => {
     if (Object.keys(updateData).length > 0) {
       await tx.course.update({
-        where: { id: params.id },
+        where: { id },
         data: updateData,
       });
     }
 
     if (syllabus) {
-      await tx.syllabusSection.deleteMany({ where: { courseId: params.id } });
+      await tx.syllabusSection.deleteMany({ where: { courseId: id } });
       if (syllabus.length) {
         await tx.syllabusSection.createMany({
           data: syllabus.map((title, index) => ({
-            courseId: params.id,
+            courseId: id,
             title,
             position: index + 1,
           })),
@@ -126,7 +128,7 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
     }
 
     return tx.course.findUniqueOrThrow({
-      where: { id: params.id },
+      where: { id },
       include: courseInclude,
     });
   });
@@ -135,13 +137,14 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
 });
 
 export const DELETE = withApiHandler(async (req: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 
   const course = await prisma.course.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true, tutorId: true, status: true },
   });
   if (!course) {
@@ -159,6 +162,6 @@ export const DELETE = withApiHandler(async (req: NextRequest, { params }: Params
     conflict("Tutor cannot delete a published course");
   }
 
-  await prisma.course.delete({ where: { id: params.id } });
+  await prisma.course.delete({ where: { id } });
   return NextResponse.json({ deleted: true });
 });

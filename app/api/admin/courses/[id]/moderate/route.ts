@@ -13,19 +13,20 @@ const moderateSchema = z.object({
 });
 
 type Params = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export const POST = withApiHandler(async (req: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const auth = await requireRoles(req, ["ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 
   const parsed = await parseJsonBody(req, moderateSchema);
 
   const existing = await prisma.course.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true, status: true },
   });
   if (!existing) {
@@ -38,7 +39,7 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
 
   const approved = parsed.decision === "APPROVE";
   const updated = await prisma.course.update({
-    where: { id: params.id },
+    where: { id },
     data: {
       status: approved ? "PUBLISHED" : "DRAFT",
       publishedAt: approved ? new Date() : null,

@@ -92,7 +92,7 @@ export const GET = withApiHandler(async (req: NextRequest) => {
 
 export const POST = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 

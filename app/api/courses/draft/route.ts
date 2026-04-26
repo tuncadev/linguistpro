@@ -18,7 +18,7 @@ const createAiDraftSchema = z.object({
 
 export const POST = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 

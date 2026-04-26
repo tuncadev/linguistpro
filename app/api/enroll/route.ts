@@ -53,7 +53,7 @@ function serializeEnrollment(
 
 export const GET = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["STUDENT", "TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 
@@ -108,7 +108,7 @@ export const GET = withApiHandler(async (req: NextRequest) => {
 
 export const POST = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["STUDENT", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 

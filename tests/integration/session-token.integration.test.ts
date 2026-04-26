@@ -57,6 +57,7 @@ describe("session token integration", () => {
 
   it("throws when secret is missing while creating token", async () => {
     delete process.env.AUTH_SESSION_SECRET;
+    process.env.NODE_ENV = "production";
 
     await expect(
       createSessionToken({

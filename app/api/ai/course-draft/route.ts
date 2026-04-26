@@ -11,7 +11,7 @@ const requestSchema = z.object({
 
 export async function POST(req: NextRequest) {
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 

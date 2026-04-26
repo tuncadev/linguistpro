@@ -6,23 +6,20 @@ This file is a technical handoff reference for future Codex sessions.
 
 ## 1) What the Repository Is
 
-LinguistPro is currently a Vite-based frontend prototype that simulates:
-- public course discovery
-- role-specific dashboard UX (`STUDENT`, `TUTOR`, `ADMIN`)
-- tutor AI-assisted course draft generation
+LinguistPro is now running on Next.js App Router with:
+- role-based auth/session APIs
+- RBAC-protected endpoints
+- Prisma-backed data services for migration paths
 
-It is not yet the planned Next.js + Prisma production architecture.
+Legacy Vite prototype files are still present and used as migration references.
 
 ## 2) Actual Runtime Composition
 
-- Entry: `index.tsx`
-- App shell + state machine: `App.tsx`
-- Shared UI: `components/`
-- Views/pages: `views/`
-- AI service wrapper: `services/geminiService.ts`
-- Domain models: `types.ts`
-- Demo dataset: `constants.ts`
-- Next.js migration scaffold: `app/`, `middleware.ts`, `lib/auth/rbac.ts`
+- Primary runtime: `app/` (Next.js App Router)
+- Proxy/route guard: `middleware.ts` (to be migrated to `proxy.ts` for Next 16 convention)
+- Auth/session APIs: `app/api/auth/*`
+- Auth UI: `app/(auth)/login/page.tsx`, `app/(auth)/register/page.tsx`
+- Legacy Vite shell retained: `index.tsx`, `App.tsx`, `views/`, `components/`
 - Prisma pipeline: `prisma/schema.prisma`, `prisma/migrations/`, `lib/prisma.ts`
 - Auth scaffold: `app/api/auth/*`, `lib/auth/password.ts`, `lib/auth/session.ts`
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
@@ -170,19 +167,19 @@ Migration update:
 - Production env/secrets policy and rotation runbook is documented with validation command (`ops:validate-env`).
 - Staging UAT sign-off workflow is documented with smoke-check automation.
 - Deploy/rollback runbook is documented with preflight automation.
-- Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
+- Next.js runtime is now the default runnable app path.
 
 ## 10) Known Gaps and Risks
 
-- Default Vite runtime still uses client-side role simulation and fallback mock data.
-- Next.js migration APIs require running in Next.js runtime to become the primary path.
+- Legacy Vite shell still contains mock-role simulation and fallback data paths.
+- Next.js 16 warns that `middleware.ts` should migrate to `proxy.ts`.
 - Metrics store is in-memory per process (no long-term retention/export yet).
 - Error webhook reporting is optional and requires `OBSERVABILITY_ERROR_WEBHOOK_URL`.
 - Secret validation is local-script based; no automated secret-manager sync yet.
-- UAT smoke API checks can warn on Vite runtime because migration API routes are not served there.
+- Local UAT smoke can warn if pointed at legacy Vite runtime instead of Next service URL.
 - No route-level URL deep linking
 - Several UI actions are placeholders (logs, approvals, notes, discussion posting)
-- Build emits warning because `index.html` references `/index.css` that is not present in repo
+- Vite legacy build emits warning because `index.html` references `/index.css` that is not present in repo
 
 Potential maintenance risk:
 - `view` is stringly-typed; typo bugs are possible

@@ -27,5 +27,5 @@ journalctl --user -u linguistpro-dev.service -f
 ## Notes
 
 1. This runs `npm run dev` continuously.
-2. Code changes are picked up automatically by Vite HMR.
+2. Code changes are picked up automatically by Next.js fast refresh.
 3. If dependencies/scripts change, restart the service.

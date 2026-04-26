@@ -3,7 +3,7 @@ import { requireRoles } from "@/lib/auth/server-checks";
 
 export async function POST(req: NextRequest) {
   const auth = await requireRoles(req, ["ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 

@@ -13,7 +13,7 @@ const querySchema = z.object({
 
 export const GET = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 

@@ -16,10 +16,15 @@ type SessionClaims = {
 
 function getSessionSecret(): Uint8Array {
   const secret = process.env.AUTH_SESSION_SECRET;
-  if (!secret) {
-    throw new Error("AUTH_SESSION_SECRET is required");
+  if (secret) {
+    return new TextEncoder().encode(secret);
   }
-  return new TextEncoder().encode(secret);
+
+  if (process.env.NODE_ENV !== "production") {
+    return new TextEncoder().encode("linguistpro-dev-session-secret-insecure");
+  }
+
+  throw new Error("AUTH_SESSION_SECRET is required");
 }
 
 export async function createSessionToken(user: SessionUser): Promise<string> {
@@ -61,7 +66,7 @@ export function sessionCookieOptions() {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     path: "/",
     maxAge: SESSION_TTL_SECONDS,
   };
@@ -71,7 +76,7 @@ export function clearSessionCookieOptions() {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     path: "/",
     maxAge: 0,
   };

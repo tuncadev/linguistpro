@@ -6,17 +6,18 @@ import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 type Params = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export const POST = withApiHandler(async (req: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
-  if (!auth.ok) {
+  if (auth.ok === false) {
     return auth.response;
   }
 
   const existing = await prisma.course.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: { id: true, tutorId: true, status: true },
   });
 
@@ -35,7 +36,7 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
   }
 
   const updated = await prisma.course.update({
-    where: { id: params.id },
+    where: { id },
     data: { status: "PENDING_REVIEW", publishedAt: null },
     include: courseInclude,
   });

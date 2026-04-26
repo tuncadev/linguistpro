@@ -1,22 +1,23 @@
 # LinguistPro
 
-LinguistPro is a React + Vite language-learning platform prototype with role-based dashboards for `STUDENT`, `TUTOR`, and `ADMIN`, plus Gemini-powered course draft generation for tutors.
+LinguistPro is a Next.js + React language-learning platform work-in-progress with role-based dashboards for `STUDENT`, `TUTOR`, and `ADMIN`, plus Gemini-powered course draft generation for tutors.
 
-This project currently behaves as a frontend-first simulation:
-- default runtime is still Vite SPA demo mode
-- Next.js API + Prisma migration layer exists under `app/`, `lib/`, and `prisma/`
-- role switching in the Vite shell remains demo-mode via in-memory mock users
+Current runtime shape:
+- default runtime is Next.js App Router (`app/`)
+- Vite legacy prototype shell is still available under root SPA files (`App.tsx`, `views/`, `components/`)
+- authentication and core APIs are wired under `app/api/*`
 
 ## Project Status
 
-The codebase is a single-page app with app-level context state and view switching via string IDs.  
-It includes architecture planning artifacts (`prisma-schema.txt`, `folder-structure.txt`, `rbac-strategy.txt`) for a future Next.js + Prisma implementation.
+The repository now runs primarily on Next.js (App Router), while legacy Vite prototype files are still present during migration.
+Planning artifacts (`prisma-schema.txt`, `folder-structure.txt`, `rbac-strategy.txt`) remain as design references.
 
 ## Tech Stack
 
+- Next.js `16`
 - React `19`
 - TypeScript `5`
-- Vite `6`
+- Vite `6` (legacy prototype runtime)
 - Tailwind utility classes (via CDN script in `index.html`)
 - `@google/genai` (`GoogleGenAI`) for tutor AI course draft generation
 - `lucide-react` icons
@@ -265,7 +266,7 @@ npm run build
 ### Preview Production Build
 
 ```bash
-npm run preview
+npm run start
 ```
 
 ### Run Test Suite
@@ -365,24 +366,23 @@ Files:
 
 These describe and guide the migration to the Next.js/Prisma architecture.
 
-Current implementation is still the Vite SPA mock with in-memory state, but a Next.js route scaffold now exists under `app/` for migration work.
+Current implementation serves Next.js runtime by default. Vite SPA files remain for migration reference and fallback development paths.
 
 ## Known Limitations
 
-- No real authentication flow (demo role switcher only)
-- Next.js API/DB layer is implemented but is not yet the default runtime path
+- Legacy Vite UI still contains demo-role behavior and mock-heavy views
 - Route state is string-based and local (not URL-driven)
 - Actions like enrollment, approval, notes, and discussion are UI-only placeholders
 - `index.html` references `/index.css`, but no local `index.css` exists (Vite warns during build)
-- Next.js scaffold files are present but Next.js runtime/dependencies are not wired as default scripts yet
+- Next.js middleware/proxy compatibility needs final cleanup (`middleware.ts` deprecation warning in Next 16)
 
 ## Recommended Next Implementation Steps
 
-1. Introduce real routing (`react-router` or migrate to Next.js App Router).
-2. Implement auth/session and server-side RBAC.
-3. Move `MOCK_*` data to API + database (Prisma schema already drafted).
-4. Convert tutor AI-generated drafts into persisted draft/publish workflow.
-5. Add CI/CD checks (build + tests) before merge/deploy.
+1. Complete staging UAT on real staging URL and record sign-off.
+2. Execute production launch checklist.
+3. Replace remaining legacy Vite mock-only screens with Next.js pages.
+4. Promote route-by-route data loading to DB-backed APIs.
+5. Resolve Next 16 middleware-to-proxy deprecation.
 
 ## Codex Handoff Files
 

@@ -54,5 +54,5 @@
 
 ## Planned vs Implemented Reminder
 
-- Implemented: Vite SPA runtime + migration API/auth/RBAC/Prisma scaffold + Vitest test layers
-- Planned only: full Next.js runtime cutover and production infra rollout
+- Implemented: Next.js runtime + API/auth/RBAC/Prisma scaffold + Vitest test layers + deployment runbooks
+- Planned only: production launch execution and remaining UAT/sign-off closure
