@@ -1,34 +1,32 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+export type GeneratedCourseDraft = {
+  title: string;
+  description: string;
+  syllabus: string[];
+  price: number;
+};
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-export const generateCourseDetails = async (topic: string, language: string, level: string) => {
+export const generateCourseDetails = async (
+  topic: string,
+  language: string,
+  level: string
+): Promise<GeneratedCourseDraft | null> => {
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Generate a detailed course description for a ${language} course about "${topic}" at ${level} level.`,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            title: { type: Type.STRING },
-            description: { type: Type.STRING },
-            syllabus: {
-              type: Type.ARRAY,
-              items: { type: Type.STRING }
-            },
-            price: { type: Type.NUMBER }
-          },
-          required: ["title", "description", "syllabus", "price"]
-        }
-      }
+    const response = await fetch("/api/ai/course-draft", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic, language, level }),
     });
 
-    return JSON.parse(response.text);
+    if (!response.ok) {
+      console.error("Course draft endpoint returned non-OK status", response.status);
+      return null;
+    }
+
+    const data = (await response.json()) as { draft?: GeneratedCourseDraft };
+    return data.draft ?? null;
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Course draft request error:", error);
     return null;
   }
 };

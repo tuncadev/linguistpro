@@ -26,9 +26,10 @@ Read in this order:
 7. `prisma/schema.prisma`
 8. `lib/auth/session.ts`
 9. `lib/auth/server-checks.ts`
-10. `App.tsx`
-11. `types.ts`
-12. `constants.ts`
+10. `lib/ai/course-draft.ts`
+11. `App.tsx`
+12. `types.ts`
+13. `constants.ts`
 
 ## Step 2: Confirm baseline
 

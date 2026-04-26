@@ -147,6 +147,17 @@ Protected API examples:
 - `POST /api/enroll` -> `STUDENT`
 - `POST /api/webhooks` -> `ADMIN`
 
+## Gemini Server-Only Integration (Implemented)
+
+Gemini course-draft generation is now server-only:
+- server utility: `lib/ai/course-draft.ts`
+- protected endpoint: `POST /api/ai/course-draft` (`TUTOR` or `ADMIN`)
+- client service now calls endpoint: `services/geminiService.ts`
+
+Security note:
+- `GEMINI_API_KEY` is no longer injected into Vite client build config.
+- API key remains server-side only.
+
 ## Getting Started
 
 ### Prerequisites

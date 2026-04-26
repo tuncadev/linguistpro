@@ -11,6 +11,7 @@
 - Read `prisma/schema.prisma`
 - Read `lib/auth/session.ts`
 - Read `lib/auth/server-checks.ts`
+- Read `lib/ai/course-draft.ts`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification

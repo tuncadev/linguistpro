@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Move Gemini integration to server-only endpoints.
+1. Build courses CRUD + tutor draft generation API.
 
 ## Phase Plan (Target Timeline)
 
@@ -27,7 +27,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Implement Prisma schema and migration pipeline.
 - [x] Implement authentication and secure session handling.
 - [x] Implement RBAC middleware + server checks.
-- [ ] Move Gemini integration to server-only endpoints.
+- [x] Move Gemini integration to server-only endpoints.
 - [ ] Build courses CRUD + tutor draft generation API.
 - [ ] Build enrollments API with idempotency checks.
 - [ ] Build admin moderation flow for course approval.
@@ -72,3 +72,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Prisma schema, migration scaffold, client helper, and package scripts implemented.
 - 2026-04-26: Auth/session scaffold implemented (JWT cookie session + register/login/logout/session API routes).
 - 2026-04-26: RBAC middleware and server-side role guards implemented for protected API routes.
+- 2026-04-26: Gemini generation moved to server-only endpoint (`/api/ai/course-draft`).

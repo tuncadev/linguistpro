@@ -26,6 +26,7 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Prisma pipeline: `prisma/schema.prisma`, `prisma/migrations/`, `lib/prisma.ts`
 - Auth scaffold: `app/api/auth/*`, `lib/auth/password.ts`, `lib/auth/session.ts`
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
+- Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
 
 Global state is held in React state and passed via `AppContext`.
 
@@ -131,6 +132,7 @@ Migration update:
 - Prisma schema and migration scaffold now exists in the repository.
 - Authentication/session scaffold exists for migration APIs and middleware.
 - RBAC role checks are enforced in both middleware and protected API handlers.
+- Gemini course draft generation is now server-side only and no longer uses client-injected API keys.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks

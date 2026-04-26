@@ -43,6 +43,8 @@ const TutorDashboard: React.FC = () => {
         }))
       };
       setCourses(prev => [newCourse, ...prev]);
+    } else {
+      alert("AI draft generation is unavailable. Ensure the server API endpoint is running and configured.");
     }
     setIsGenerating(false);
     setTopic('');

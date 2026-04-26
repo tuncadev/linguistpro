@@ -21,9 +21,10 @@ Before making edits, read in this order:
 6. `prisma/schema.prisma`
 7. `lib/auth/session.ts`
 8. `lib/auth/server-checks.ts`
-9. `App.tsx`
-10. `types.ts`
-11. `constants.ts`
+9. `lib/ai/course-draft.ts`
+10. `App.tsx`
+11. `types.ts`
+12. `constants.ts`
 
 ## Canonical Commands
 
