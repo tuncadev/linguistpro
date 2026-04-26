@@ -19,6 +19,9 @@
 - Read `lib/http/with-api-handler.ts`
 - Read `lib/observability/metrics.ts`
 - Read `lib/observability/error-tracker.ts`
+- Read `ops/backup/postgres-backup.sh`
+- Read `ops/backup/postgres-restore-test.sh`
+- Read `docs/POSTGRES_BACKUP_RUNBOOK.md`
 - Read `.github/workflows/ci.yml`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 

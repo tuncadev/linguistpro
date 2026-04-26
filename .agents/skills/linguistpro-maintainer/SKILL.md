@@ -34,10 +34,13 @@ Read in this order:
 15. `lib/http/with-api-handler.ts`
 16. `lib/observability/metrics.ts`
 17. `lib/observability/error-tracker.ts`
-18. `.github/workflows/ci.yml`
-19. `App.tsx`
-20. `types.ts`
-21. `constants.ts`
+18. `ops/backup/postgres-backup.sh`
+19. `ops/backup/postgres-restore-test.sh`
+20. `docs/POSTGRES_BACKUP_RUNBOOK.md`
+21. `.github/workflows/ci.yml`
+22. `App.tsx`
+23. `types.ts`
+24. `constants.ts`
 
 ## Step 2: Confirm baseline
 

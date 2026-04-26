@@ -29,10 +29,13 @@ Before making edits, read in this order:
 14. `lib/http/with-api-handler.ts`
 15. `lib/observability/metrics.ts`
 16. `lib/observability/error-tracker.ts`
-17. `.github/workflows/ci.yml`
-18. `App.tsx`
-19. `types.ts`
-20. `constants.ts`
+17. `ops/backup/postgres-backup.sh`
+18. `ops/backup/postgres-restore-test.sh`
+19. `docs/POSTGRES_BACKUP_RUNBOOK.md`
+20. `.github/workflows/ci.yml`
+21. `App.tsx`
+22. `types.ts`
+23. `constants.ts`
 
 ## Canonical Commands
 
@@ -44,6 +47,8 @@ Before making edits, read in this order:
 - Unit tests: `npm run test:unit`
 - Integration tests: `npm run test:integration`
 - E2E critical flows: `npm run test:e2e`
+- Postgres backup: `npm run db:backup`
+- Postgres restore verification: `npm run db:restore:test`
 
 ## Architecture Reality Check
 

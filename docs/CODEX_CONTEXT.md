@@ -34,6 +34,8 @@ It is not yet the planned Next.js + Prisma production architecture.
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
 - Observability layer: `lib/observability/logger.ts`, `lib/observability/metrics.ts`, `lib/observability/error-tracker.ts`
 - Operational endpoints: `app/api/health/route.ts`, `app/api/metrics/route.ts`
+- Backup scripts: `ops/backup/postgres-backup.sh`, `ops/backup/postgres-restore-test.sh`
+- Backup runbook: `docs/POSTGRES_BACKUP_RUNBOOK.md`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
 - CI workflow: `.github/workflows/ci.yml`
 
@@ -115,6 +117,7 @@ Environment variables:
 - `.env.local`: `GEMINI_API_KEY=...`
 - `.env.local`: `AUTH_SESSION_SECRET=...`
 - `.env.local`: `OBSERVABILITY_ERROR_WEBHOOK_URL=...` (optional)
+- `.env.local`: `RESTORE_TEST_DATABASE_URL=...` (required for restore verification)
 
 Expected commands:
 - `npm install`
@@ -124,6 +127,8 @@ Expected commands:
 - `npm run test:unit`
 - `npm run test:integration`
 - `npm run test:e2e`
+- `npm run db:backup`
+- `npm run db:restore:test`
 
 ## 9) Planning Artifacts (Not Yet Implemented)
 
@@ -152,6 +157,7 @@ Migration update:
 - Vitest coverage now includes unit, integration, and E2E critical-flow tests.
 - GitHub Actions CI runs Prisma validation, test layers, and Vite production build.
 - Observability baseline is wired through `withApiHandler` with request IDs, structured logs, and in-memory metrics snapshots.
+- Postgres backup policy + restore validation workflow is documented and scripted under `ops/backup/`.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks

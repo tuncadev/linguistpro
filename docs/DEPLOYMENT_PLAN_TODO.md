@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Add backup policy and restore test for Postgres.
+1. Add production env/secrets policy and rotation runbook.
 
 ## Phase Plan (Target Timeline)
 
@@ -36,7 +36,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Add test suite (unit + integration + E2E critical flows).
 - [x] Add CI/CD with required checks before merge/deploy.
 - [x] Add observability (logs, traces, metrics, error tracking).
-- [ ] Add backup policy and restore test for Postgres.
+- [x] Add backup policy and restore test for Postgres.
 - [ ] Add production env/secrets policy and rotation runbook.
 - [ ] Complete staging UAT and sign-off.
 - [ ] Document deploy and rollback runbooks.
@@ -81,3 +81,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Vitest suite added with unit, integration, and E2E critical-flow tests (`tests/` + `vitest.config.ts`).
 - 2026-04-26: GitHub Actions CI added (`.github/workflows/ci.yml`) with Prisma validation, unit/integration/E2E tests, and production build checks.
 - 2026-04-26: Observability baseline added (structured API logs with request IDs, in-memory metrics, `/api/health`, admin `/api/metrics`, optional error webhook reporting).
+- 2026-04-26: PostgreSQL backup/restore runbook and executable scripts added (`ops/backup/` + `docs/POSTGRES_BACKUP_RUNBOOK.md`) with dry-run validation.

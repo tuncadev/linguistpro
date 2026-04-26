@@ -109,6 +109,10 @@ Authentication/session env:
 Observability env:
 - `OBSERVABILITY_ERROR_WEBHOOK_URL` (optional): receives JSON error events for 5xx API failures.
 
+Backup/restore env:
+- `DATABASE_URL`: source Postgres database.
+- `RESTORE_TEST_DATABASE_URL`: isolated database used only for restore verification.
+
 ## Prisma Pipeline (Implemented)
 
 Prisma assets now exist for the production migration path:
@@ -284,6 +288,16 @@ Checks executed on pull requests and protected branch pushes:
 - `npm run test:e2e`
 - `npm run build`
 
+## Backup and Restore Policy
+
+Runbook: `docs/POSTGRES_BACKUP_RUNBOOK.md`
+
+Operational scripts:
+- `npm run db:backup`
+- `npm run db:restore:test`
+
+Both scripts support `DRY_RUN=1` for command-path validation without touching databases.
+
 ## Directory Map
 
 ```text
@@ -355,4 +369,5 @@ For future agent sessions, see:
 - `docs/INFRA_DECISION.md` (final infrastructure choices for deployment)
 - `docs/NEXTJS_ROUTE_MAP.md` (target route design and current mapping)
 - `docs/LOCAL_SERVICE.md` (systemd service to keep local dev server running)
+- `docs/POSTGRES_BACKUP_RUNBOOK.md` (backup/restore policy + scripts usage)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

@@ -11,6 +11,8 @@
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
     "test:e2e": "vitest run tests/e2e",
+    "db:backup": "bash ops/backup/postgres-backup.sh",
+    "db:restore:test": "bash ops/backup/postgres-restore-test.sh",
     "prisma:format": "prisma format",
     "prisma:validate": "prisma validate",
     "prisma:generate": "prisma generate",

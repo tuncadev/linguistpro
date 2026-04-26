@@ -22,6 +22,7 @@ coverage
 
 # AI/tooling generated artifacts
 migrated_prompt_history/
+ops/backups/
 
 # Editor directories and files
 .vscode/*
