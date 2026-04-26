@@ -1,16 +1,19 @@
 
 import React, { useContext } from 'react';
 import { AppContext } from '../App';
-import { MOCK_COURSES } from '../constants';
 
 const StudentDashboard: React.FC = () => {
-  const { user, setSelectedCourse, setActiveLesson, setView } = useContext(AppContext);
+  const { user, courses, setSelectedCourse, setActiveLesson, setView } = useContext(AppContext);
+
+  const inProgressCourses = courses.slice(0, 2);
 
   const handleStartLearning = (courseId: string) => {
-    const course = MOCK_COURSES.find(c => c.id === courseId);
+    const course = courses.find(c => c.id === courseId);
     if (course) {
       setSelectedCourse(course);
-      setActiveLesson(course.syllabus[0].lessons[0]);
+      const firstLesson = course.syllabus[0]?.lessons[0];
+      if (!firstLesson) return;
+      setActiveLesson(firstLesson);
       setView('lesson-view');
     }
   };
@@ -27,7 +30,7 @@ const StudentDashboard: React.FC = () => {
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
             <h2 className="text-lg font-bold mb-6">In Progress</h2>
             <div className="space-y-6">
-              {[MOCK_COURSES[0], MOCK_COURSES[1]].map((course, idx) => (
+              {inProgressCourses.length > 0 ? inProgressCourses.map((course, idx) => (
                 <div 
                   key={course.id} 
                   onClick={() => handleStartLearning(course.id)}
@@ -42,7 +45,9 @@ const StudentDashboard: React.FC = () => {
                     <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">{idx === 0 ? '65%' : '20%'} Complete</p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-sm text-slate-500">No courses in progress yet.</div>
+              )}
             </div>
           </div>
           

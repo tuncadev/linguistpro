@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Replace mock data paths with DB-backed services.
+1. Add centralized error handling and API validation.
 
 ## Phase Plan (Target Timeline)
 
@@ -31,7 +31,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Build courses CRUD + tutor draft generation API.
 - [x] Build enrollments API with idempotency checks.
 - [x] Build admin moderation flow for course approval.
-- [ ] Replace mock data paths with DB-backed services.
+- [x] Replace mock data paths with DB-backed services.
 - [ ] Add centralized error handling and API validation.
 - [ ] Add test suite (unit + integration + E2E critical flows).
 - [ ] Add CI/CD with required checks before merge/deploy.
@@ -76,3 +76,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Courses CRUD + AI draft persistence APIs implemented under `/api/courses`.
 - 2026-04-26: Enrollment API implemented with DB-backed idempotency replay behavior.
 - 2026-04-26: Admin moderation flow added (submit for review + pending queue + approve/reject).
+- 2026-04-26: Core frontend course flows now load DB-backed course data via API service with mock fallback.

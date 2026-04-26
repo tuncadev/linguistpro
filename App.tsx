@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, UserRole, Course, Language, Lesson } from './types';
-import { MOCK_USERS, MOCK_COURSES, LANGUAGES } from './constants';
+import { MOCK_COURSES } from './constants';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import StudentDashboard from './views/StudentDashboard';
@@ -14,6 +14,7 @@ import LanguageLandingView from './views/LanguageLandingView';
 import CourseDetailsView from './views/CourseDetailsView';
 import TutorProfileView from './views/TutorProfileView';
 import LessonView from './views/LessonView';
+import { fetchPublishedCourses } from './services/courseApiService';
 
 export const AppContext = React.createContext<{
   user: User | null;
@@ -49,12 +50,33 @@ export const AppContext = React.createContext<{
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [courses, setCourses] = useState<Course[]>(MOCK_COURSES);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [view, setView] = useState<string>('home');
   const [selectedLang, setSelectedLang] = useState<Language | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedTutor, setSelectedTutor] = useState<User | null>(null);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadCourses = async () => {
+      const fetched = await fetchPublishedCourses();
+      if (!isMounted) return;
+
+      if (fetched && fetched.length > 0) {
+        setCourses(fetched);
+      } else {
+        setCourses(MOCK_COURSES);
+      }
+    };
+
+    void loadCourses();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const renderView = () => {
     switch (view) {

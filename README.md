@@ -189,6 +189,13 @@ Course moderation endpoints:
 - `GET /api/admin/courses/submissions` (`ADMIN`): list pending review queue
 - `POST /api/admin/courses/:id/moderate` (`ADMIN`): `APPROVE` (publish) or `REJECT` (return to draft)
 
+## Replacing Mock Paths with DB-backed Services
+
+Course read paths are now API-first:
+- `services/courseApiService.ts` fetches `/api/courses` and maps API payload to frontend `Course`.
+- `App.tsx` initializes `courses` from API and falls back to `MOCK_COURSES` when backend data is unavailable.
+- `LanguageLandingView` and `StudentDashboard` now consume context `courses` instead of hardcoded `MOCK_COURSES`.
+
 ## Getting Started
 
 ### Prerequisites

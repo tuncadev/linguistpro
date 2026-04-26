@@ -30,6 +30,7 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
+- Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
 
 Global state is held in React state and passed via `AppContext`.
 
@@ -139,6 +140,7 @@ Migration update:
 - Courses CRUD and AI draft persistence endpoints are implemented for migration APIs.
 - Enrollment create/list endpoints are implemented with idempotent replay on duplicates.
 - Admin moderation endpoints now handle review submission and approve/reject decisions.
+- Frontend course state now prefers DB-backed `/api/courses` data with fallback to mock seed data.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks

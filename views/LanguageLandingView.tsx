@@ -1,7 +1,7 @@
 
 import React, { useContext } from 'react';
 import { AppContext } from '../App';
-import { LEVELS, MOCK_COURSES } from '../constants';
+import { LEVELS } from '../constants';
 import { CheckCircle2, Star, BookOpen, MessageCircle } from 'lucide-react';
 
 const LANGUAGE_HEADER_IMAGES: Record<string, string> = {
@@ -13,11 +13,11 @@ const LANGUAGE_HEADER_IMAGES: Record<string, string> = {
 };
 
 const LanguageLandingView: React.FC = () => {
-  const { selectedLang, setView, setSelectedCourse } = useContext(AppContext);
+  const { selectedLang, setView, setSelectedCourse, courses } = useContext(AppContext);
 
   if (!selectedLang) return null;
 
-  const relevantCourses = MOCK_COURSES.filter(c => c.languageId === selectedLang.id);
+  const relevantCourses = courses.filter(c => c.languageId === selectedLang.id);
   const headerImage = LANGUAGE_HEADER_IMAGES[selectedLang.id] || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800';
 
   return (
