@@ -106,6 +106,7 @@ If no valid key is set, AI generation fails gracefully and returns `null`.
 
 Authentication/session env:
 - `AUTH_SESSION_SECRET` must be set for signed session cookies.
+- `AUTH_ALLOW_DEV_ROLE_HEADER` controls whether `x-dev-role` header fallback is accepted (`false` by default).
 
 ## Prisma Pipeline (Implemented)
 
@@ -134,6 +135,17 @@ Auth API routes:
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
 - `GET /api/auth/session`
+
+## RBAC Middleware and Server Checks (Implemented)
+
+RBAC is now enforced at two layers:
+- route middleware for dashboard paths (`/student/*`, `/tutor/*`, `/admin/*`) in `middleware.ts`
+- server-side API guards in `lib/auth/server-checks.ts` using `requireRoles(...)`
+
+Protected API examples:
+- `POST /api/courses` -> `TUTOR` or `ADMIN`
+- `POST /api/enroll` -> `STUDENT`
+- `POST /api/webhooks` -> `ADMIN`
 
 ## Getting Started
 

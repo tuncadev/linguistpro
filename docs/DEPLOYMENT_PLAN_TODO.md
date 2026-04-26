@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Implement RBAC middleware + server checks.
+1. Move Gemini integration to server-only endpoints.
 
 ## Phase Plan (Target Timeline)
 
@@ -26,7 +26,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Implement Next.js app structure and route map.
 - [x] Implement Prisma schema and migration pipeline.
 - [x] Implement authentication and secure session handling.
-- [ ] Implement RBAC middleware + server checks.
+- [x] Implement RBAC middleware + server checks.
 - [ ] Move Gemini integration to server-only endpoints.
 - [ ] Build courses CRUD + tutor draft generation API.
 - [ ] Build enrollments API with idempotency checks.
@@ -71,3 +71,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Next.js App Router scaffold added under `app/` with route map in `docs/NEXTJS_ROUTE_MAP.md`.
 - 2026-04-26: Prisma schema, migration scaffold, client helper, and package scripts implemented.
 - 2026-04-26: Auth/session scaffold implemented (JWT cookie session + register/login/logout/session API routes).
+- 2026-04-26: RBAC middleware and server-side role guards implemented for protected API routes.

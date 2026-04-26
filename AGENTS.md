@@ -20,9 +20,10 @@ Before making edits, read in this order:
 5. `docs/NEXTJS_ROUTE_MAP.md`
 6. `prisma/schema.prisma`
 7. `lib/auth/session.ts`
-8. `App.tsx`
-9. `types.ts`
-10. `constants.ts`
+8. `lib/auth/server-checks.ts`
+9. `App.tsx`
+10. `types.ts`
+11. `constants.ts`
 
 ## Canonical Commands
 
