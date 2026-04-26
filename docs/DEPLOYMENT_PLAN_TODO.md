@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Implement Next.js app structure and route map.
+1. Implement Prisma schema and migration pipeline.
 
 ## Phase Plan (Target Timeline)
 
@@ -23,7 +23,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 - [x] Finalize v1 scope and non-goals.
 - [x] Choose cloud providers (app, DB, object storage, CDN, secrets, observability).
-- [ ] Implement Next.js app structure and route map.
+- [x] Implement Next.js app structure and route map.
 - [ ] Implement Prisma schema and migration pipeline.
 - [ ] Implement authentication and secure session handling.
 - [ ] Implement RBAC middleware + server checks.
@@ -68,3 +68,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: `v1` scope/non-goals drafted in `docs/V1_SCOPE.md`.
 - 2026-04-26: Cloud decision draft started in `docs/INFRA_DECISION_DRAFT.md`.
 - 2026-04-26: Cloud provider decision finalized in `docs/INFRA_DECISION.md`.
+- 2026-04-26: Next.js App Router scaffold added under `app/` with route map in `docs/NEXTJS_ROUTE_MAP.md`.

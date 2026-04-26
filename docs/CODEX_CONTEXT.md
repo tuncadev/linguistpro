@@ -22,6 +22,7 @@ It is not yet the planned Next.js + Prisma production architecture.
 - AI service wrapper: `services/geminiService.ts`
 - Domain models: `types.ts`
 - Demo dataset: `constants.ts`
+- Next.js migration scaffold: `app/`, `middleware.ts`, `lib/auth/rbac.ts`
 
 Global state is held in React state and passed via `AppContext`.
 
@@ -115,11 +116,16 @@ The following files are strategy/design documents, not runtime code:
 - `prisma-schema.txt`
 - `folder-structure.txt`
 - `rbac-strategy.txt`
+- `docs/NEXTJS_ROUTE_MAP.md`
 
 They describe a future architecture with:
 - Next.js app router
 - Prisma/PostgreSQL schema
 - middleware RBAC strategy
+
+Migration update:
+- A Next.js route and middleware scaffold now exists in the repository.
+- Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks
 

@@ -178,10 +178,11 @@ Files:
 - `prisma-schema.txt`
 - `folder-structure.txt`
 - `rbac-strategy.txt`
+- `docs/NEXTJS_ROUTE_MAP.md`
 
-These describe a future Next.js/Prisma architecture and are not yet implemented in this repository.
+These describe and guide the migration to the Next.js/Prisma architecture.
 
-Current implementation is a Vite SPA mock with in-memory state.
+Current implementation is still the Vite SPA mock with in-memory state, but a Next.js route scaffold now exists under `app/` for migration work.
 
 ## Known Limitations
 
@@ -191,6 +192,7 @@ Current implementation is a Vite SPA mock with in-memory state.
 - Route state is string-based and local (not URL-driven)
 - Actions like enrollment, approval, notes, and discussion are UI-only placeholders
 - `index.html` references `/index.css`, but no local `index.css` exists (Vite warns during build)
+- Next.js scaffold files are present but Next.js runtime/dependencies are not wired as default scripts yet
 
 ## Recommended Next Implementation Steps
 
@@ -207,4 +209,5 @@ For future agent sessions, see:
 - `docs/CODEX_CONTEXT.md` (deep technical context)
 - `docs/DEPLOYMENT_PLAN_TODO.md` (execution tracker and next action)
 - `docs/INFRA_DECISION.md` (final infrastructure choices for deployment)
+- `docs/NEXTJS_ROUTE_MAP.md` (target route design and current mapping)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

@@ -17,9 +17,10 @@ Before making edits, read in this order:
 2. `docs/CODEX_CONTEXT.md`
 3. `docs/DEPLOYMENT_PLAN_TODO.md`
 4. `docs/INFRA_DECISION.md`
-5. `App.tsx`
-6. `types.ts`
-7. `constants.ts`
+5. `docs/NEXTJS_ROUTE_MAP.md`
+6. `App.tsx`
+7. `types.ts`
+8. `constants.ts`
 
 ## Canonical Commands
 
