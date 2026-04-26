@@ -8,6 +8,7 @@
 - Read `docs/DEPLOYMENT_PLAN_TODO.md`
 - Read `docs/INFRA_DECISION.md`
 - Read `docs/NEXTJS_ROUTE_MAP.md`
+- Read `prisma/schema.prisma`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification

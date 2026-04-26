@@ -23,9 +23,10 @@ Read in this order:
 4. `docs/DEPLOYMENT_PLAN_TODO.md`
 5. `docs/INFRA_DECISION.md`
 6. `docs/NEXTJS_ROUTE_MAP.md`
-7. `App.tsx`
-8. `types.ts`
-9. `constants.ts`
+7. `prisma/schema.prisma`
+8. `App.tsx`
+9. `types.ts`
+10. `constants.ts`
 
 ## Step 2: Confirm baseline
 

@@ -104,6 +104,21 @@ Vite exposes this key through `vite.config.ts`:
 
 If no valid key is set, AI generation fails gracefully and returns `null`.
 
+## Prisma Pipeline (Implemented)
+
+Prisma assets now exist for the production migration path:
+- schema: `prisma/schema.prisma`
+- initial SQL migration scaffold: `prisma/migrations/20260426170000_init/migration.sql`
+- Prisma client singleton: `lib/prisma.ts`
+
+Available scripts:
+- `npm run prisma:format`
+- `npm run prisma:validate`
+- `npm run prisma:generate`
+- `npm run prisma:migrate:dev`
+- `npm run prisma:migrate:deploy`
+- `npm run prisma:studio`
+
 ## Getting Started
 
 ### Prerequisites

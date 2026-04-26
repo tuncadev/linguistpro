@@ -18,9 +18,10 @@ Before making edits, read in this order:
 3. `docs/DEPLOYMENT_PLAN_TODO.md`
 4. `docs/INFRA_DECISION.md`
 5. `docs/NEXTJS_ROUTE_MAP.md`
-6. `App.tsx`
-7. `types.ts`
-8. `constants.ts`
+6. `prisma/schema.prisma`
+7. `App.tsx`
+8. `types.ts`
+9. `constants.ts`
 
 ## Canonical Commands
 

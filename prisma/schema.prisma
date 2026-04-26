@@ -1,0 +1,129 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+  ADMIN
+}
+
+enum CourseStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LessonType {
+  VIDEO
+  QUIZ
+  READING
+}
+
+model User {
+  id              String  @id @default(cuid())
+  name            String?
+  email           String  @unique
+  passwordHash    String?
+  role            Role    @default(STUDENT)
+  avatarUrl       String?
+  bio             String?
+  rating          Float?
+  studentCount    Int?
+  coursesAuthored Int?
+
+  authoredCourses Course[]     @relation("CourseTutor")
+  enrollments     Enrollment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Language {
+  id   String @id @default(cuid())
+  name String @unique
+  code String @unique
+
+  courses Course[]
+}
+
+model Level {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+
+  courses Course[]
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String       @db.Text
+  price       Decimal      @db.Decimal(10, 2)
+  imageUrl    String?
+  status      CourseStatus @default(DRAFT)
+  publishedAt DateTime?
+
+  tutor   User   @relation("CourseTutor", fields: [tutorId], references: [id])
+  tutorId String
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String
+
+  level   Level  @relation(fields: [levelId], references: [id])
+  levelId String
+
+  studentCount Int   @default(0)
+  rating       Float @default(0)
+  reviews      Int   @default(0)
+
+  syllabusSections SyllabusSection[]
+  enrollments      Enrollment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SyllabusSection {
+  id       String @id @default(cuid())
+  title    String
+  position Int
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  id              String     @id @default(cuid())
+  title           String
+  durationSeconds Int?
+  type            LessonType
+  content         String?    @db.Text
+  position        Int
+
+  section   SyllabusSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId String
+}
+
+model Enrollment {
+  id String @id @default(cuid())
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([courseId, studentId])
+}
