@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Add observability (logs, traces, metrics, error tracking).
+1. Add backup policy and restore test for Postgres.
 
 ## Phase Plan (Target Timeline)
 
@@ -35,7 +35,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Add centralized error handling and API validation.
 - [x] Add test suite (unit + integration + E2E critical flows).
 - [x] Add CI/CD with required checks before merge/deploy.
-- [ ] Add observability (logs, traces, metrics, error tracking).
+- [x] Add observability (logs, traces, metrics, error tracking).
 - [ ] Add backup policy and restore test for Postgres.
 - [ ] Add production env/secrets policy and rotation runbook.
 - [ ] Complete staging UAT and sign-off.
@@ -80,3 +80,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Centralized API error normalization and request validation helpers applied to core routes.
 - 2026-04-26: Vitest suite added with unit, integration, and E2E critical-flow tests (`tests/` + `vitest.config.ts`).
 - 2026-04-26: GitHub Actions CI added (`.github/workflows/ci.yml`) with Prisma validation, unit/integration/E2E tests, and production build checks.
+- 2026-04-26: Observability baseline added (structured API logs with request IDs, in-memory metrics, `/api/health`, admin `/api/metrics`, optional error webhook reporting).

@@ -2,6 +2,9 @@ import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { ApiError } from "@/lib/http/api-error";
+import { reportError } from "@/lib/observability/error-tracker";
+import { recordApiRequest } from "@/lib/observability/metrics";
+import { logInfo, logWarn } from "@/lib/observability/logger";
 
 type Handler<TContext = unknown> = (
   req: NextRequest,
@@ -77,15 +80,81 @@ function normalizeError(error: unknown) {
 
 export function withApiHandler<TContext = unknown>(handler: Handler<TContext>) {
   return async (req: NextRequest, context: TContext) => {
+    const requestId = req.headers.get("x-request-id")?.trim() || crypto.randomUUID();
+    const method = req.method;
+    const path = req.nextUrl.pathname;
+    const startedAt = Date.now();
+
     try {
-      return await handler(req, context);
+      const response = await handler(req, context);
+      const durationMs = Date.now() - startedAt;
+
+      recordApiRequest({
+        method,
+        path,
+        status: response.status,
+        durationMs,
+      });
+
+      if (response.status >= 400) {
+        logWarn("api_request_completed", {
+          requestId,
+          method,
+          path,
+          status: response.status,
+          durationMs,
+        });
+      } else {
+        logInfo("api_request_completed", {
+          requestId,
+          method,
+          path,
+          status: response.status,
+          durationMs,
+        });
+      }
+
+      response.headers.set("x-request-id", requestId);
+      return response;
     } catch (error) {
       const normalized = normalizeError(error);
+      const durationMs = Date.now() - startedAt;
+
+      recordApiRequest({
+        method,
+        path,
+        status: normalized.status,
+        durationMs,
+      });
+
       if (normalized.status >= 500) {
-        console.error("api handler error", error);
+        await reportError(error, {
+          requestId,
+          method,
+          path,
+          status: normalized.status,
+          durationMs,
+        });
+      } else {
+        logWarn("api_request_failed", {
+          requestId,
+          method,
+          path,
+          status: normalized.status,
+          durationMs,
+          code: normalized.body.error.code,
+        });
       }
-      return NextResponse.json(normalized.body, { status: normalized.status });
+
+      const response = NextResponse.json(
+        {
+          ...normalized.body,
+          requestId,
+        },
+        { status: normalized.status }
+      );
+      response.headers.set("x-request-id", requestId);
+      return response;
     }
   };
 }
-

@@ -27,10 +27,12 @@ Before making edits, read in this order:
 12. `app/api/admin/courses/[id]/moderate/route.ts`
 13. `services/courseApiService.ts`
 14. `lib/http/with-api-handler.ts`
-15. `.github/workflows/ci.yml`
-16. `App.tsx`
-17. `types.ts`
-18. `constants.ts`
+15. `lib/observability/metrics.ts`
+16. `lib/observability/error-tracker.ts`
+17. `.github/workflows/ci.yml`
+18. `App.tsx`
+19. `types.ts`
+20. `constants.ts`
 
 ## Canonical Commands
 

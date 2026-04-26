@@ -32,6 +32,8 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
+- Observability layer: `lib/observability/logger.ts`, `lib/observability/metrics.ts`, `lib/observability/error-tracker.ts`
+- Operational endpoints: `app/api/health/route.ts`, `app/api/metrics/route.ts`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
 - CI workflow: `.github/workflows/ci.yml`
 
@@ -112,6 +114,7 @@ Important details:
 Environment variables:
 - `.env.local`: `GEMINI_API_KEY=...`
 - `.env.local`: `AUTH_SESSION_SECRET=...`
+- `.env.local`: `OBSERVABILITY_ERROR_WEBHOOK_URL=...` (optional)
 
 Expected commands:
 - `npm install`
@@ -148,12 +151,15 @@ Migration update:
 - Core API routes now use centralized validation + normalized error response handling.
 - Vitest coverage now includes unit, integration, and E2E critical-flow tests.
 - GitHub Actions CI runs Prisma validation, test layers, and Vite production build.
+- Observability baseline is wired through `withApiHandler` with request IDs, structured logs, and in-memory metrics snapshots.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks
 
 - Default Vite runtime still uses client-side role simulation and fallback mock data.
 - Next.js migration APIs require running in Next.js runtime to become the primary path.
+- Metrics store is in-memory per process (no long-term retention/export yet).
+- Error webhook reporting is optional and requires `OBSERVABILITY_ERROR_WEBHOOK_URL`.
 - No route-level URL deep linking
 - Several UI actions are placeholders (logs, approvals, notes, discussion posting)
 - Build emits warning because `index.html` references `/index.css` that is not present in repo

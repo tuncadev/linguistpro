@@ -106,6 +106,9 @@ Authentication/session env:
 - `AUTH_SESSION_SECRET` must be set for signed session cookies.
 - `AUTH_ALLOW_DEV_ROLE_HEADER` controls whether `x-dev-role` header fallback is accepted (`false` by default).
 
+Observability env:
+- `OBSERVABILITY_ERROR_WEBHOOK_URL` (optional): receives JSON error events for 5xx API failures.
+
 ## Prisma Pipeline (Implemented)
 
 Prisma assets now exist for the production migration path:
@@ -205,6 +208,23 @@ Applied to core production routes:
 - courses CRUD/draft routes
 - enrollments route
 - moderation routes
+
+## Observability Baseline (Implemented)
+
+Shared observability modules:
+- `lib/observability/logger.ts` (structured JSON logs)
+- `lib/observability/metrics.ts` (runtime request counters and status-class metrics)
+- `lib/observability/error-tracker.ts` (optional webhook forwarding for 5xx errors)
+
+Automatic API instrumentation:
+- `lib/http/with-api-handler.ts` now emits/propagates `x-request-id`
+- records per-request duration/status metrics
+- logs success/failure with request context
+- returns `requestId` in normalized error payloads
+
+Operational endpoints:
+- `GET /api/health` (liveness + uptime)
+- `GET /api/metrics` (`ADMIN` role required)
 
 ## Getting Started
 

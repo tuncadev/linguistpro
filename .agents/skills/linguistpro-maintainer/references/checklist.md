@@ -17,6 +17,8 @@
 - Read `app/api/admin/courses/[id]/moderate/route.ts`
 - Read `services/courseApiService.ts`
 - Read `lib/http/with-api-handler.ts`
+- Read `lib/observability/metrics.ts`
+- Read `lib/observability/error-tracker.ts`
 - Read `.github/workflows/ci.yml`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
