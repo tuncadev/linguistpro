@@ -315,6 +315,13 @@ Runbook/template: `docs/STAGING_UAT_SIGNOFF.md`
 Smoke command:
 - `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:smoke`
 
+## Deploy and Rollback
+
+Runbook: `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
+
+Preflight command:
+- `npm run ops:deploy:preflight`
+
 ## Directory Map
 
 ```text
@@ -389,4 +396,5 @@ For future agent sessions, see:
 - `docs/POSTGRES_BACKUP_RUNBOOK.md` (backup/restore policy + scripts usage)
 - `docs/SECRETS_POLICY_RUNBOOK.md` (production env/secrets rotation + validation)
 - `docs/STAGING_UAT_SIGNOFF.md` (staging acceptance checklist + sign-off log)
+- `docs/DEPLOY_ROLLBACK_RUNBOOK.md` (deploy preflight + rollback process)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

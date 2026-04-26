@@ -40,6 +40,8 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Secrets runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
 - UAT smoke script: `ops/uat/smoke-check.sh`
 - UAT sign-off template: `docs/STAGING_UAT_SIGNOFF.md`
+- Deploy preflight script: `ops/deploy/preflight.sh`
+- Deploy/rollback runbook: `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
 - CI workflow: `.github/workflows/ci.yml`
 
@@ -135,6 +137,7 @@ Expected commands:
 - `npm run db:restore:test`
 - `npm run ops:validate-env`
 - `npm run ops:uat:smoke` (set `STAGING_BASE_URL` for real staging target)
+- `npm run ops:deploy:preflight`
 
 ## 9) Planning Artifacts (Not Yet Implemented)
 
@@ -166,6 +169,7 @@ Migration update:
 - Postgres backup policy + restore validation workflow is documented and scripted under `ops/backup/`.
 - Production env/secrets policy and rotation runbook is documented with validation command (`ops:validate-env`).
 - Staging UAT sign-off workflow is documented with smoke-check automation.
+- Deploy/rollback runbook is documented with preflight automation.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks

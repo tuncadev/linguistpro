@@ -36,10 +36,12 @@ Before making edits, read in this order:
 21. `docs/SECRETS_POLICY_RUNBOOK.md`
 22. `ops/uat/smoke-check.sh`
 23. `docs/STAGING_UAT_SIGNOFF.md`
-24. `.github/workflows/ci.yml`
-25. `App.tsx`
-26. `types.ts`
-27. `constants.ts`
+24. `ops/deploy/preflight.sh`
+25. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
+26. `.github/workflows/ci.yml`
+27. `App.tsx`
+28. `types.ts`
+29. `constants.ts`
 
 ## Canonical Commands
 
@@ -55,6 +57,7 @@ Before making edits, read in this order:
 - Postgres restore verification: `npm run db:restore:test`
 - Production env policy validation: `npm run ops:validate-env`
 - UAT smoke check: `npm run ops:uat:smoke`
+- Deploy preflight: `npm run ops:deploy:preflight`
 
 ## Architecture Reality Check
 

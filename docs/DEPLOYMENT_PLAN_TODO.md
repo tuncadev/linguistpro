@@ -39,7 +39,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Add backup policy and restore test for Postgres.
 - [x] Add production env/secrets policy and rotation runbook.
 - [ ] Complete staging UAT and sign-off.
-- [ ] Document deploy and rollback runbooks.
+- [x] Document deploy and rollback runbooks.
 - [ ] Execute production launch checklist.
 
 ## P1 First-Month Enhancements
@@ -84,3 +84,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: PostgreSQL backup/restore runbook and executable scripts added (`ops/backup/` + `docs/POSTGRES_BACKUP_RUNBOOK.md`) with dry-run validation.
 - 2026-04-26: Production env/secrets policy and rotation runbook added (`docs/SECRETS_POLICY_RUNBOOK.md`) with validation script (`ops/secrets/validate-env.sh`).
 - 2026-04-26: Staging UAT sign-off template and smoke script added (`docs/STAGING_UAT_SIGNOFF.md`, `ops/uat/smoke-check.sh`); local smoke run completed with API endpoint warnings under Vite runtime.
+- 2026-04-26: Deploy/rollback runbook added (`docs/DEPLOY_ROLLBACK_RUNBOOK.md`) with automated preflight script (`ops/deploy/preflight.sh`).

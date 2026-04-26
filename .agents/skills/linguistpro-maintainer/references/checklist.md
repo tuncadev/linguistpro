@@ -26,6 +26,8 @@
 - Read `docs/SECRETS_POLICY_RUNBOOK.md`
 - Read `ops/uat/smoke-check.sh`
 - Read `docs/STAGING_UAT_SIGNOFF.md`
+- Read `ops/deploy/preflight.sh`
+- Read `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
 - Read `.github/workflows/ci.yml`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
