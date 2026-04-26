@@ -158,6 +158,19 @@ Security note:
 - `GEMINI_API_KEY` is no longer injected into Vite client build config.
 - API key remains server-side only.
 
+## Courses CRUD and Draft APIs (Implemented)
+
+Core course APIs (Next.js migration path):
+- `GET /api/courses` (public published list; role-aware filters for admin/tutor)
+- `POST /api/courses` (`TUTOR`/`ADMIN`: create draft course)
+- `GET /api/courses/:id` (published or authorized owner/admin)
+- `PATCH /api/courses/:id` (owner tutor or admin updates)
+- `DELETE /api/courses/:id` (owner tutor for non-published, or admin)
+- `POST /api/courses/draft` (`TUTOR`/`ADMIN`: generate + persist AI draft)
+
+Serialization helper:
+- `lib/courses/serialize.ts` normalizes Prisma payloads (including Decimal to number).
+
 ## Getting Started
 
 ### Prerequisites

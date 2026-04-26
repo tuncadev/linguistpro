@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Build courses CRUD + tutor draft generation API.
+1. Build enrollments API with idempotency checks.
 
 ## Phase Plan (Target Timeline)
 
@@ -28,7 +28,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Implement authentication and secure session handling.
 - [x] Implement RBAC middleware + server checks.
 - [x] Move Gemini integration to server-only endpoints.
-- [ ] Build courses CRUD + tutor draft generation API.
+- [x] Build courses CRUD + tutor draft generation API.
 - [ ] Build enrollments API with idempotency checks.
 - [ ] Build admin moderation flow for course approval.
 - [ ] Replace mock data paths with DB-backed services.
@@ -73,3 +73,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Auth/session scaffold implemented (JWT cookie session + register/login/logout/session API routes).
 - 2026-04-26: RBAC middleware and server-side role guards implemented for protected API routes.
 - 2026-04-26: Gemini generation moved to server-only endpoint (`/api/ai/course-draft`).
+- 2026-04-26: Courses CRUD + AI draft persistence APIs implemented under `/api/courses`.

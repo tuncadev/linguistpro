@@ -22,9 +22,10 @@ Before making edits, read in this order:
 7. `lib/auth/session.ts`
 8. `lib/auth/server-checks.ts`
 9. `lib/ai/course-draft.ts`
-10. `App.tsx`
-11. `types.ts`
-12. `constants.ts`
+10. `app/api/courses/route.ts`
+11. `App.tsx`
+12. `types.ts`
+13. `constants.ts`
 
 ## Canonical Commands
 

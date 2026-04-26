@@ -1,10 +1,99 @@
+import { CourseStatus, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { getSessionFromRequest } from "@/lib/auth/request-session";
 import { requireRoles } from "@/lib/auth/server-checks";
+import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+const listQuerySchema = z.object({
+  q: z.string().trim().max(160).optional(),
+  languageId: z.string().trim().min(1).optional(),
+  levelId: z.string().trim().min(1).optional(),
+  tutorId: z.string().trim().min(1).optional(),
+  status: z.nativeEnum(CourseStatus).optional(),
+  mine: z.coerce.boolean().optional(),
+  includeUnpublished: z.coerce.boolean().optional(),
+  take: z.coerce.number().int().min(1).max(100).optional(),
+  skip: z.coerce.number().int().min(0).optional(),
+});
+
+const createCourseSchema = z.object({
+  title: z.string().trim().min(3).max(160),
+  description: z.string().trim().min(10).max(5000),
+  price: z.number().min(0).max(100000),
+  imageUrl: z.string().trim().url().optional(),
+  tutorId: z.string().trim().min(1).optional(),
+  languageId: z.string().trim().min(1),
+  levelId: z.string().trim().min(1),
+  syllabus: z.array(z.string().trim().min(1).max(180)).max(50).optional(),
+});
+
+export async function GET(req: NextRequest) {
+  const parsed = listQuerySchema.safeParse(
+    Object.fromEntries(req.nextUrl.searchParams.entries())
+  );
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid query parameters", details: parsed.error.flatten() },
+      { status: 400 }
+    );
+  }
+
+  const session = await getSessionFromRequest(req);
+  const where: Prisma.CourseWhereInput = {};
+  const query = parsed.data;
+
+  if (query.q) {
+    where.OR = [
+      { title: { contains: query.q, mode: "insensitive" } },
+      { description: { contains: query.q, mode: "insensitive" } },
+    ];
+  }
+  if (query.languageId) where.languageId = query.languageId;
+  if (query.levelId) where.levelId = query.levelId;
+  if (query.tutorId) where.tutorId = query.tutorId;
+
+  if (query.mine) {
+    if (!session) {
+      return NextResponse.json({ error: "Authentication required for mine=true" }, { status: 401 });
+    }
+    if (session.role !== "TUTOR" && session.role !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    if (session.role !== "ADMIN") {
+      where.tutorId = session.id;
+    }
+    if (query.status) {
+      where.status = query.status;
+    }
+  } else if (session?.role === "ADMIN" && query.includeUnpublished) {
+    if (query.status) {
+      where.status = query.status;
+    }
+  } else {
+    if (query.status && query.status !== "PUBLISHED") {
+      return NextResponse.json({ error: "Forbidden status filter" }, { status: 403 });
+    }
+    where.status = "PUBLISHED";
+  }
+
+  const courses = await prisma.course.findMany({
+    where,
+    include: courseInclude,
+    orderBy: { createdAt: "desc" },
+    take: query.take ?? 20,
+    skip: query.skip ?? 0,
+  });
+
   return NextResponse.json({
-    message: "Courses API scaffold",
-    status: "ok",
+    data: courses.map(serializeCourse),
+    meta: {
+      count: courses.length,
+      take: query.take ?? 20,
+      skip: query.skip ?? 0,
+    },
   });
 }
 
@@ -14,12 +103,62 @@ export async function POST(req: NextRequest) {
     return auth.response;
   }
 
-  return NextResponse.json(
-    {
-      message: "Course create API scaffold",
-      status: "accepted",
-      actorRole: auth.session.role,
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const parsed = createCourseSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid course payload", details: parsed.error.flatten() },
+      { status: 400 }
+    );
+  }
+
+  const payload = parsed.data;
+  const tutorId = auth.session.role === "ADMIN" ? payload.tutorId ?? auth.session.id : auth.session.id;
+
+  const [language, level, tutor] = await Promise.all([
+    prisma.language.findUnique({ where: { id: payload.languageId } }),
+    prisma.level.findUnique({ where: { id: payload.levelId } }),
+    prisma.user.findUnique({ where: { id: tutorId } }),
+  ]);
+
+  if (!language) {
+    return NextResponse.json({ error: "Language not found" }, { status: 400 });
+  }
+  if (!level) {
+    return NextResponse.json({ error: "Level not found" }, { status: 400 });
+  }
+  if (!tutor) {
+    return NextResponse.json({ error: "Tutor not found" }, { status: 400 });
+  }
+
+  const created = await prisma.course.create({
+    data: {
+      title: payload.title,
+      description: payload.description,
+      price: payload.price,
+      imageUrl: payload.imageUrl,
+      status: "DRAFT",
+      tutorId,
+      languageId: payload.languageId,
+      levelId: payload.levelId,
+      syllabusSections: payload.syllabus?.length
+        ? {
+            create: payload.syllabus.map((title, index) => ({
+              title,
+              position: index + 1,
+            })),
+          }
+        : undefined,
     },
-    { status: 201 }
-  );
+    include: courseInclude,
+  });
+
+  return NextResponse.json({ data: serializeCourse(created) }, { status: 201 });
 }
+
