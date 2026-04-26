@@ -1,12 +1,15 @@
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { AppContext } from '../App';
 import { MOCK_USERS, LANGUAGES, LEVELS } from '../constants';
 import { Star, Clock, Users, ChevronDown, ChevronRight, CheckCircle, Award, Play } from 'lucide-react';
+import { UserRole } from '../types';
+import { enrollInCourse } from '../services/enrollmentApiService';
 
 const CourseDetailsView: React.FC = () => {
   const { selectedCourse, setView, setSelectedTutor, setActiveLesson, user } = useContext(AppContext);
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const [isEnrolling, setIsEnrolling] = useState(false);
 
   if (!selectedCourse) return null;
 
@@ -16,6 +19,46 @@ const CourseDetailsView: React.FC = () => {
 
   const toggleSection = (id: string) => {
     setOpenSection(openSection === id ? null : id);
+  };
+
+  const firstLesson = useMemo(
+    () => selectedCourse.syllabus[0]?.lessons[0],
+    [selectedCourse.syllabus]
+  );
+
+  const startCourse = () => {
+    if (!firstLesson) {
+      alert('This course has no lessons yet.');
+      return;
+    }
+
+    setActiveLesson(firstLesson);
+    setView('lesson-view');
+  };
+
+  const handleEnroll = async () => {
+    if (!user) {
+      alert('Admissions require a Student account.');
+      return;
+    }
+
+    if (user.role !== UserRole.STUDENT) {
+      alert('Please sign in with a Student account to enroll.');
+      return;
+    }
+
+    setIsEnrolling(true);
+    const result = await enrollInCourse(selectedCourse.id);
+    setIsEnrolling(false);
+
+    if (result.ok) {
+      startCourse();
+      return;
+    }
+
+    console.warn('enrollInCourse failed, using local fallback', result.errorMessage);
+    alert(result.errorMessage || 'Enrollment service unavailable. Starting in preview mode.');
+    startCourse();
   };
 
   return (
@@ -145,10 +188,11 @@ const CourseDetailsView: React.FC = () => {
                 </div>
                 
                 <button 
-                  onClick={() => { if (user) { setActiveLesson(selectedCourse.syllabus[0].lessons[0]); setView('lesson-view'); } else { alert("Admissions require a Student account."); } }}
-                  className="w-full bg-[#f47361] text-white py-5 rounded-2xl font-black text-xl hover:bg-[#e06352] transition-all shadow-xl shadow-[#f47361]/20"
+                  onClick={() => { void handleEnroll(); }}
+                  disabled={isEnrolling}
+                  className="w-full bg-[#f47361] text-white py-5 rounded-2xl font-black text-xl hover:bg-[#e06352] transition-all shadow-xl shadow-[#f47361]/20 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Enroll Today
+                  {isEnrolling ? 'Enrolling...' : 'Enroll Today'}
                 </button>
                 
                 <div className="space-y-5 pt-8 border-t border-slate-100">

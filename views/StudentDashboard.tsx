@@ -1,11 +1,42 @@
-
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../App';
+import { fetchMyEnrollmentCourseIds } from '../services/enrollmentApiService';
 
 const StudentDashboard: React.FC = () => {
   const { user, courses, setSelectedCourse, setActiveLesson, setView } = useContext(AppContext);
+  const [enrollmentCourseIds, setEnrollmentCourseIds] = useState<string[] | null>(null);
 
-  const inProgressCourses = courses.slice(0, 2);
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadEnrollments = async () => {
+      const ids = await fetchMyEnrollmentCourseIds();
+      if (!isMounted) {
+        return;
+      }
+      setEnrollmentCourseIds(ids);
+    };
+
+    void loadEnrollments();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const inProgressCourses = useMemo(() => {
+    const fallbackCourses = courses.slice(0, 2);
+    if (enrollmentCourseIds === null) {
+      return fallbackCourses;
+    }
+
+    const byId = new Map(courses.map((course) => [course.id, course]));
+    const fromEnrollments = enrollmentCourseIds
+      .map((courseId) => byId.get(courseId))
+      .filter((course): course is NonNullable<typeof course> => Boolean(course));
+
+    return fromEnrollments;
+  }, [courses, enrollmentCourseIds]);
 
   const handleStartLearning = (courseId: string) => {
     const course = courses.find(c => c.id === courseId);

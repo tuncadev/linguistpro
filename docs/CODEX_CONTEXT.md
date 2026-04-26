@@ -30,6 +30,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
+- Frontend enrollment adapter: `services/enrollmentApiService.ts` (`GET/POST /api/enroll` bridge for legacy views)
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
 - Observability layer: `lib/observability/logger.ts`, `lib/observability/metrics.ts`, `lib/observability/error-tracker.ts`
 - Operational endpoints: `app/api/health/route.ts`, `app/api/metrics/route.ts`
@@ -79,7 +80,9 @@ If these are unset, the corresponding views currently return `null`.
 
 ## 5) Role Simulation Model
 
-No real auth exists. Role switching is performed in `Navbar` by selecting one of `MOCK_USERS` or `Guest`.
+Both real session auth and mock role switching exist in `Navbar`.
+- Real session auth: styled modal calling `/api/auth/login` and `/api/auth/register`.
+- Demo role switch: selecting one of `MOCK_USERS` (or `Guest`) still overrides context for prototype flows.
 
 Guest behavior:
 - can browse public views
@@ -173,6 +176,7 @@ Migration update:
 - Next.js runtime is now the default runnable app path.
 - Local Postgres-backed auth flow is validated end-to-end (`/api/auth/register`, `/api/auth/login`, `/api/auth/session`).
 - Legacy frontend `Log In`/`Start Free Trial` buttons are now backend-wired via auth modal.
+- Legacy `CourseDetailsView` enrollment button now calls `/api/enroll`; `StudentDashboard` now prefers `/api/enroll` IDs for "In Progress" with local fallback.
 
 ## 10) Known Gaps and Risks
 

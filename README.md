@@ -154,6 +154,7 @@ Auth API routes:
 Legacy frontend wiring update:
 - Navbar `Log In` / `Start Free Trial` now use a styled auth modal and call the backend auth APIs.
 - Session is restored on app load via `GET /api/auth/session`.
+- `CourseDetailsView` `Enroll Today` now calls `POST /api/enroll` for student accounts, then continues into lesson view.
 
 ## RBAC Middleware and Server Checks (Implemented)
 
@@ -214,6 +215,8 @@ Course read paths are now API-first:
 - `services/courseApiService.ts` fetches `/api/courses` and maps API payload to frontend `Course`.
 - `App.tsx` initializes `courses` from API and falls back to `MOCK_COURSES` when backend data is unavailable.
 - `LanguageLandingView` and `StudentDashboard` now consume context `courses` instead of hardcoded `MOCK_COURSES`.
+- `services/enrollmentApiService.ts` now bridges legacy frontend enrollment flows to `/api/enroll`.
+- `StudentDashboard` now derives "In Progress" from `GET /api/enroll` course IDs with fallback to existing local slice behavior when backend data is unavailable.
 
 ## Centralized API Error Handling and Validation (Implemented)
 
