@@ -339,6 +339,11 @@ Preflight command:
 - `npm run ops:deploy:preflight`
 - `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight` (local production-like validation)
 
+Launch checklist command:
+- `npm run ops:deploy:launch`
+- `STAGING_UAT_SIGNED_OFF=true CI_GREEN=true ENV_FILE=.env.production PRODUCTION_BASE_URL=https://app.example.com npm run ops:deploy:launch`
+- `DRY_RUN=1 STAGING_UAT_SIGNED_OFF=true CI_GREEN=true npm run ops:deploy:launch` (workflow dry-run)
+
 ## Directory Map
 
 ```text

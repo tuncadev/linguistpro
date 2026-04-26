@@ -142,6 +142,7 @@ Expected commands:
 - `npm run ops:uat:smoke` (set `STAGING_BASE_URL` for real staging target)
 - `npm run ops:uat:roles` (full student/tutor/admin API flow check)
 - `npm run ops:deploy:preflight`
+- `npm run ops:deploy:launch` (production launch gate; writes report to `ops/deploy/reports/`)
 
 ## 9) Planning Artifacts (Not Yet Implemented)
 
@@ -181,6 +182,7 @@ Migration update:
 - Full local role-flow UAT automation exists at `ops/uat/role-flow-check.sh` with report output under `ops/uat/reports/`.
 - Deploy preflight has been validated locally with env-policy mode using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
 - Backup and restore scripts now normalize Prisma-style `schema` URL params before invoking PostgreSQL CLI tools (`pg_dump`, `pg_restore`, `psql`).
+- Automated production launch checklist exists at `ops/deploy/launch-checklist.sh` and supports dry-run evidence generation.
 
 ## 10) Known Gaps and Risks
 

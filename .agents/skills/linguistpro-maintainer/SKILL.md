@@ -43,11 +43,12 @@ Read in this order:
 24. `ops/uat/role-flow-check.sh`
 25. `docs/STAGING_UAT_SIGNOFF.md`
 26. `ops/deploy/preflight.sh`
-27. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
-28. `.github/workflows/ci.yml`
-29. `App.tsx`
-30. `types.ts`
-31. `constants.ts`
+27. `ops/deploy/launch-checklist.sh`
+28. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
+29. `.github/workflows/ci.yml`
+30. `App.tsx`
+31. `types.ts`
+32. `constants.ts`
 
 ## Step 2: Confirm baseline
 

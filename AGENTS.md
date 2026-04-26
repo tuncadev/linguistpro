@@ -38,11 +38,12 @@ Before making edits, read in this order:
 23. `ops/uat/role-flow-check.sh`
 24. `docs/STAGING_UAT_SIGNOFF.md`
 25. `ops/deploy/preflight.sh`
-26. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
-27. `.github/workflows/ci.yml`
-28. `App.tsx`
-29. `types.ts`
-30. `constants.ts`
+26. `ops/deploy/launch-checklist.sh`
+27. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
+28. `.github/workflows/ci.yml`
+29. `App.tsx`
+30. `types.ts`
+31. `constants.ts`
 
 ## Canonical Commands
 
@@ -62,6 +63,7 @@ Before making edits, read in this order:
 - UAT role-flow check: `npm run ops:uat:roles`
 - Deploy preflight: `npm run ops:deploy:preflight`
 - Deploy preflight (local prod-like env): `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`
+- Launch checklist gate: `npm run ops:deploy:launch`
 
 ## Architecture Reality Check
 

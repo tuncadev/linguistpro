@@ -21,6 +21,7 @@
     "ops:uat:smoke": "bash ops/uat/smoke-check.sh",
     "ops:uat:roles": "bash ops/uat/role-flow-check.sh",
     "ops:deploy:preflight": "bash ops/deploy/preflight.sh",
+    "ops:deploy:launch": "bash ops/deploy/launch-checklist.sh",
     "prisma:format": "prisma format",
     "prisma:validate": "prisma validate",
     "prisma:generate": "prisma generate",

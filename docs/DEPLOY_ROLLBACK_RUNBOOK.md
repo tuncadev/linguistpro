@@ -49,14 +49,27 @@ NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight
 
 1. Confirm staging sign-off with no blocker issues.
 2. Ensure production backup exists in the last 24h.
-3. Deploy app artifact to production.
-4. Apply migrations with `npx prisma migrate deploy`.
-5. Run production smoke checks:
+3. Run launch checklist gate:
+   - `STAGING_UAT_SIGNED_OFF=true CI_GREEN=true ENV_FILE=.env.production PRODUCTION_BASE_URL=<prod-url> npm run ops:deploy:launch`
+4. Confirm launch checklist report under `ops/deploy/reports/` is passing.
+5. Deploy app artifact to production.
+6. Apply migrations with `npx prisma migrate deploy`.
+7. Run production smoke checks:
    - homepage and key routes
    - auth flow
    - tutor draft generation endpoint
    - admin moderation queue load
-6. Monitor logs/errors for at least 30 minutes after deploy.
+8. Monitor logs/errors for at least 30 minutes after deploy.
+
+## Launch Checklist Dry-Run
+
+Use this when validating process wiring without running external checks:
+
+```bash
+DRY_RUN=1 STAGING_UAT_SIGNED_OFF=true CI_GREEN=true npm run ops:deploy:launch
+```
+
+This writes a report to `ops/deploy/reports/` and exits non-zero on checklist failures.
 
 ## Rollback Procedure
 
