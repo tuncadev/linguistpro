@@ -180,6 +180,7 @@ Migration update:
 - Legacy `CourseDetailsView` enrollment button now calls `/api/enroll`; `StudentDashboard` now prefers `/api/enroll` IDs for "In Progress" with local fallback.
 - Full local role-flow UAT automation exists at `ops/uat/role-flow-check.sh` with report output under `ops/uat/reports/`.
 - Deploy preflight has been validated locally with env-policy mode using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
+- Backup and restore scripts now normalize Prisma-style `schema` URL params before invoking PostgreSQL CLI tools (`pg_dump`, `pg_restore`, `psql`).
 
 ## 10) Known Gaps and Risks
 

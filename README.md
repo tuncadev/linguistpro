@@ -314,6 +314,7 @@ Operational scripts:
 - `npm run db:restore:test`
 
 Both scripts support `DRY_RUN=1` for command-path validation without touching databases.
+Backup/restore scripts also normalize Prisma-style DB URLs by stripping `schema` query params for PostgreSQL CLI compatibility.
 
 ## Secrets and Env Validation
 

@@ -35,14 +35,46 @@ if [[ -z "${RESTORE_TEST_DATABASE_URL:-}" ]]; then
   exit 1
 fi
 
+sanitize_pg_url() {
+  local raw_url="$1"
+  local base="${raw_url%%\?*}"
+
+  if [[ "$raw_url" != *\?* ]]; then
+    printf "%s" "$raw_url"
+    return
+  fi
+
+  local query="${raw_url#*\?}"
+  IFS='&' read -r -a pairs <<< "$query"
+  local filtered=()
+  local pair
+  for pair in "${pairs[@]}"; do
+    if [[ "$pair" == schema=* ]]; then
+      continue
+    fi
+    filtered+=("$pair")
+  done
+
+  if [[ "${#filtered[@]}" -eq 0 ]]; then
+    printf "%s" "$base"
+    return
+  fi
+
+  local filtered_query
+  filtered_query="$(IFS='&'; echo "${filtered[*]}")"
+  printf "%s?%s" "$base" "$filtered_query"
+}
+
+PG_RESTORE_DATABASE_URL="$(sanitize_pg_url "$RESTORE_TEST_DATABASE_URL")"
+
 if [[ "$DRY_RUN" == "1" ]]; then
   echo "[dry-run] reset schema in restore test database"
-  echo "[dry-run] pg_restore --clean --if-exists --no-owner --no-privileges --dbname \"\$RESTORE_TEST_DATABASE_URL\" \"$BACKUP_FILE\""
+  echo "[dry-run] pg_restore --clean --if-exists --no-owner --no-privileges --dbname \"\$PG_RESTORE_DATABASE_URL\" \"$BACKUP_FILE\""
   echo "[dry-run] run table existence checks"
   exit 0
 fi
 
-psql "$RESTORE_TEST_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
+psql "$PG_RESTORE_DATABASE_URL" -v ON_ERROR_STOP=1 <<'SQL'
 DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO CURRENT_USER;
@@ -53,10 +85,10 @@ pg_restore \
   --if-exists \
   --no-owner \
   --no-privileges \
-  --dbname="$RESTORE_TEST_DATABASE_URL" \
+  --dbname="$PG_RESTORE_DATABASE_URL" \
   "$BACKUP_FILE"
 
-TABLE_CHECKS="$(psql "$RESTORE_TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -At <<'SQL'
+TABLE_CHECKS="$(psql "$PG_RESTORE_DATABASE_URL" -v ON_ERROR_STOP=1 -At <<'SQL'
 SELECT CASE WHEN to_regclass('"User"') IS NULL THEN 'missing:User' ELSE 'ok:User' END;
 SELECT CASE WHEN to_regclass('"Course"') IS NULL THEN 'missing:Course' ELSE 'ok:Course' END;
 SELECT CASE WHEN to_regclass('"Enrollment"') IS NULL THEN 'missing:Enrollment' ELSE 'ok:Enrollment' END;

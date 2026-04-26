@@ -19,16 +19,48 @@ if [[ -z "${DATABASE_URL:-}" ]]; then
   exit 1
 fi
 
+sanitize_pg_url() {
+  local raw_url="$1"
+  local base="${raw_url%%\?*}"
+
+  if [[ "$raw_url" != *\?* ]]; then
+    printf "%s" "$raw_url"
+    return
+  fi
+
+  local query="${raw_url#*\?}"
+  IFS='&' read -r -a pairs <<< "$query"
+  local filtered=()
+  local pair
+  for pair in "${pairs[@]}"; do
+    if [[ "$pair" == schema=* ]]; then
+      continue
+    fi
+    filtered+=("$pair")
+  done
+
+  if [[ "${#filtered[@]}" -eq 0 ]]; then
+    printf "%s" "$base"
+    return
+  fi
+
+  local filtered_query
+  filtered_query="$(IFS='&'; echo "${filtered[*]}")"
+  printf "%s?%s" "$base" "$filtered_query"
+}
+
+PG_DUMP_DATABASE_URL="$(sanitize_pg_url "$DATABASE_URL")"
+
 mkdir -p "$BACKUP_DIR"
 
 if [[ "$DRY_RUN" == "1" ]]; then
-  echo "[dry-run] pg_dump \"\$DATABASE_URL\" --format=custom --no-owner --no-privileges --file \"$BACKUP_FILE\""
+  echo "[dry-run] pg_dump \"\$PG_DUMP_DATABASE_URL\" --format=custom --no-owner --no-privileges --file \"$BACKUP_FILE\""
   echo "[dry-run] compute checksum for $BACKUP_FILE"
   echo "[dry-run] prune backup artifacts older than $RETENTION_DAYS days in $BACKUP_DIR"
   exit 0
 fi
 
-pg_dump "$DATABASE_URL" \
+pg_dump "$PG_DUMP_DATABASE_URL" \
   --format=custom \
   --no-owner \
   --no-privileges \

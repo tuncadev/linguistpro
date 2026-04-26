@@ -50,5 +50,6 @@ DRY_RUN=1 npm run db:restore:test -- ./ops/backups/linguistpro_YYYYMMDDTHHMMSSZ.
 
 - Do not use production database URL as `RESTORE_TEST_DATABASE_URL`.
 - Restore script resets `public` schema in the restore-test database.
+- Backup/restore scripts normalize Prisma-style URLs by removing `schema` query params before invoking PostgreSQL CLI tools.
 - Verify backup artifacts are excluded from git (`ops/backups/*`).
 - Persist restore-test evidence in deployment notes (date, backup filename, result).

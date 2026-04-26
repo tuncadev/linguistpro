@@ -93,3 +93,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Added full role-flow UAT automation (`ops/uat/role-flow-check.sh` via `npm run ops:uat:roles`) and completed local dry-run pass report `ops/uat/reports/uat-role-flow-20260426T161644Z.md`.
 - 2026-04-26: Re-ran local UAT suite with clean pass reports: `ops/uat/reports/uat-smoke-20260426T161816Z.md` and `ops/uat/reports/uat-role-flow-20260426T161816Z.md`.
 - 2026-04-26: Deploy preflight passed end-to-end with production env policy validation using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
+- 2026-04-26: Fixed backup/restore scripts to support Prisma-style DB URLs with `schema` query params; executed successful backup + restore verification using `ops/backups/linguistpro_20260426T164246Z.dump`.
