@@ -18,10 +18,12 @@ Run against staging URL:
 ```bash
 STAGING_BASE_URL=https://staging.example.com npm run ops:uat:smoke
 STAGING_BASE_URL=https://staging.example.com npm run ops:uat:roles
+STAGING_BASE_URL=https://staging.example.com QA_OWNER="QA Lead" PRODUCT_OWNER="PO Name" NOTES="Release candidate RC1" npm run ops:uat:signoff
 ```
 
 Artifacts:
 - UAT report outputs are written to `ops/uat/reports/`.
+- Sign-off summary output is written to `ops/uat/reports/staging-signoff-*.md` (includes a ready-to-paste sign-off log row).
 
 ## Manual UAT Checklist
 
@@ -37,6 +39,7 @@ Artifacts:
 
 | Date (UTC) | Environment URL | Smoke Report | QA Owner | Product Owner | Result | Notes |
 |---|---|---|---|---|---|---|
+| 2026-04-26 | `http://127.0.0.1:3001` (local orchestrator run) | `ops/uat/reports/staging-signoff-20260426T165842Z.md` | Codex | _pending_ | PASS (local) | `ops:uat:signoff` validated; formal staging sign-off still pending. |
 | 2026-04-26 | `http://127.0.0.1:3001` (local dry-run) | `ops/uat/reports/uat-role-flow-20260426T161816Z.md` | Codex | _pending_ | PASS (local) | Full student/tutor/admin API role-flow check passed; formal staging sign-off still pending. |
 | 2026-04-26 | `http://127.0.0.1:3001` (local dry-run) | `ops/uat/reports/uat-smoke-20260426T161816Z.md` | Codex | _pending_ | PASS (local) | Local Next runtime smoke succeeded; formal staging sign-off still pending. |
 | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |

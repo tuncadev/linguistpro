@@ -95,3 +95,5 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Deploy preflight passed end-to-end with production env policy validation using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
 - 2026-04-26: Fixed backup/restore scripts to support Prisma-style DB URLs with `schema` query params; executed successful backup + restore verification using `ops/backups/linguistpro_20260426T164246Z.dump`.
 - 2026-04-26: Added automated production launch checklist gate (`npm run ops:deploy:launch`) and generated dry-run launch report `ops/deploy/reports/launch-checklist-20260426T164834Z.md`.
+- 2026-04-26: Added staging sign-off orchestrator (`npm run ops:uat:signoff`) to run smoke+roles and generate a ready-to-paste sign-off log row in `ops/uat/reports/staging-signoff-*.md`.
+- 2026-04-26: Validated staging sign-off orchestrator locally with passing summary report `ops/uat/reports/staging-signoff-20260426T165842Z.md`.

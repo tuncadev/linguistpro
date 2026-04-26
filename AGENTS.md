@@ -36,14 +36,15 @@ Before making edits, read in this order:
 21. `docs/SECRETS_POLICY_RUNBOOK.md`
 22. `ops/uat/smoke-check.sh`
 23. `ops/uat/role-flow-check.sh`
-24. `docs/STAGING_UAT_SIGNOFF.md`
-25. `ops/deploy/preflight.sh`
-26. `ops/deploy/launch-checklist.sh`
-27. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
-28. `.github/workflows/ci.yml`
-29. `App.tsx`
-30. `types.ts`
-31. `constants.ts`
+24. `ops/uat/staging-signoff.sh`
+25. `docs/STAGING_UAT_SIGNOFF.md`
+26. `ops/deploy/preflight.sh`
+27. `ops/deploy/launch-checklist.sh`
+28. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
+29. `.github/workflows/ci.yml`
+30. `App.tsx`
+31. `types.ts`
+32. `constants.ts`
 
 ## Canonical Commands
 
@@ -61,6 +62,7 @@ Before making edits, read in this order:
 - Production env policy validation: `npm run ops:validate-env`
 - UAT smoke check: `npm run ops:uat:smoke`
 - UAT role-flow check: `npm run ops:uat:roles`
+- UAT staging sign-off orchestrator: `npm run ops:uat:signoff`
 - Deploy preflight: `npm run ops:deploy:preflight`
 - Deploy preflight (local prod-like env): `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`
 - Launch checklist gate: `npm run ops:deploy:launch`

@@ -41,9 +41,9 @@ NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight
 
 1. Deploy release candidate to staging environment.
 2. Apply migrations: `npx prisma migrate deploy`.
-3. Run smoke checks:
-   - `STAGING_BASE_URL=<staging-url> npm run ops:uat:smoke`
-4. Execute manual UAT checklist and capture sign-off.
+3. Run automated staging sign-off checks:
+   - `STAGING_BASE_URL=<staging-url> QA_OWNER="<qa>" PRODUCT_OWNER="<po>" NOTES="RC sign-off" npm run ops:uat:signoff`
+4. Execute manual UAT checklist and capture final sign-off row in `docs/STAGING_UAT_SIGNOFF.md`.
 
 ## Production Deploy Procedure
 

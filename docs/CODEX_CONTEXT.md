@@ -141,6 +141,7 @@ Expected commands:
 - `npm run ops:validate-env`
 - `npm run ops:uat:smoke` (set `STAGING_BASE_URL` for real staging target)
 - `npm run ops:uat:roles` (full student/tutor/admin API flow check)
+- `npm run ops:uat:signoff` (runs smoke+roles and writes sign-off summary/row snippet)
 - `npm run ops:deploy:preflight`
 - `npm run ops:deploy:launch` (production launch gate; writes report to `ops/deploy/reports/`)
 
@@ -180,6 +181,7 @@ Migration update:
 - Legacy frontend `Log In`/`Start Free Trial` buttons are now backend-wired via auth modal.
 - Legacy `CourseDetailsView` enrollment button now calls `/api/enroll`; `StudentDashboard` now prefers `/api/enroll` IDs for "In Progress" with local fallback.
 - Full local role-flow UAT automation exists at `ops/uat/role-flow-check.sh` with report output under `ops/uat/reports/`.
+- Staging UAT orchestration exists at `ops/uat/staging-signoff.sh` (runs smoke + role-flow and emits sign-off row snippet/report).
 - Deploy preflight has been validated locally with env-policy mode using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
 - Backup and restore scripts now normalize Prisma-style `schema` URL params before invoking PostgreSQL CLI tools (`pg_dump`, `pg_restore`, `psql`).
 - Automated production launch checklist exists at `ops/deploy/launch-checklist.sh` and supports dry-run evidence generation.
