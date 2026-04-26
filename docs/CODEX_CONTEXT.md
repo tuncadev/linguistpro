@@ -140,6 +140,7 @@ Expected commands:
 - `npm run db:restore:test`
 - `npm run ops:validate-env`
 - `npm run ops:uat:smoke` (set `STAGING_BASE_URL` for real staging target)
+- `npm run ops:uat:roles` (full student/tutor/admin API flow check)
 - `npm run ops:deploy:preflight`
 
 ## 9) Planning Artifacts (Not Yet Implemented)
@@ -177,6 +178,7 @@ Migration update:
 - Local Postgres-backed auth flow is validated end-to-end (`/api/auth/register`, `/api/auth/login`, `/api/auth/session`).
 - Legacy frontend `Log In`/`Start Free Trial` buttons are now backend-wired via auth modal.
 - Legacy `CourseDetailsView` enrollment button now calls `/api/enroll`; `StudentDashboard` now prefers `/api/enroll` IDs for "In Progress" with local fallback.
+- Full local role-flow UAT automation exists at `ops/uat/role-flow-check.sh` with report output under `ops/uat/reports/`.
 
 ## 10) Known Gaps and Risks
 

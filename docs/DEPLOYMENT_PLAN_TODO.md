@@ -90,3 +90,5 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Legacy styled frontend navbar auth buttons wired to backend APIs through modal login/register flow.
 - 2026-04-26: Legacy frontend enrollment flow wired to backend `/api/enroll` for course enrollment and student in-progress dashboard loading with fallback behavior.
 - 2026-04-26: UAT smoke check passes cleanly on local Next service (`http://127.0.0.1:3001`) with report `ops/uat/reports/uat-smoke-20260426T160743Z.md`; formal staging sign-off remains pending.
+- 2026-04-26: Added full role-flow UAT automation (`ops/uat/role-flow-check.sh` via `npm run ops:uat:roles`) and completed local dry-run pass report `ops/uat/reports/uat-role-flow-20260426T161644Z.md`.
+- 2026-04-26: Re-ran local UAT suite with clean pass reports: `ops/uat/reports/uat-smoke-20260426T161816Z.md` and `ops/uat/reports/uat-role-flow-20260426T161816Z.md`.

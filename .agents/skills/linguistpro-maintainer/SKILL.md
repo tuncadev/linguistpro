@@ -40,13 +40,14 @@ Read in this order:
 21. `ops/secrets/validate-env.sh`
 22. `docs/SECRETS_POLICY_RUNBOOK.md`
 23. `ops/uat/smoke-check.sh`
-24. `docs/STAGING_UAT_SIGNOFF.md`
-25. `ops/deploy/preflight.sh`
-26. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
-27. `.github/workflows/ci.yml`
-28. `App.tsx`
-29. `types.ts`
-30. `constants.ts`
+24. `ops/uat/role-flow-check.sh`
+25. `docs/STAGING_UAT_SIGNOFF.md`
+26. `ops/deploy/preflight.sh`
+27. `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
+28. `.github/workflows/ci.yml`
+29. `App.tsx`
+30. `types.ts`
+31. `constants.ts`
 
 ## Step 2: Confirm baseline
 

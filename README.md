@@ -328,6 +328,7 @@ Runbook/template: `docs/STAGING_UAT_SIGNOFF.md`
 
 Smoke command:
 - `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:smoke`
+- `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:roles`
 
 ## Deploy and Rollback
 
