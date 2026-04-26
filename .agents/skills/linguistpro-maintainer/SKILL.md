@@ -21,9 +21,10 @@ Read in this order:
 2. `README.md`
 3. `docs/CODEX_CONTEXT.md`
 4. `docs/DEPLOYMENT_PLAN_TODO.md`
-5. `App.tsx`
-6. `types.ts`
-7. `constants.ts`
+5. `docs/INFRA_DECISION.md`
+6. `App.tsx`
+7. `types.ts`
+8. `constants.ts`
 
 ## Step 2: Confirm baseline
 

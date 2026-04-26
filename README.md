@@ -206,4 +206,5 @@ For future agent sessions, see:
 - `AGENTS.md` (project-specific Codex operating instructions)
 - `docs/CODEX_CONTEXT.md` (deep technical context)
 - `docs/DEPLOYMENT_PLAN_TODO.md` (execution tracker and next action)
+- `docs/INFRA_DECISION.md` (final infrastructure choices for deployment)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

@@ -16,9 +16,10 @@ Before making edits, read in this order:
 1. `README.md`
 2. `docs/CODEX_CONTEXT.md`
 3. `docs/DEPLOYMENT_PLAN_TODO.md`
-4. `App.tsx`
-5. `types.ts`
-6. `constants.ts`
+4. `docs/INFRA_DECISION.md`
+5. `App.tsx`
+6. `types.ts`
+7. `constants.ts`
 
 ## Canonical Commands
 

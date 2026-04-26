@@ -6,6 +6,7 @@
 - Read `README.md`
 - Read `docs/CODEX_CONTEXT.md`
 - Read `docs/DEPLOYMENT_PLAN_TODO.md`
+- Read `docs/INFRA_DECISION.md`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification
