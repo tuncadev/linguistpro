@@ -32,10 +32,12 @@ Before making edits, read in this order:
 17. `ops/backup/postgres-backup.sh`
 18. `ops/backup/postgres-restore-test.sh`
 19. `docs/POSTGRES_BACKUP_RUNBOOK.md`
-20. `.github/workflows/ci.yml`
-21. `App.tsx`
-22. `types.ts`
-23. `constants.ts`
+20. `ops/secrets/validate-env.sh`
+21. `docs/SECRETS_POLICY_RUNBOOK.md`
+22. `.github/workflows/ci.yml`
+23. `App.tsx`
+24. `types.ts`
+25. `constants.ts`
 
 ## Canonical Commands
 
@@ -49,6 +51,7 @@ Before making edits, read in this order:
 - E2E critical flows: `npm run test:e2e`
 - Postgres backup: `npm run db:backup`
 - Postgres restore verification: `npm run db:restore:test`
+- Production env policy validation: `npm run ops:validate-env`
 
 ## Architecture Reality Check
 

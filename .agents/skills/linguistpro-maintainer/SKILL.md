@@ -37,10 +37,12 @@ Read in this order:
 18. `ops/backup/postgres-backup.sh`
 19. `ops/backup/postgres-restore-test.sh`
 20. `docs/POSTGRES_BACKUP_RUNBOOK.md`
-21. `.github/workflows/ci.yml`
-22. `App.tsx`
-23. `types.ts`
-24. `constants.ts`
+21. `ops/secrets/validate-env.sh`
+22. `docs/SECRETS_POLICY_RUNBOOK.md`
+23. `.github/workflows/ci.yml`
+24. `App.tsx`
+25. `types.ts`
+26. `constants.ts`
 
 ## Step 2: Confirm baseline
 

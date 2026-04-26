@@ -113,6 +113,9 @@ Backup/restore env:
 - `DATABASE_URL`: source Postgres database.
 - `RESTORE_TEST_DATABASE_URL`: isolated database used only for restore verification.
 
+Production env policy:
+- See `docs/SECRETS_POLICY_RUNBOOK.md` for required secrets and rotation workflow.
+
 ## Prisma Pipeline (Implemented)
 
 Prisma assets now exist for the production migration path:
@@ -297,6 +300,13 @@ Operational scripts:
 - `npm run db:restore:test`
 
 Both scripts support `DRY_RUN=1` for command-path validation without touching databases.
+
+## Secrets and Env Validation
+
+Runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
+
+Validation command:
+- `npm run ops:validate-env`
 
 ## Directory Map
 

@@ -22,6 +22,8 @@
 - Read `ops/backup/postgres-backup.sh`
 - Read `ops/backup/postgres-restore-test.sh`
 - Read `docs/POSTGRES_BACKUP_RUNBOOK.md`
+- Read `ops/secrets/validate-env.sh`
+- Read `docs/SECRETS_POLICY_RUNBOOK.md`
 - Read `.github/workflows/ci.yml`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 

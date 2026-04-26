@@ -36,6 +36,8 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Operational endpoints: `app/api/health/route.ts`, `app/api/metrics/route.ts`
 - Backup scripts: `ops/backup/postgres-backup.sh`, `ops/backup/postgres-restore-test.sh`
 - Backup runbook: `docs/POSTGRES_BACKUP_RUNBOOK.md`
+- Secrets validation script: `ops/secrets/validate-env.sh`
+- Secrets runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
 - CI workflow: `.github/workflows/ci.yml`
 
@@ -129,6 +131,7 @@ Expected commands:
 - `npm run test:e2e`
 - `npm run db:backup`
 - `npm run db:restore:test`
+- `npm run ops:validate-env`
 
 ## 9) Planning Artifacts (Not Yet Implemented)
 
@@ -158,6 +161,7 @@ Migration update:
 - GitHub Actions CI runs Prisma validation, test layers, and Vite production build.
 - Observability baseline is wired through `withApiHandler` with request IDs, structured logs, and in-memory metrics snapshots.
 - Postgres backup policy + restore validation workflow is documented and scripted under `ops/backup/`.
+- Production env/secrets policy and rotation runbook is documented with validation command (`ops:validate-env`).
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks
@@ -166,6 +170,7 @@ Migration update:
 - Next.js migration APIs require running in Next.js runtime to become the primary path.
 - Metrics store is in-memory per process (no long-term retention/export yet).
 - Error webhook reporting is optional and requires `OBSERVABILITY_ERROR_WEBHOOK_URL`.
+- Secret validation is local-script based; no automated secret-manager sync yet.
 - No route-level URL deep linking
 - Several UI actions are placeholders (logs, approvals, notes, discussion posting)
 - Build emits warning because `index.html` references `/index.css` that is not present in repo
