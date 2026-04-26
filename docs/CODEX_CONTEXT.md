@@ -29,6 +29,8 @@ Legacy Vite prototype files are still present and used as migration references.
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
+- Feature flag APIs: `app/api/feature-flags/route.ts`, `app/api/admin/feature-flags/route.ts`, `app/api/admin/feature-flags/[key]/route.ts`
+- Feature flag server helper: `lib/feature-flags/is-enabled.ts`
 - Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
 - Frontend enrollment adapter: `services/enrollmentApiService.ts` (`GET/POST /api/enroll` bridge for legacy views)
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
@@ -186,6 +188,7 @@ Migration update:
 - Backup and restore scripts now normalize Prisma-style `schema` URL params before invoking PostgreSQL CLI tools (`pg_dump`, `pg_restore`, `psql`).
 - Automated production launch checklist exists at `ops/deploy/launch-checklist.sh` and supports dry-run evidence generation.
 - Latest launch checklist was executed with explicit staging waiver override pending real staging QA completion.
+- Feature flag foundation is now implemented with Prisma model, seeded defaults, admin CRUD APIs, and public read endpoint.
 
 ## 10) Known Gaps and Risks
 

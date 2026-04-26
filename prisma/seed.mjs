@@ -36,6 +36,24 @@ const DEFAULT_LEVELS = [
   { name: "Advanced", slug: "advanced", description: "Professional fluency track." },
 ];
 
+const DEFAULT_FEATURE_FLAGS = [
+  {
+    key: "billing_v1",
+    description: "Enable billing/subscription checkout flows",
+    enabled: false,
+  },
+  {
+    key: "email_workflows_v1",
+    description: "Enable transactional email workflow integrations",
+    enabled: false,
+  },
+  {
+    key: "recommendations_v1",
+    description: "Enable personalized course recommendation engine",
+    enabled: false,
+  },
+];
+
 async function upsertUsers() {
   const users = {};
 
@@ -92,6 +110,18 @@ async function upsertLevels() {
   }
 
   return levels;
+}
+
+async function upsertFeatureFlags() {
+  for (const flag of DEFAULT_FEATURE_FLAGS) {
+    await prisma.featureFlag.upsert({
+      where: { key: flag.key },
+      update: {
+        description: flag.description,
+      },
+      create: flag,
+    });
+  }
 }
 
 async function ensureSampleCourse({ tutorId, languageId, levelId }) {
@@ -174,6 +204,7 @@ async function main() {
   const users = await upsertUsers();
   const languages = await upsertLanguages();
   const levels = await upsertLevels();
+  await upsertFeatureFlags();
 
   const sampleCourseId = await ensureSampleCourse({
     tutorId: users.TUTOR.id,

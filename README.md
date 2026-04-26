@@ -209,6 +209,24 @@ Course moderation endpoints:
 - `GET /api/admin/courses/submissions` (`ADMIN`): list pending review queue
 - `POST /api/admin/courses/:id/moderate` (`ADMIN`): `APPROVE` (publish) or `REJECT` (return to draft)
 
+## Feature Flags Foundation (Implemented)
+
+Feature flag data model and APIs are now available:
+- DB model: `FeatureFlag` in `prisma/schema.prisma`
+- server helper: `lib/feature-flags/is-enabled.ts`
+- public read endpoint: `GET /api/feature-flags`
+- admin endpoints (`ADMIN`):
+  - `GET /api/admin/feature-flags`
+  - `POST /api/admin/feature-flags`
+  - `GET /api/admin/feature-flags/:key`
+  - `PATCH /api/admin/feature-flags/:key`
+  - `DELETE /api/admin/feature-flags/:key`
+
+Seeded default flags:
+- `billing_v1`
+- `email_workflows_v1`
+- `recommendations_v1`
+
 ## Replacing Mock Paths with DB-backed Services
 
 Course read paths are now API-first:
