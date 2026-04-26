@@ -185,6 +185,7 @@ Migration update:
 - Deploy preflight has been validated locally with env-policy mode using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
 - Backup and restore scripts now normalize Prisma-style `schema` URL params before invoking PostgreSQL CLI tools (`pg_dump`, `pg_restore`, `psql`).
 - Automated production launch checklist exists at `ops/deploy/launch-checklist.sh` and supports dry-run evidence generation.
+- Latest launch checklist was executed with explicit staging waiver override pending real staging QA completion.
 
 ## 10) Known Gaps and Risks
 

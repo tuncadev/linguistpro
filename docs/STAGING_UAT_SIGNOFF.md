@@ -39,6 +39,7 @@ Artifacts:
 
 | Date (UTC) | Environment URL | Smoke Report | QA Owner | Product Owner | Result | Notes |
 |---|---|---|---|---|---|---|
+| 2026-04-26 | _deferred_ | _n/a_ | Codex | _pending_ | WAIVED (temporary) | Staging QA skipped by owner decision for now; production flow proceeded with explicit waiver override. |
 | 2026-04-26 | `http://127.0.0.1:3001` (local orchestrator run) | `ops/uat/reports/staging-signoff-20260426T165842Z.md` | Codex | _pending_ | PASS (local) | `ops:uat:signoff` validated; formal staging sign-off still pending. |
 | 2026-04-26 | `http://127.0.0.1:3001` (local dry-run) | `ops/uat/reports/uat-role-flow-20260426T161816Z.md` | Codex | _pending_ | PASS (local) | Full student/tutor/admin API role-flow check passed; formal staging sign-off still pending. |
 | 2026-04-26 | `http://127.0.0.1:3001` (local dry-run) | `ops/uat/reports/uat-smoke-20260426T161816Z.md` | Codex | _pending_ | PASS (local) | Local Next runtime smoke succeeded; formal staging sign-off still pending. |
