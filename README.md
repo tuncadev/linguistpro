@@ -128,9 +128,15 @@ Available scripts:
 - `npm run prisma:format`
 - `npm run prisma:validate`
 - `npm run prisma:generate`
+- `npm run prisma:seed`
 - `npm run prisma:migrate:dev`
 - `npm run prisma:migrate:deploy`
 - `npm run prisma:studio`
+
+Local seed defaults (for auth testing):
+- `admin@linguistpro.local / Admin123!`
+- `tutor@linguistpro.local / Tutor123!`
+- `student@linguistpro.local / Student123!`
 
 ## Auth and Session Scaffold (Implemented)
 

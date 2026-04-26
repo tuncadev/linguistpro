@@ -53,6 +53,7 @@ Before making edits, read in this order:
 - Unit tests: `npm run test:unit`
 - Integration tests: `npm run test:integration`
 - E2E critical flows: `npm run test:e2e`
+- Prisma seed: `npm run prisma:seed`
 - Postgres backup: `npm run db:backup`
 - Postgres restore verification: `npm run db:restore:test`
 - Production env policy validation: `npm run ops:validate-env`

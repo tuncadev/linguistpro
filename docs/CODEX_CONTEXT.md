@@ -21,6 +21,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Auth UI: `app/(auth)/login/page.tsx`, `app/(auth)/register/page.tsx`
 - Legacy Vite shell retained: `index.tsx`, `App.tsx`, `views/`, `components/`
 - Prisma pipeline: `prisma/schema.prisma`, `prisma/migrations/`, `lib/prisma.ts`
+- Prisma seed utility: `prisma/seed.mjs`
 - Auth scaffold: `app/api/auth/*`, `lib/auth/password.ts`, `lib/auth/session.ts`
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
 - Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
@@ -130,6 +131,7 @@ Expected commands:
 - `npm run test:unit`
 - `npm run test:integration`
 - `npm run test:e2e`
+- `npm run prisma:seed`
 - `npm run db:backup`
 - `npm run db:restore:test`
 - `npm run ops:validate-env`
@@ -168,6 +170,7 @@ Migration update:
 - Staging UAT sign-off workflow is documented with smoke-check automation.
 - Deploy/rollback runbook is documented with preflight automation.
 - Next.js runtime is now the default runnable app path.
+- Local Postgres-backed auth flow is validated end-to-end (`/api/auth/register`, `/api/auth/login`, `/api/auth/session`).
 
 ## 10) Known Gaps and Risks
 
