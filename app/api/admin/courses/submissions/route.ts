@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import { parseQuery } from "@/lib/http/validation";
+import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 const querySchema = z.object({
@@ -9,23 +11,13 @@ const querySchema = z.object({
   skip: z.coerce.number().int().min(0).optional(),
 });
 
-export async function GET(req: NextRequest) {
+export const GET = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["ADMIN"]);
   if (!auth.ok) {
     return auth.response;
   }
 
-  const parsed = querySchema.safeParse(
-    Object.fromEntries(req.nextUrl.searchParams.entries())
-  );
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid query parameters", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
-
-  const query = parsed.data;
+  const query = parseQuery(req, querySchema);
 
   const courses = await prisma.course.findMany({
     where: { status: "PENDING_REVIEW" },
@@ -43,5 +35,4 @@ export async function GET(req: NextRequest) {
       skip: query.skip ?? 0,
     },
   });
-}
-
+});

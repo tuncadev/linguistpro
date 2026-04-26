@@ -4,6 +4,9 @@ import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import { badRequest, forbidden, notFound } from "@/lib/http/api-error";
+import { parseJsonBody, parseQuery } from "@/lib/http/validation";
+import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 const listQuerySchema = z.object({
@@ -29,21 +32,11 @@ const createCourseSchema = z.object({
   syllabus: z.array(z.string().trim().min(1).max(180)).max(50).optional(),
 });
 
-export async function GET(req: NextRequest) {
-  const parsed = listQuerySchema.safeParse(
-    Object.fromEntries(req.nextUrl.searchParams.entries())
-  );
-
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid query parameters", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
-
+export const GET = withApiHandler(async (req: NextRequest) => {
+  const parsed = parseQuery(req, listQuerySchema);
   const session = await getSessionFromRequest(req);
   const where: Prisma.CourseWhereInput = {};
-  const query = parsed.data;
+  const query = parsed;
 
   if (query.q) {
     where.OR = [
@@ -60,7 +53,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Authentication required for mine=true" }, { status: 401 });
     }
     if (session.role !== "TUTOR" && session.role !== "ADMIN") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      forbidden();
     }
     if (session.role !== "ADMIN") {
       where.tutorId = session.id;
@@ -74,7 +67,7 @@ export async function GET(req: NextRequest) {
     }
   } else {
     if (query.status && query.status !== "PUBLISHED") {
-      return NextResponse.json({ error: "Forbidden status filter" }, { status: 403 });
+      forbidden("Forbidden status filter");
     }
     where.status = "PUBLISHED";
   }
@@ -95,30 +88,15 @@ export async function GET(req: NextRequest) {
       skip: query.skip ?? 0,
     },
   });
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
   if (!auth.ok) {
     return auth.response;
   }
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
-  const parsed = createCourseSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid course payload", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
-
-  const payload = parsed.data;
+  const payload = await parseJsonBody(req, createCourseSchema);
   const tutorId = auth.session.role === "ADMIN" ? payload.tutorId ?? auth.session.id : auth.session.id;
 
   const [language, level, tutor] = await Promise.all([
@@ -128,13 +106,13 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (!language) {
-    return NextResponse.json({ error: "Language not found" }, { status: 400 });
+    badRequest("Language not found");
   }
   if (!level) {
-    return NextResponse.json({ error: "Level not found" }, { status: 400 });
+    badRequest("Level not found");
   }
   if (!tutor) {
-    return NextResponse.json({ error: "Tutor not found" }, { status: 400 });
+    notFound("Tutor not found");
   }
 
   const created = await prisma.course.create({
@@ -160,5 +138,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ data: serializeCourse(created) }, { status: 201 });
-}
-
+});

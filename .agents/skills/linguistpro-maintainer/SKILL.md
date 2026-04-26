@@ -31,9 +31,10 @@ Read in this order:
 12. `app/api/enroll/route.ts`
 13. `app/api/admin/courses/[id]/moderate/route.ts`
 14. `services/courseApiService.ts`
-15. `App.tsx`
-16. `types.ts`
-17. `constants.ts`
+15. `lib/http/with-api-handler.ts`
+16. `App.tsx`
+17. `types.ts`
+18. `constants.ts`
 
 ## Step 2: Confirm baseline
 

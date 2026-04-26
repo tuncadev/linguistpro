@@ -196,6 +196,18 @@ Course read paths are now API-first:
 - `App.tsx` initializes `courses` from API and falls back to `MOCK_COURSES` when backend data is unavailable.
 - `LanguageLandingView` and `StudentDashboard` now consume context `courses` instead of hardcoded `MOCK_COURSES`.
 
+## Centralized API Error Handling and Validation (Implemented)
+
+Shared HTTP utilities:
+- `lib/http/api-error.ts` (typed API errors)
+- `lib/http/validation.ts` (`parseJsonBody`, `parseQuery`)
+- `lib/http/with-api-handler.ts` (standardized error normalization for route handlers)
+
+Applied to core production routes:
+- courses CRUD/draft routes
+- enrollments route
+- moderation routes
+
 ## Getting Started
 
 ### Prerequisites

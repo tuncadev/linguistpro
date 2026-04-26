@@ -26,9 +26,10 @@ Before making edits, read in this order:
 11. `app/api/enroll/route.ts`
 12. `app/api/admin/courses/[id]/moderate/route.ts`
 13. `services/courseApiService.ts`
-14. `App.tsx`
-15. `types.ts`
-16. `constants.ts`
+14. `lib/http/with-api-handler.ts`
+15. `App.tsx`
+16. `types.ts`
+17. `constants.ts`
 
 ## Canonical Commands
 

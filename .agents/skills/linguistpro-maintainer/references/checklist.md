@@ -16,6 +16,7 @@
 - Read `app/api/enroll/route.ts`
 - Read `app/api/admin/courses/[id]/moderate/route.ts`
 - Read `services/courseApiService.ts`
+- Read `lib/http/with-api-handler.ts`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification

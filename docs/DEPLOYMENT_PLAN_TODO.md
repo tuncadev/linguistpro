@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Add centralized error handling and API validation.
+1. Add test suite (unit + integration + E2E critical flows).
 
 ## Phase Plan (Target Timeline)
 
@@ -32,7 +32,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Build enrollments API with idempotency checks.
 - [x] Build admin moderation flow for course approval.
 - [x] Replace mock data paths with DB-backed services.
-- [ ] Add centralized error handling and API validation.
+- [x] Add centralized error handling and API validation.
 - [ ] Add test suite (unit + integration + E2E critical flows).
 - [ ] Add CI/CD with required checks before merge/deploy.
 - [ ] Add observability (logs, traces, metrics, error tracking).
@@ -77,3 +77,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Enrollment API implemented with DB-backed idempotency replay behavior.
 - 2026-04-26: Admin moderation flow added (submit for review + pending queue + approve/reject).
 - 2026-04-26: Core frontend course flows now load DB-backed course data via API service with mock fallback.
+- 2026-04-26: Centralized API error normalization and request validation helpers applied to core routes.

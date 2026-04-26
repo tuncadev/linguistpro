@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import { conflict, forbidden, notFound } from "@/lib/http/api-error";
+import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 type Params = {
   params: { id: string };
 };
 
-export async function POST(req: NextRequest, { params }: Params) {
+export const POST = withApiHandler(async (req: NextRequest, { params }: Params) => {
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
   if (!auth.ok) {
     return auth.response;
@@ -19,20 +21,17 @@ export async function POST(req: NextRequest, { params }: Params) {
   });
 
   if (!existing) {
-    return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    notFound("Course not found");
   }
 
   const isAdmin = auth.session.role === "ADMIN";
   const isOwner = existing.tutorId === auth.session.id;
   if (!isAdmin && !isOwner) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    forbidden();
   }
 
   if (existing.status !== "DRAFT") {
-    return NextResponse.json(
-      { error: "Only draft courses can be submitted for review" },
-      { status: 409 }
-    );
+    conflict("Only draft courses can be submitted for review");
   }
 
   const updated = await prisma.course.update({
@@ -45,5 +44,4 @@ export async function POST(req: NextRequest, { params }: Params) {
     data: serializeCourse(updated),
     submitted: true,
   });
-}
-
+});

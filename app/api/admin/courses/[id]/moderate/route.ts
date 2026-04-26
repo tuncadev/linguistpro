@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import { conflict, notFound } from "@/lib/http/api-error";
+import { parseJsonBody } from "@/lib/http/validation";
+import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 const moderateSchema = z.object({
@@ -13,43 +16,27 @@ type Params = {
   params: { id: string };
 };
 
-export async function POST(req: NextRequest, { params }: Params) {
+export const POST = withApiHandler(async (req: NextRequest, { params }: Params) => {
   const auth = await requireRoles(req, ["ADMIN"]);
   if (!auth.ok) {
     return auth.response;
   }
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
-  const parsed = moderateSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid moderation payload", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
+  const parsed = await parseJsonBody(req, moderateSchema);
 
   const existing = await prisma.course.findUnique({
     where: { id: params.id },
     select: { id: true, status: true },
   });
   if (!existing) {
-    return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    notFound("Course not found");
   }
 
   if (existing.status !== "PENDING_REVIEW") {
-    return NextResponse.json(
-      { error: "Only pending_review courses can be moderated" },
-      { status: 409 }
-    );
+    conflict("Only pending_review courses can be moderated");
   }
 
-  const approved = parsed.data.decision === "APPROVE";
+  const approved = parsed.decision === "APPROVE";
   const updated = await prisma.course.update({
     where: { id: params.id },
     data: {
@@ -62,11 +49,10 @@ export async function POST(req: NextRequest, { params }: Params) {
   return NextResponse.json({
     data: serializeCourse(updated),
     moderation: {
-      decision: parsed.data.decision,
-      reason: parsed.data.reason ?? null,
+      decision: parsed.decision,
+      reason: parsed.reason ?? null,
       moderatedBy: auth.session.id,
       moderatedAt: new Date().toISOString(),
     },
   });
-}
-
+});

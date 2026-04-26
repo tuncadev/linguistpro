@@ -2,6 +2,9 @@ import { Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
+import { conflict, forbidden, notFound } from "@/lib/http/api-error";
+import { parseJsonBody, parseQuery } from "@/lib/http/validation";
+import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 const listQuerySchema = z.object({
@@ -48,23 +51,13 @@ function serializeEnrollment(
   };
 }
 
-export async function GET(req: NextRequest) {
+export const GET = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["STUDENT", "TUTOR", "ADMIN"]);
   if (!auth.ok) {
     return auth.response;
   }
 
-  const parsed = listQuerySchema.safeParse(
-    Object.fromEntries(req.nextUrl.searchParams.entries())
-  );
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid query parameters", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
-
-  const query = parsed.data;
+  const query = parseQuery(req, listQuerySchema);
   const where: Prisma.EnrollmentWhereInput = {};
 
   if (query.courseId) {
@@ -111,30 +104,15 @@ export async function GET(req: NextRequest) {
       skip: query.skip ?? 0,
     },
   });
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["STUDENT", "ADMIN"]);
   if (!auth.ok) {
     return auth.response;
   }
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
-  const parsed = createEnrollmentSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid enrollment payload", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
-
-  const payload = parsed.data;
+  const payload = await parseJsonBody(req, createEnrollmentSchema);
   const studentId =
     auth.session.role === "ADMIN" ? payload.studentId ?? auth.session.id : auth.session.id;
   const idempotencyKey = req.headers.get("idempotency-key") ?? null;
@@ -151,19 +129,19 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (!student) {
-    return NextResponse.json({ error: "Student not found" }, { status: 400 });
+    notFound("Student not found");
   }
 
   if (student.role !== Role.STUDENT && auth.session.role !== "ADMIN") {
-    return NextResponse.json({ error: "Only STUDENT can enroll" }, { status: 403 });
+    forbidden("Only STUDENT can enroll");
   }
 
   if (!course) {
-    return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    notFound("Course not found");
   }
 
   if (auth.session.role !== "ADMIN" && course.status !== "PUBLISHED") {
-    return NextResponse.json({ error: "Only published courses can be enrolled" }, { status: 409 });
+    conflict("Only published courses can be enrolled");
   }
 
   try {
@@ -231,7 +209,6 @@ export async function POST(req: NextRequest) {
     }
 
     console.error("enroll error", error);
-    return NextResponse.json({ error: "Enrollment failed" }, { status: 500 });
+    throw error;
   }
-}
-
+});

@@ -3,6 +3,9 @@ import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { generateCourseDraft } from "@/lib/ai/course-draft";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import { badRequest, notFound } from "@/lib/http/api-error";
+import { parseJsonBody } from "@/lib/http/validation";
+import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 
 const createAiDraftSchema = z.object({
@@ -13,28 +16,13 @@ const createAiDraftSchema = z.object({
   tutorId: z.string().trim().min(1).optional(),
 });
 
-export async function POST(req: NextRequest) {
+export const POST = withApiHandler(async (req: NextRequest) => {
   const auth = await requireRoles(req, ["TUTOR", "ADMIN"]);
   if (!auth.ok) {
     return auth.response;
   }
 
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
-  const parsed = createAiDraftSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Invalid draft payload", details: parsed.error.flatten() },
-      { status: 400 }
-    );
-  }
-
-  const payload = parsed.data;
+  const payload = await parseJsonBody(req, createAiDraftSchema);
   const tutorId = auth.session.role === "ADMIN" ? payload.tutorId ?? auth.session.id : auth.session.id;
 
   const [language, level, tutor] = await Promise.all([
@@ -44,13 +32,13 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (!language) {
-    return NextResponse.json({ error: "Language not found" }, { status: 400 });
+    badRequest("Language not found");
   }
   if (!level) {
-    return NextResponse.json({ error: "Level not found" }, { status: 400 });
+    badRequest("Level not found");
   }
   if (!tutor) {
-    return NextResponse.json({ error: "Tutor not found" }, { status: 400 });
+    notFound("Tutor not found");
   }
 
   const generated = await generateCourseDraft(payload.topic, language.name, level.name);
@@ -87,5 +75,4 @@ export async function POST(req: NextRequest) {
     },
     { status: 201 }
   );
-}
-
+});
