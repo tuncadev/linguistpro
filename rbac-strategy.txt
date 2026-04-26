@@ -1,0 +1,51 @@
+
+Strategy for RBAC in Next.js Middleware:
+
+1. Data Definition: 
+   Assign a `role` field (Enum: STUDENT, TUTOR, ADMIN) to the User model in Prisma.
+
+2. Middleware Logic:
+   Create a `middleware.ts` in the root (Next.js App Router).
+   Define route groups that require specific roles:
+   
+   const roleRoutes = {
+     ADMIN: '/admin',
+     TUTOR: '/tutor',
+     STUDENT: '/student'
+   };
+
+3. Implementation (Conceptual):
+   
+   import { NextResponse } from 'next/server';
+   import type { NextRequest } from 'next/server';
+   import { getToken } from 'next-auth/jwt';
+
+   export async function middleware(req: NextRequest) {
+     const token = await getToken({ req });
+     const { pathname } = req.nextUrl;
+
+     // 1. Authentication Check
+     if (!token && pathname.startsWith('/dashboard')) {
+       return NextResponse.redirect(new URL('/login', req.url));
+     }
+
+     // 2. Authorization (RBAC) Check
+     const userRole = token?.role as string;
+
+     if (pathname.startsWith('/admin') && userRole !== 'ADMIN') {
+       return NextResponse.redirect(new URL('/unauthorized', req.url));
+     }
+
+     if (pathname.startsWith('/tutor') && userRole !== 'TUTOR' && userRole !== 'ADMIN') {
+       return NextResponse.redirect(new URL('/unauthorized', req.url));
+     }
+
+     return NextResponse.next();
+   }
+
+   export const config = {
+     matcher: ['/admin/:path*', '/tutor/:path*', '/student/:path*', '/api/admin/:path*'],
+   };
+
+4. Client Side Guard:
+   Always use a `RoleGuard` component in React to wrap sensitive UI elements even if the route is protected, to ensure the UI doesn't flicker or show unauthorized states.

@@ -1,0 +1,8 @@
+{
+  "name": "LinguistPro - Language Learning Platform",
+  "description": "A high-end language course platform featuring course management for tutors, discovery for students, and administrative control, powered by a scalable architecture and Gemini AI course generation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

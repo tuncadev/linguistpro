@@ -1,0 +1,38 @@
+
+/app
+  /(auth)               # Auth group (Login/Register)
+    /login
+    /register
+  /(dashboard)          # Protected group
+    /admin              # Admin-only routes
+      /courses
+      /users
+      /taxonomies
+    /tutor              # Tutor-only routes
+      /my-courses
+      /create
+      /analytics
+    /student            # Student routes
+      /my-learning
+      /certificates
+    /layout.tsx         # Dashboard shell (Sidebar/Nav)
+  /courses              # Public course browsing
+    /[id]
+    /page.tsx
+  /api                  # API Routes
+    /courses
+    /enroll
+    /webhooks
+/components
+  /ui                   # Atomic components (Button, Input, etc)
+  /shared               # Cross-role components (Nav, Sidebar)
+  /courses              # Course-specific UI
+  /auth                 # Auth components (RoleGuard)
+/lib
+  /prisma.ts            # DB Client
+  /gemini.ts            # AI Service logic
+  /utils.ts             # Helper functions
+/hooks                  # Custom hooks (useAuth, useCourses)
+/types                  # TypeScript definitions
+/prisma                 # Schema and seeds
+middleware.ts           # RBAC Implementation (Logic shared in response)

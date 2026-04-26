@@ -1,0 +1,86 @@
+
+// This represents the database architecture requested
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          Role      @default(STUDENT)
+  image         String?
+  
+  // Relations
+  authoredCourses Course[]    @relation("CourseTutor")
+  enrollments     Enrollment[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  image       String?
+  published   Boolean  @default(false)
+  
+  // "CPT" Relations
+  tutor       User     @relation("CourseTutor", fields: [tutorId], references: [id])
+  tutorId     String
+  
+  // Taxonomies
+  language    Language @relation(fields: [languageId], references: [id])
+  languageId  String
+  level       Level    @relation(fields: [levelId], references: [id])
+  levelId     String
+  
+  // Relationship
+  enrollments Enrollment[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Taxonomy: Language
+model Language {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  slug    String   @unique
+  courses Course[]
+}
+
+// Taxonomy: Level
+model Level {
+  id      String   @id @default(cuid())
+  name    String   @unique // e.g. A1, B2
+  slug    String   @unique
+  courses Course[]
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  student   User     @relation(fields: [studentId], references: [id])
+  studentId String
+  
+  createdAt DateTime @default(now())
+
+  @@unique([courseId, studentId])
+}
