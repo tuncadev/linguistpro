@@ -252,6 +252,18 @@ Layer-specific runs:
 - `npm run test:integration`
 - `npm run test:e2e`
 
+## CI/CD Checks
+
+GitHub Actions workflow: `.github/workflows/ci.yml`
+
+Checks executed on pull requests and protected branch pushes:
+- `npm ci`
+- `npm run prisma:validate`
+- `npm run test:unit`
+- `npm run test:integration`
+- `npm run test:e2e`
+- `npm run build`
+
 ## Directory Map
 
 ```text

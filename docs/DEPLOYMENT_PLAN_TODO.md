@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Add CI/CD with required checks before merge/deploy.
+1. Add observability (logs, traces, metrics, error tracking).
 
 ## Phase Plan (Target Timeline)
 
@@ -34,7 +34,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Replace mock data paths with DB-backed services.
 - [x] Add centralized error handling and API validation.
 - [x] Add test suite (unit + integration + E2E critical flows).
-- [ ] Add CI/CD with required checks before merge/deploy.
+- [x] Add CI/CD with required checks before merge/deploy.
 - [ ] Add observability (logs, traces, metrics, error tracking).
 - [ ] Add backup policy and restore test for Postgres.
 - [ ] Add production env/secrets policy and rotation runbook.
@@ -79,3 +79,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Core frontend course flows now load DB-backed course data via API service with mock fallback.
 - 2026-04-26: Centralized API error normalization and request validation helpers applied to core routes.
 - 2026-04-26: Vitest suite added with unit, integration, and E2E critical-flow tests (`tests/` + `vitest.config.ts`).
+- 2026-04-26: GitHub Actions CI added (`.github/workflows/ci.yml`) with Prisma validation, unit/integration/E2E tests, and production build checks.

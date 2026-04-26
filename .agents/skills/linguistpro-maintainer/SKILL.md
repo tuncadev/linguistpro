@@ -32,9 +32,10 @@ Read in this order:
 13. `app/api/admin/courses/[id]/moderate/route.ts`
 14. `services/courseApiService.ts`
 15. `lib/http/with-api-handler.ts`
-16. `App.tsx`
-17. `types.ts`
-18. `constants.ts`
+16. `.github/workflows/ci.yml`
+17. `App.tsx`
+18. `types.ts`
+19. `constants.ts`
 
 ## Step 2: Confirm baseline
 

@@ -33,6 +33,7 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
+- CI workflow: `.github/workflows/ci.yml`
 
 Global state is held in React state and passed via `AppContext`.
 
@@ -146,6 +147,7 @@ Migration update:
 - Frontend course state now prefers DB-backed `/api/courses` data with fallback to mock seed data.
 - Core API routes now use centralized validation + normalized error response handling.
 - Vitest coverage now includes unit, integration, and E2E critical-flow tests.
+- GitHub Actions CI runs Prisma validation, test layers, and Vite production build.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks
