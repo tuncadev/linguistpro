@@ -19,6 +19,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Proxy/route guard: `middleware.ts` (to be migrated to `proxy.ts` for Next 16 convention)
 - Auth/session APIs: `app/api/auth/*`
 - Auth UI: `app/(auth)/login/page.tsx`, `app/(auth)/register/page.tsx`
+- Legacy styled auth UI: `components/Navbar.tsx` modal wired to `/api/auth/*`
 - Legacy Vite shell retained: `index.tsx`, `App.tsx`, `views/`, `components/`
 - Prisma pipeline: `prisma/schema.prisma`, `prisma/migrations/`, `lib/prisma.ts`
 - Prisma seed utility: `prisma/seed.mjs`
@@ -171,6 +172,7 @@ Migration update:
 - Deploy/rollback runbook is documented with preflight automation.
 - Next.js runtime is now the default runnable app path.
 - Local Postgres-backed auth flow is validated end-to-end (`/api/auth/register`, `/api/auth/login`, `/api/auth/session`).
+- Legacy frontend `Log In`/`Start Free Trial` buttons are now backend-wired via auth modal.
 
 ## 10) Known Gaps and Risks
 

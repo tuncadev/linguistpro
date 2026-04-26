@@ -87,3 +87,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Deploy/rollback runbook added (`docs/DEPLOY_ROLLBACK_RUNBOOK.md`) with automated preflight script (`ops/deploy/preflight.sh`).
 - 2026-04-26: Default local runtime switched to Next.js (`next dev`/`next build`), service unit updated, and `/login` + `/register` forms wired to auth APIs.
 - 2026-04-26: Local Postgres app user/database provisioning completed, Prisma migration+seed executed, and auth register/login/session validated against real DB.
+- 2026-04-26: Legacy styled frontend navbar auth buttons wired to backend APIs through modal login/register flow.

@@ -16,6 +16,7 @@ import CourseDetailsView from './views/CourseDetailsView';
 import TutorProfileView from './views/TutorProfileView';
 import LessonView from './views/LessonView';
 import { fetchPublishedCourses } from './services/courseApiService';
+import { fetchSessionUser } from './services/authApiService';
 
 export const AppContext = React.createContext<{
   user: User | null;
@@ -73,6 +74,24 @@ const App: React.FC = () => {
     };
 
     void loadCourses();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadSession = async () => {
+      const sessionUser = await fetchSessionUser();
+      if (!isMounted) return;
+      if (sessionUser) {
+        setUser(sessionUser);
+      }
+    };
+
+    void loadSession();
 
     return () => {
       isMounted = false;

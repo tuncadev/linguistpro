@@ -151,6 +151,10 @@ Auth API routes:
 - `POST /api/auth/logout`
 - `GET /api/auth/session`
 
+Legacy frontend wiring update:
+- Navbar `Log In` / `Start Free Trial` now use a styled auth modal and call the backend auth APIs.
+- Session is restored on app load via `GET /api/auth/session`.
+
 ## RBAC Middleware and Server Checks (Implemented)
 
 RBAC is now enforced at two layers:

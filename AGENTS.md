@@ -96,6 +96,10 @@ When creating courses (example: tutor AI flow), always produce all required fiel
 
 ## Safe Change Strategy
 
+Frontend preservation rule:
+- Keep existing legacy frontend visual style and layout intact while wiring backend incrementally.
+- Prefer adapter/wiring changes over broad UI redesign.
+
 When adding new views:
 1. Create view component under `views/`.
 2. Add `view` case in `App.tsx::renderView()`.
