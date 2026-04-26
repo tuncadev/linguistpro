@@ -241,4 +241,5 @@ For future agent sessions, see:
 - `docs/DEPLOYMENT_PLAN_TODO.md` (execution tracker and next action)
 - `docs/INFRA_DECISION.md` (final infrastructure choices for deployment)
 - `docs/NEXTJS_ROUTE_MAP.md` (target route design and current mapping)
+- `docs/LOCAL_SERVICE.md` (systemd service to keep local dev server running)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

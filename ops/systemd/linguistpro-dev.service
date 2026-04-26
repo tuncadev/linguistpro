@@ -1,0 +1,14 @@
+[Unit]
+Description=LinguistPro Vite Dev Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pardus/Hosting/linguistpro
+Environment=NODE_ENV=development
+ExecStart=/usr/bin/npm run dev -- --host 0.0.0.0 --port 3001
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
