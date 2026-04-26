@@ -89,3 +89,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Local Postgres app user/database provisioning completed, Prisma migration+seed executed, and auth register/login/session validated against real DB.
 - 2026-04-26: Legacy styled frontend navbar auth buttons wired to backend APIs through modal login/register flow.
 - 2026-04-26: Legacy frontend enrollment flow wired to backend `/api/enroll` for course enrollment and student in-progress dashboard loading with fallback behavior.
+- 2026-04-26: UAT smoke check passes cleanly on local Next service (`http://127.0.0.1:3001`) with report `ops/uat/reports/uat-smoke-20260426T160743Z.md`; formal staging sign-off remains pending.
