@@ -28,9 +28,10 @@ Read in this order:
 9. `lib/auth/server-checks.ts`
 10. `lib/ai/course-draft.ts`
 11. `app/api/courses/route.ts`
-12. `App.tsx`
-13. `types.ts`
-14. `constants.ts`
+12. `app/api/enroll/route.ts`
+13. `App.tsx`
+14. `types.ts`
+15. `constants.ts`
 
 ## Step 2: Confirm baseline
 

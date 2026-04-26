@@ -171,6 +171,17 @@ Core course APIs (Next.js migration path):
 Serialization helper:
 - `lib/courses/serialize.ts` normalizes Prisma payloads (including Decimal to number).
 
+## Enrollments API with Idempotency (Implemented)
+
+Enrollment endpoints:
+- `GET /api/enroll` (role-aware listing)
+- `POST /api/enroll` (creates enrollment)
+
+Idempotency behavior:
+- DB uniqueness on `(courseId, studentId)` prevents duplicates.
+- Repeated enrollment calls for the same user/course return existing enrollment (`idempotentReplay: true`) instead of creating a new record.
+- Supports optional `Idempotency-Key` header echo for client retry tracing.
+
 ## Getting Started
 
 ### Prerequisites

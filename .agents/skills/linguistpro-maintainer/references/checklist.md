@@ -13,6 +13,7 @@
 - Read `lib/auth/server-checks.ts`
 - Read `lib/ai/course-draft.ts`
 - Read `app/api/courses/route.ts`
+- Read `app/api/enroll/route.ts`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification
