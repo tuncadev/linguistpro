@@ -24,9 +24,10 @@ Before making edits, read in this order:
 9. `lib/ai/course-draft.ts`
 10. `app/api/courses/route.ts`
 11. `app/api/enroll/route.ts`
-12. `App.tsx`
-13. `types.ts`
-14. `constants.ts`
+12. `app/api/admin/courses/[id]/moderate/route.ts`
+13. `App.tsx`
+14. `types.ts`
+15. `constants.ts`
 
 ## Canonical Commands
 

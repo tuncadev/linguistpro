@@ -182,6 +182,13 @@ Idempotency behavior:
 - Repeated enrollment calls for the same user/course return existing enrollment (`idempotentReplay: true`) instead of creating a new record.
 - Supports optional `Idempotency-Key` header echo for client retry tracing.
 
+## Admin Moderation Flow (Implemented)
+
+Course moderation endpoints:
+- `POST /api/courses/:id/submit` (`TUTOR`/`ADMIN`): submit draft to review (`PENDING_REVIEW`)
+- `GET /api/admin/courses/submissions` (`ADMIN`): list pending review queue
+- `POST /api/admin/courses/:id/moderate` (`ADMIN`): `APPROVE` (publish) or `REJECT` (return to draft)
+
 ## Getting Started
 
 ### Prerequisites

@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Build admin moderation flow for course approval.
+1. Replace mock data paths with DB-backed services.
 
 ## Phase Plan (Target Timeline)
 
@@ -30,7 +30,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Move Gemini integration to server-only endpoints.
 - [x] Build courses CRUD + tutor draft generation API.
 - [x] Build enrollments API with idempotency checks.
-- [ ] Build admin moderation flow for course approval.
+- [x] Build admin moderation flow for course approval.
 - [ ] Replace mock data paths with DB-backed services.
 - [ ] Add centralized error handling and API validation.
 - [ ] Add test suite (unit + integration + E2E critical flows).
@@ -75,3 +75,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Gemini generation moved to server-only endpoint (`/api/ai/course-draft`).
 - 2026-04-26: Courses CRUD + AI draft persistence APIs implemented under `/api/courses`.
 - 2026-04-26: Enrollment API implemented with DB-backed idempotency replay behavior.
+- 2026-04-26: Admin moderation flow added (submit for review + pending queue + approve/reject).

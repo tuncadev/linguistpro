@@ -14,6 +14,7 @@
 - Read `lib/ai/course-draft.ts`
 - Read `app/api/courses/route.ts`
 - Read `app/api/enroll/route.ts`
+- Read `app/api/admin/courses/[id]/moderate/route.ts`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification
