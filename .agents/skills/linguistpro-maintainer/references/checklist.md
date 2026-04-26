@@ -22,7 +22,9 @@
 ## Build Verification
 
 - Run `npm run build` before edits if possible
+- Run `npm run test` before edits if possible
 - Run `npm run build` after edits
+- Run `npm run test` after edits
 
 ## High-Risk Touchpoints
 
@@ -40,5 +42,5 @@
 
 ## Planned vs Implemented Reminder
 
-- Implemented: Vite SPA mock
-- Planned only: Next.js + Prisma + middleware RBAC (`*.txt` planning docs)
+- Implemented: Vite SPA runtime + migration API/auth/RBAC/Prisma scaffold + Vitest test layers
+- Planned only: full Next.js runtime cutover and production infra rollout

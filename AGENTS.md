@@ -7,7 +7,7 @@ These instructions are project-local and apply to future Codex sessions in this 
 - Project type: frontend prototype
 - Runtime: Vite + React + TypeScript
 - Primary goal: demonstrate language-course platform UX and role-based flows
-- Current data source: in-memory mock data in `constants.ts`
+- Current data source: API-first course reads via `services/courseApiService.ts` with `constants.ts` fallback
 - AI integration: Gemini draft course generation for tutor dashboard
 
 ## First-Read Files
@@ -37,6 +37,10 @@ Before making edits, read in this order:
 - Dev server: `npm run dev`
 - Production build check: `npm run build`
 - Local preview: `npm run preview`
+- Full tests: `npm run test`
+- Unit tests: `npm run test:unit`
+- Integration tests: `npm run test:integration`
+- E2E critical flows: `npm run test:e2e`
 
 ## Architecture Reality Check
 
@@ -68,7 +72,7 @@ When creating courses (example: tutor AI flow), always produce all required fiel
 ## AI Integration Notes
 
 - Gemini wiring lives in `services/geminiService.ts`.
-- API key is read from `process.env.API_KEY` (mapped from `GEMINI_API_KEY` in Vite config).
+- Client calls `POST /api/ai/course-draft`; Gemini key stays server-side.
 - Keep response schema strict JSON for reliable parsing.
 - On failure, current behavior returns `null`; preserve or intentionally improve this contract.
 

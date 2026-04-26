@@ -3,9 +3,9 @@
 LinguistPro is a React + Vite language-learning platform prototype with role-based dashboards for `STUDENT`, `TUTOR`, and `ADMIN`, plus Gemini-powered course draft generation for tutors.
 
 This project currently behaves as a frontend-first simulation:
-- no backend API is wired
-- no persistent database is wired
-- auth and role switching are demo-mode via in-memory mock users
+- default runtime is still Vite SPA demo mode
+- Next.js API + Prisma migration layer exists under `app/`, `lib/`, and `prisma/`
+- role switching in the Vite shell remains demo-mode via in-memory mock users
 
 ## Project Status
 
@@ -76,14 +76,14 @@ Mock seed data is in `constants.ts`:
 - `generateCourseDetails(topic, language, level)`
 
 Behavior:
-1. Uses `GoogleGenAI` with `process.env.API_KEY`.
-2. Sends a prompt to model `gemini-3-flash-preview`.
+1. Calls `POST /api/ai/course-draft`.
+2. Server utility uses Gemini model `gemini-3-flash-preview`.
 3. Requests strict JSON response schema:
 - `title: string`
 - `description: string`
 - `syllabus: string[]`
 - `price: number`
-4. Parses `response.text` into JSON and returns it.
+4. Returns parsed JSON payload to the frontend service.
 
 In tutor dashboard (`views/TutorDashboard.tsx`):
 - Result is converted into a local `Course` object.
@@ -98,9 +98,7 @@ Create/update `.env.local`:
 GEMINI_API_KEY=your_real_key_here
 ```
 
-Vite exposes this key through `vite.config.ts`:
-- `process.env.API_KEY`
-- `process.env.GEMINI_API_KEY`
+Gemini key is used server-side by the migration endpoint (`/api/ai/course-draft`).
 
 If no valid key is set, AI generation fails gracefully and returns `null`.
 
@@ -243,6 +241,17 @@ npm run build
 npm run preview
 ```
 
+### Run Test Suite
+
+```bash
+npm run test
+```
+
+Layer-specific runs:
+- `npm run test:unit`
+- `npm run test:integration`
+- `npm run test:e2e`
+
 ## Directory Map
 
 ```text
@@ -291,8 +300,7 @@ Current implementation is still the Vite SPA mock with in-memory state, but a Ne
 ## Known Limitations
 
 - No real authentication flow (demo role switcher only)
-- No API/backend persistence
-- No DB integration despite Prisma design notes
+- Next.js API/DB layer is implemented but is not yet the default runtime path
 - Route state is string-based and local (not URL-driven)
 - Actions like enrollment, approval, notes, and discussion are UI-only placeholders
 - `index.html` references `/index.css`, but no local `index.css` exists (Vite warns during build)
@@ -304,7 +312,7 @@ Current implementation is still the Vite SPA mock with in-memory state, but a Ne
 2. Implement auth/session and server-side RBAC.
 3. Move `MOCK_*` data to API + database (Prisma schema already drafted).
 4. Convert tutor AI-generated drafts into persisted draft/publish workflow.
-5. Add tests for critical flows (catalog filtering, view transitions, tutor AI result mapping).
+5. Add CI/CD checks (build + tests) before merge/deploy.
 
 ## Codex Handoff Files
 

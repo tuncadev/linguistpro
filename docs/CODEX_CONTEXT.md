@@ -32,6 +32,7 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
+- Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
 
 Global state is held in React state and passed via `AppContext`.
 
@@ -96,28 +97,29 @@ File path: `views/TutorDashboard.tsx`
 Flow:
 1. Tutor chooses language, level, topic.
 2. `generateCourseDetails(topic, language, level)` is called.
-3. Service (`services/geminiService.ts`) requests structured JSON from Gemini.
+3. Service (`services/geminiService.ts`) calls `/api/ai/course-draft`.
 4. Result is transformed into local `Course` object and prepended to state.
 
 Important details:
 - model name is `gemini-3-flash-preview`
-- service reads `process.env.API_KEY`
+- Gemini key is consumed server-side by the migration API endpoint
 - failures are logged and return `null`
 - generated syllabus strings are mapped to sections with empty lesson lists
 
 ## 8) Environment and Build Notes
 
-Environment variable:
+Environment variables:
 - `.env.local`: `GEMINI_API_KEY=...`
-
-Vite maps this into:
-- `process.env.API_KEY`
-- `process.env.GEMINI_API_KEY`
+- `.env.local`: `AUTH_SESSION_SECRET=...`
 
 Expected commands:
 - `npm install`
 - `npm run dev`
 - `npm run build`
+- `npm run test`
+- `npm run test:unit`
+- `npm run test:integration`
+- `npm run test:e2e`
 
 ## 9) Planning Artifacts (Not Yet Implemented)
 
@@ -143,13 +145,13 @@ Migration update:
 - Admin moderation endpoints now handle review submission and approve/reject decisions.
 - Frontend course state now prefers DB-backed `/api/courses` data with fallback to mock seed data.
 - Core API routes now use centralized validation + normalized error response handling.
+- Vitest coverage now includes unit, integration, and E2E critical-flow tests.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks
 
-- No backend persistence
-- No API endpoints
-- No real authentication/session
+- Default Vite runtime still uses client-side role simulation and fallback mock data.
+- Next.js migration APIs require running in Next.js runtime to become the primary path.
 - No route-level URL deep linking
 - Several UI actions are placeholders (logs, approvals, notes, discussion posting)
 - Build emits warning because `index.html` references `/index.css` that is not present in repo
@@ -163,7 +165,7 @@ Potential maintenance risk:
 Short-term hardening in current stack:
 1. Replace raw `view` strings with a `ViewId` union type or enum.
 2. Introduce central navigation helpers to reduce transition mistakes.
-3. Add component tests for key view transitions.
+3. Expand automated coverage to component/view transition tests.
 4. Add runtime guards for missing selection state with fallback UI.
 
 Migration path to target architecture:

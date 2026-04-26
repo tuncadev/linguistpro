@@ -40,6 +40,7 @@ Read in this order:
 
 Run:
 - `npm run build`
+- `npm run test`
 
 If build fails, fix or report blockers before making broader changes.
 
@@ -62,6 +63,7 @@ Always update docs when behavior or architecture changes:
 
 Run:
 - `npm run build`
+- `npm run test`
 
 Then summarize:
 - what changed
