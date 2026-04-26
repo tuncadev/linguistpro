@@ -61,6 +61,7 @@ Before making edits, read in this order:
 - UAT smoke check: `npm run ops:uat:smoke`
 - UAT role-flow check: `npm run ops:uat:roles`
 - Deploy preflight: `npm run ops:deploy:preflight`
+- Deploy preflight (local prod-like env): `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`
 
 ## Architecture Reality Check
 

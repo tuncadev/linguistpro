@@ -179,6 +179,7 @@ Migration update:
 - Legacy frontend `Log In`/`Start Free Trial` buttons are now backend-wired via auth modal.
 - Legacy `CourseDetailsView` enrollment button now calls `/api/enroll`; `StudentDashboard` now prefers `/api/enroll` IDs for "In Progress" with local fallback.
 - Full local role-flow UAT automation exists at `ops/uat/role-flow-check.sh` with report output under `ops/uat/reports/`.
+- Deploy preflight has been validated locally with env-policy mode using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
 
 ## 10) Known Gaps and Risks
 

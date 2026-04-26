@@ -31,6 +31,12 @@ Optional with production-like env file:
 ENV_FILE=.env.production npm run ops:deploy:preflight
 ```
 
+Local dry-run example (when reusing `.env.local` for validation):
+
+```bash
+NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight
+```
+
 ## Staging Deploy Procedure
 
 1. Deploy release candidate to staging environment.

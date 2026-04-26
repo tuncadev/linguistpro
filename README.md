@@ -336,6 +336,7 @@ Runbook: `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
 
 Preflight command:
 - `npm run ops:deploy:preflight`
+- `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight` (local production-like validation)
 
 ## Directory Map
 
