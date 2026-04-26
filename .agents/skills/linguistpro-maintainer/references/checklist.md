@@ -24,6 +24,8 @@
 - Read `docs/POSTGRES_BACKUP_RUNBOOK.md`
 - Read `ops/secrets/validate-env.sh`
 - Read `docs/SECRETS_POLICY_RUNBOOK.md`
+- Read `ops/uat/smoke-check.sh`
+- Read `docs/STAGING_UAT_SIGNOFF.md`
 - Read `.github/workflows/ci.yml`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 

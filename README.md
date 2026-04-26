@@ -308,6 +308,13 @@ Runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
 Validation command:
 - `npm run ops:validate-env`
 
+## Staging UAT Sign-Off
+
+Runbook/template: `docs/STAGING_UAT_SIGNOFF.md`
+
+Smoke command:
+- `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:smoke`
+
 ## Directory Map
 
 ```text
@@ -380,4 +387,6 @@ For future agent sessions, see:
 - `docs/NEXTJS_ROUTE_MAP.md` (target route design and current mapping)
 - `docs/LOCAL_SERVICE.md` (systemd service to keep local dev server running)
 - `docs/POSTGRES_BACKUP_RUNBOOK.md` (backup/restore policy + scripts usage)
+- `docs/SECRETS_POLICY_RUNBOOK.md` (production env/secrets rotation + validation)
+- `docs/STAGING_UAT_SIGNOFF.md` (staging acceptance checklist + sign-off log)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

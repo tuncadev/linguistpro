@@ -39,10 +39,12 @@ Read in this order:
 20. `docs/POSTGRES_BACKUP_RUNBOOK.md`
 21. `ops/secrets/validate-env.sh`
 22. `docs/SECRETS_POLICY_RUNBOOK.md`
-23. `.github/workflows/ci.yml`
-24. `App.tsx`
-25. `types.ts`
-26. `constants.ts`
+23. `ops/uat/smoke-check.sh`
+24. `docs/STAGING_UAT_SIGNOFF.md`
+25. `.github/workflows/ci.yml`
+26. `App.tsx`
+27. `types.ts`
+28. `constants.ts`
 
 ## Step 2: Confirm baseline
 

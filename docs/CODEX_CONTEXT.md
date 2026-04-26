@@ -38,6 +38,8 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Backup runbook: `docs/POSTGRES_BACKUP_RUNBOOK.md`
 - Secrets validation script: `ops/secrets/validate-env.sh`
 - Secrets runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
+- UAT smoke script: `ops/uat/smoke-check.sh`
+- UAT sign-off template: `docs/STAGING_UAT_SIGNOFF.md`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
 - CI workflow: `.github/workflows/ci.yml`
 
@@ -132,6 +134,7 @@ Expected commands:
 - `npm run db:backup`
 - `npm run db:restore:test`
 - `npm run ops:validate-env`
+- `npm run ops:uat:smoke` (set `STAGING_BASE_URL` for real staging target)
 
 ## 9) Planning Artifacts (Not Yet Implemented)
 
@@ -162,6 +165,7 @@ Migration update:
 - Observability baseline is wired through `withApiHandler` with request IDs, structured logs, and in-memory metrics snapshots.
 - Postgres backup policy + restore validation workflow is documented and scripted under `ops/backup/`.
 - Production env/secrets policy and rotation runbook is documented with validation command (`ops:validate-env`).
+- Staging UAT sign-off workflow is documented with smoke-check automation.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks
@@ -171,6 +175,7 @@ Migration update:
 - Metrics store is in-memory per process (no long-term retention/export yet).
 - Error webhook reporting is optional and requires `OBSERVABILITY_ERROR_WEBHOOK_URL`.
 - Secret validation is local-script based; no automated secret-manager sync yet.
+- UAT smoke API checks can warn on Vite runtime because migration API routes are not served there.
 - No route-level URL deep linking
 - Several UI actions are placeholders (logs, approvals, notes, discussion posting)
 - Build emits warning because `index.html` references `/index.css` that is not present in repo

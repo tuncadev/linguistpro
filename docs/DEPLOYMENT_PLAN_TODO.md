@@ -83,3 +83,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Observability baseline added (structured API logs with request IDs, in-memory metrics, `/api/health`, admin `/api/metrics`, optional error webhook reporting).
 - 2026-04-26: PostgreSQL backup/restore runbook and executable scripts added (`ops/backup/` + `docs/POSTGRES_BACKUP_RUNBOOK.md`) with dry-run validation.
 - 2026-04-26: Production env/secrets policy and rotation runbook added (`docs/SECRETS_POLICY_RUNBOOK.md`) with validation script (`ops/secrets/validate-env.sh`).
+- 2026-04-26: Staging UAT sign-off template and smoke script added (`docs/STAGING_UAT_SIGNOFF.md`, `ops/uat/smoke-check.sh`); local smoke run completed with API endpoint warnings under Vite runtime.
