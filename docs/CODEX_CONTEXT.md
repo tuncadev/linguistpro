@@ -24,6 +24,7 @@ It is not yet the planned Next.js + Prisma production architecture.
 - Demo dataset: `constants.ts`
 - Next.js migration scaffold: `app/`, `middleware.ts`, `lib/auth/rbac.ts`
 - Prisma pipeline: `prisma/schema.prisma`, `prisma/migrations/`, `lib/prisma.ts`
+- Auth scaffold: `app/api/auth/*`, `lib/auth/password.ts`, `lib/auth/session.ts`
 
 Global state is held in React state and passed via `AppContext`.
 
@@ -127,6 +128,7 @@ They describe a future architecture with:
 Migration update:
 - A Next.js route and middleware scaffold now exists in the repository.
 - Prisma schema and migration scaffold now exists in the repository.
+- Authentication/session scaffold exists for migration APIs and middleware.
 - Default runnable app remains the Vite implementation until Next.js scripts/deps are promoted.
 
 ## 10) Known Gaps and Risks

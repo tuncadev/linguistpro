@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Implement authentication and secure session handling.
+1. Implement RBAC middleware + server checks.
 
 ## Phase Plan (Target Timeline)
 
@@ -25,7 +25,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [x] Choose cloud providers (app, DB, object storage, CDN, secrets, observability).
 - [x] Implement Next.js app structure and route map.
 - [x] Implement Prisma schema and migration pipeline.
-- [ ] Implement authentication and secure session handling.
+- [x] Implement authentication and secure session handling.
 - [ ] Implement RBAC middleware + server checks.
 - [ ] Move Gemini integration to server-only endpoints.
 - [ ] Build courses CRUD + tutor draft generation API.
@@ -70,3 +70,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Cloud provider decision finalized in `docs/INFRA_DECISION.md`.
 - 2026-04-26: Next.js App Router scaffold added under `app/` with route map in `docs/NEXTJS_ROUTE_MAP.md`.
 - 2026-04-26: Prisma schema, migration scaffold, client helper, and package scripts implemented.
+- 2026-04-26: Auth/session scaffold implemented (JWT cookie session + register/login/logout/session API routes).

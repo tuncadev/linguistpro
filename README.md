@@ -104,6 +104,9 @@ Vite exposes this key through `vite.config.ts`:
 
 If no valid key is set, AI generation fails gracefully and returns `null`.
 
+Authentication/session env:
+- `AUTH_SESSION_SECRET` must be set for signed session cookies.
+
 ## Prisma Pipeline (Implemented)
 
 Prisma assets now exist for the production migration path:
@@ -118,6 +121,19 @@ Available scripts:
 - `npm run prisma:migrate:dev`
 - `npm run prisma:migrate:deploy`
 - `npm run prisma:studio`
+
+## Auth and Session Scaffold (Implemented)
+
+Server-side auth/session scaffold is implemented for the Next.js migration path:
+- password hashing: `lib/auth/password.ts`
+- session JWT signing/verification: `lib/auth/session.ts`
+- middleware session role extraction: `middleware.ts`
+
+Auth API routes:
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/auth/session`
 
 ## Getting Started
 

@@ -19,9 +19,10 @@ Before making edits, read in this order:
 4. `docs/INFRA_DECISION.md`
 5. `docs/NEXTJS_ROUTE_MAP.md`
 6. `prisma/schema.prisma`
-7. `App.tsx`
-8. `types.ts`
-9. `constants.ts`
+7. `lib/auth/session.ts`
+8. `App.tsx`
+9. `types.ts`
+10. `constants.ts`
 
 ## Canonical Commands
 

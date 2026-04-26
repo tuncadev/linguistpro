@@ -24,9 +24,10 @@ Read in this order:
 5. `docs/INFRA_DECISION.md`
 6. `docs/NEXTJS_ROUTE_MAP.md`
 7. `prisma/schema.prisma`
-8. `App.tsx`
-9. `types.ts`
-10. `constants.ts`
+8. `lib/auth/session.ts`
+9. `App.tsx`
+10. `types.ts`
+11. `constants.ts`
 
 ## Step 2: Confirm baseline
 

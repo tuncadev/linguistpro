@@ -9,6 +9,7 @@
 - Read `docs/INFRA_DECISION.md`
 - Read `docs/NEXTJS_ROUTE_MAP.md`
 - Read `prisma/schema.prisma`
+- Read `lib/auth/session.ts`
 - Inspect `App.tsx`, `types.ts`, `constants.ts`
 
 ## Build Verification
