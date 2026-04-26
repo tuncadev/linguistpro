@@ -1,3 +1,4 @@
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { User, UserRole, Course, Language, Lesson } from './types';
