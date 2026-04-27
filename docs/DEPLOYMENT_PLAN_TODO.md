@@ -107,3 +107,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-27: Added admin tutor management flow with DB-backed add/edit/remove (`/admin/tutors`, `/api/admin/tutors`, `/api/admin/tutors/:id`) and linked admin navigation tabs across courses/tutors/users.
 - 2026-04-27: Added persistent left admin navigation layout, dedicated tutor edit route (`/admin/tutors/:id`), enforced tutor-role-only course assignment in `/api/courses*`, and normalized course label wording to `Course Tutor`.
 - 2026-04-27: Added tutor integrity fallback (`/api/tutors` + `/api/admin/tutors`) to auto-create a default frontend-style tutor when tutor records are empty and exposed admin edit action directly on legacy tutor profile view.
+- 2026-04-27: Refined legacy tutor profile to support in-place admin editing on the same UI layout (parallel to course details edit flow), instead of forcing a separate admin edit screen.

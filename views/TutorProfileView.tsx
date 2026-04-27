@@ -1,15 +1,109 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../App';
 import { Star, Video, BookOpen, MapPin, Globe, CheckCircle } from 'lucide-react';
 import { UserRole } from '../types';
+import { updateAdminTutor } from '../services/adminTutorCrudApiService';
+
+type TutorEditDraft = {
+  name: string;
+  email: string;
+  avatarUrl: string;
+  bio: string;
+  studentCount: string;
+  password: string;
+};
+
+function buildDraft(tutor: NonNullable<React.ContextType<typeof AppContext>['selectedTutor']>): TutorEditDraft {
+  return {
+    name: tutor.name,
+    email: tutor.email,
+    avatarUrl: tutor.avatar || '',
+    bio: tutor.bio || '',
+    studentCount:
+      typeof tutor.studentCount === 'number' && Number.isFinite(tutor.studentCount)
+        ? String(tutor.studentCount)
+        : '',
+    password: '',
+  };
+}
 
 const TutorProfileView: React.FC = () => {
-  const { selectedTutor, courses, setView, setSelectedCourse, user } = useContext(AppContext);
+  const { selectedTutor, courses, setView, setSelectedCourse, user, setTutors, setSelectedTutor } = useContext(AppContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+  const [draft, setDraft] = useState<TutorEditDraft | null>(null);
 
-  if (!selectedTutor) return null;
+  useEffect(() => {
+    if (!selectedTutor) {
+      setDraft(null);
+      return;
+    }
+
+    setDraft(buildDraft(selectedTutor));
+    setIsEditing(false);
+    setEditError(null);
+  }, [selectedTutor?.id]);
+
+  if (!selectedTutor || !draft) return null;
 
   const tutorCourses = courses.filter(c => c.tutorId === selectedTutor.id);
+  const avatarPreview =
+    draft.avatarUrl.trim() || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200';
+
+  const handleSave = async () => {
+    if (user?.role !== UserRole.ADMIN) {
+      return;
+    }
+
+    const name = draft.name.trim();
+    const email = draft.email.trim().toLowerCase();
+    const studentCountRaw = draft.studentCount.trim();
+    const password = draft.password.trim();
+
+    if (!name || !email) {
+      setEditError('Name and email are required.');
+      return;
+    }
+
+    if (studentCountRaw && (!Number.isInteger(Number(studentCountRaw)) || Number(studentCountRaw) < 0)) {
+      setEditError('Student count must be a non-negative integer.');
+      return;
+    }
+
+    if (password && password.length < 8) {
+      setEditError('New password must be at least 8 characters.');
+      return;
+    }
+
+    setIsSaving(true);
+    setEditError(null);
+
+    const updated = await updateAdminTutor(selectedTutor.id, {
+      name,
+      email,
+      avatarUrl: draft.avatarUrl.trim() || null,
+      bio: draft.bio.trim() || null,
+      studentCount: studentCountRaw ? Number(studentCountRaw) : undefined,
+      password: password || undefined,
+    }).catch((error: unknown) => {
+      console.error('updateAdminTutor failed', error);
+      return null;
+    });
+
+    setIsSaving(false);
+
+    if (!updated) {
+      setEditError('Save failed. Check admin session and tutor values.');
+      return;
+    }
+
+    setTutors((current) => current.map((candidate) => (candidate.id === updated.id ? updated : candidate)));
+    setSelectedTutor(updated);
+    setDraft(buildDraft(updated));
+    setIsEditing(false);
+  };
 
   return (
     <div className="animate-in fade-in duration-500 max-w-6xl mx-auto px-6 py-12">
@@ -17,21 +111,88 @@ const TutorProfileView: React.FC = () => {
         <div className="lg:w-1/3 space-y-10">
           <div className="text-center lg:text-left">
             <img 
-              src={selectedTutor.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200'} 
+              src={isEditing ? avatarPreview : selectedTutor.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200'} 
               className="w-56 h-56 rounded-[4rem] border-8 border-white shadow-2xl mx-auto lg:mx-0 object-cover mb-8" 
               alt={selectedTutor.name}
             />
-            <h1 className="text-4xl font-black text-[#2d3e50] mb-2 tracking-tight">{selectedTutor.name}</h1>
+            {isEditing ? (
+              <input
+                value={draft.name}
+                onChange={(event) =>
+                  setDraft((current) => (current ? { ...current, name: event.target.value } : current))
+                }
+                className="mb-2 w-full rounded-xl border border-slate-300 px-3 py-2 text-2xl font-black tracking-tight text-[#2d3e50] outline-none focus:border-[#f47361]"
+              />
+            ) : (
+              <h1 className="text-4xl font-black text-[#2d3e50] mb-2 tracking-tight">{selectedTutor.name}</h1>
+            )}
             <p className="text-[#f47361] font-black uppercase tracking-[0.2em] text-xs mb-6">Catalina Senior Fellow</p>
             {user?.role === UserRole.ADMIN ? (
-              <button
-                onClick={() => {
-                  window.location.href = `/admin/tutors/${selectedTutor.id}`;
-                }}
-                className="mb-6 rounded-xl border border-[#2d3e50] px-4 py-2 text-xs font-black uppercase tracking-widest text-[#2d3e50] transition-colors hover:bg-[#2d3e50] hover:text-white"
-              >
-                Edit Tutor
-              </button>
+              <div className="mb-6 flex flex-wrap gap-2">
+                {!isEditing ? (
+                  <button
+                    onClick={() => {
+                      setDraft(buildDraft(selectedTutor));
+                      setIsEditing(true);
+                      setEditError(null);
+                    }}
+                    className="rounded-xl border border-[#2d3e50] px-4 py-2 text-xs font-black uppercase tracking-widest text-[#2d3e50] transition-colors hover:bg-[#2d3e50] hover:text-white"
+                  >
+                    Edit Tutor
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        void handleSave();
+                      }}
+                      disabled={isSaving}
+                      className="rounded-xl bg-[#2d3e50] px-4 py-2 text-xs font-black uppercase tracking-widest text-white transition-colors hover:bg-[#1a2530] disabled:opacity-70"
+                    >
+                      {isSaving ? 'Saving...' : 'Save Changes'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDraft(buildDraft(selectedTutor));
+                        setIsEditing(false);
+                        setEditError(null);
+                      }}
+                      className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-600 transition-colors hover:bg-slate-100"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
+              </div>
+            ) : null}
+            {isEditing ? (
+              <div className="mb-6 space-y-2">
+                <input
+                  value={draft.email}
+                  onChange={(event) =>
+                    setDraft((current) => (current ? { ...current, email: event.target.value } : current))
+                  }
+                  placeholder="Tutor email"
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 outline-none focus:border-[#f47361]"
+                />
+                <input
+                  value={draft.avatarUrl}
+                  onChange={(event) =>
+                    setDraft((current) => (current ? { ...current, avatarUrl: event.target.value } : current))
+                  }
+                  placeholder="Avatar URL"
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 outline-none focus:border-[#f47361]"
+                />
+                <input
+                  value={draft.password}
+                  type="password"
+                  onChange={(event) =>
+                    setDraft((current) => (current ? { ...current, password: event.target.value } : current))
+                  }
+                  placeholder="New password (optional)"
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 outline-none focus:border-[#f47361]"
+                />
+              </div>
             ) : null}
             <div className="flex flex-col gap-3 text-slate-500 mb-10 items-center lg:items-start">
               <span className="flex items-center gap-2 text-sm font-medium"><MapPin className="w-4 h-4 text-[#f47361]" /> Barcelona, Spain HQ</span>
@@ -40,7 +201,18 @@ const TutorProfileView: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-                <p className="text-3xl font-black text-[#2d3e50]">{selectedTutor.studentCount?.toLocaleString()}</p>
+                {isEditing ? (
+                  <input
+                    value={draft.studentCount}
+                    onChange={(event) =>
+                      setDraft((current) => (current ? { ...current, studentCount: event.target.value } : current))
+                    }
+                    inputMode="numeric"
+                    className="w-full bg-transparent text-center text-3xl font-black text-[#2d3e50] outline-none"
+                  />
+                ) : (
+                  <p className="text-3xl font-black text-[#2d3e50]">{selectedTutor.studentCount?.toLocaleString()}</p>
+                )}
                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Graduates</p>
               </div>
               <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
@@ -53,7 +225,18 @@ const TutorProfileView: React.FC = () => {
           <div className="bg-[#2d3e50] p-10 rounded-[3rem] text-white space-y-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#f47361]/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
             <h3 className="text-xl font-black uppercase tracking-widest relative z-10">Faculty Profile</h3>
-            <p className="text-slate-300 text-sm leading-relaxed relative z-10">{selectedTutor.bio || 'Profile details are being updated.'}</p>
+            {isEditing ? (
+              <textarea
+                value={draft.bio}
+                onChange={(event) =>
+                  setDraft((current) => (current ? { ...current, bio: event.target.value } : current))
+                }
+                rows={5}
+                className="relative z-10 w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-sm leading-relaxed text-slate-200 outline-none focus:border-[#f47361]"
+              />
+            ) : (
+              <p className="text-slate-300 text-sm leading-relaxed relative z-10">{selectedTutor.bio || 'Profile details are being updated.'}</p>
+            )}
             <div className="space-y-4 pt-6 border-t border-white/5 relative z-10">
                {[
                  'Accredited by National Board',
@@ -68,6 +251,9 @@ const TutorProfileView: React.FC = () => {
                ))}
             </div>
           </div>
+          {editError ? (
+            <p className="text-sm font-bold text-rose-600">{editError}</p>
+          ) : null}
         </div>
 
         <div className="lg:w-2/3 space-y-16">
