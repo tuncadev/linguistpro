@@ -187,7 +187,7 @@ Security note:
 
 Core course APIs (Next.js migration path):
 - `GET /api/courses` (public published list; role-aware filters for admin/tutor)
-- `POST /api/courses` (`TUTOR`/`ADMIN`: create draft course)
+- `POST /api/courses` (`TUTOR`/`ADMIN`: create course; admin can set/create as `PUBLISHED`)
 - `GET /api/courses/:id` (published or authorized owner/admin)
 - `PATCH /api/courses/:id` (owner tutor or admin updates)
 - `DELETE /api/courses/:id` (owner tutor for non-published, or admin)
@@ -224,6 +224,7 @@ Implemented behavior:
 - creates courses through `POST /api/courses`
 - edits courses through `PATCH /api/courses/:id`
 - removes courses through `DELETE /api/courses/:id`
+- create form now exposes backend detail-content fields used by course details page (objectives, enrollment includes, labels)
 - uses dynamic taxonomy/tutor selectors from `/api/taxonomies` and `/api/tutors`
 - keeps static summary cards while rendering DB-backed course list/actions
 
@@ -257,7 +258,7 @@ Seeded default flags:
 
 Course read paths are now API-first:
 - `services/courseApiService.ts` fetches `/api/courses` and maps API payload to frontend `Course`.
-- `App.tsx` initializes `courses` from API and falls back to `MOCK_COURSES` when backend data is unavailable.
+- `App.tsx` initializes `courses` from API and falls back to `MOCK_COURSES` only when backend fetch fails (`null`), not when DB returns empty list.
 - `LanguageLandingView` and `StudentDashboard` now consume context `courses` instead of hardcoded `MOCK_COURSES`.
 - `services/enrollmentApiService.ts` now bridges legacy frontend enrollment flows to `/api/enroll`.
 - `StudentDashboard` now derives "In Progress" from `GET /api/enroll` course IDs with fallback to existing local slice behavior when backend data is unavailable.
@@ -269,6 +270,7 @@ Course read paths are now API-first:
 - `HomeView`, `CourseCatalog`, `LanguageLandingView`, `TutorDashboard`, and `CourseDetailsView` now use AppContext `languages`, `levels`, and `tutors` loaded from backend-first sources with static fallback.
 - `Navbar` role buttons now use backend-loaded `demoUsers` from `AppContext`; `services/authApiService.ts` maps avatar/profile metadata from auth payloads instead of `MOCK_USERS`.
 - `StudentDashboard` upcoming class card now derives course/tutor details from backend-backed context state.
+- `CourseDetailsView` hero/objectives/enroll-card content (course director label, learning objectives, enrollment includes, tuition/discount labels) now reads backend course fields.
 
 ## Centralized API Error Handling and Validation (Implemented)
 

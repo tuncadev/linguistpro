@@ -19,6 +19,11 @@ const updateCourseSchema = z.object({
   tutorId: z.string().trim().min(1).optional(),
   status: z.nativeEnum(CourseStatus).optional(),
   syllabus: z.array(z.string().trim().min(1).max(180)).max(50).optional(),
+  learningObjectives: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
+  enrollmentIncludes: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
+  tuitionLabel: z.string().trim().min(1).max(80).nullable().optional(),
+  discountLabel: z.string().trim().min(1).max(80).nullable().optional(),
+  courseDirectorLabel: z.string().trim().min(1).max(80).nullable().optional(),
 });
 
 type Params = {

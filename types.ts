@@ -56,6 +56,11 @@ export interface Course {
   studentCount: number;
   rating: number;
   reviews: number;
+  learningObjectives?: string[];
+  enrollmentIncludes?: string[];
+  tuitionLabel?: string;
+  discountLabel?: string;
+  courseDirectorLabel?: string;
   syllabus: SyllabusSection[];
 }
 

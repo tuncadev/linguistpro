@@ -4,6 +4,13 @@ import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
+import {
+  DEFAULT_COURSE_DIRECTOR_LABEL,
+  DEFAULT_COURSE_DISCOUNT_LABEL,
+  DEFAULT_COURSE_ENROLLMENT_INCLUDES,
+  DEFAULT_COURSE_LEARNING_OBJECTIVES,
+  DEFAULT_COURSE_TUITION_LABEL,
+} from "@/lib/courses/presentation-defaults";
 import { badRequest, forbidden, notFound } from "@/lib/http/api-error";
 import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
@@ -27,9 +34,15 @@ const createCourseSchema = z.object({
   price: z.number().min(0).max(100000),
   imageUrl: z.string().trim().url().optional(),
   tutorId: z.string().trim().min(1).optional(),
+  status: z.nativeEnum(CourseStatus).optional(),
   languageId: z.string().trim().min(1),
   levelId: z.string().trim().min(1),
   syllabus: z.array(z.string().trim().min(1).max(180)).max(50).optional(),
+  learningObjectives: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
+  enrollmentIncludes: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
+  tuitionLabel: z.string().trim().min(1).max(80).optional(),
+  discountLabel: z.string().trim().min(1).max(80).optional(),
+  courseDirectorLabel: z.string().trim().min(1).max(80).optional(),
 });
 
 export const GET = withApiHandler(async (req: NextRequest) => {
@@ -97,7 +110,13 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   }
 
   const payload = await parseJsonBody(req, createCourseSchema);
+  const isAdmin = auth.session.role === "ADMIN";
+  if (!isAdmin && payload.status) {
+    forbidden("Only admin can set status during course creation");
+  }
+
   const tutorId = auth.session.role === "ADMIN" ? payload.tutorId ?? auth.session.id : auth.session.id;
+  const status = isAdmin ? payload.status ?? "PUBLISHED" : "DRAFT";
 
   const [language, level, tutor] = await Promise.all([
     prisma.language.findUnique({ where: { id: payload.languageId } }),
@@ -121,10 +140,16 @@ export const POST = withApiHandler(async (req: NextRequest) => {
       description: payload.description,
       price: payload.price,
       imageUrl: payload.imageUrl,
-      status: "DRAFT",
+      status,
+      publishedAt: status === "PUBLISHED" ? new Date() : null,
       tutorId,
       languageId: payload.languageId,
       levelId: payload.levelId,
+      learningObjectives: payload.learningObjectives ?? DEFAULT_COURSE_LEARNING_OBJECTIVES,
+      enrollmentIncludes: payload.enrollmentIncludes ?? DEFAULT_COURSE_ENROLLMENT_INCLUDES,
+      tuitionLabel: payload.tuitionLabel ?? DEFAULT_COURSE_TUITION_LABEL,
+      discountLabel: payload.discountLabel ?? DEFAULT_COURSE_DISCOUNT_LABEL,
+      courseDirectorLabel: payload.courseDirectorLabel ?? DEFAULT_COURSE_DIRECTOR_LABEL,
       syllabusSections: payload.syllabus?.length
         ? {
             create: payload.syllabus.map((title, index) => ({

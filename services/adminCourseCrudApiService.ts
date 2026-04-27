@@ -17,6 +17,11 @@ type CourseMutationPayload = {
   tutorId?: string;
   status?: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "ARCHIVED";
   syllabus?: string[];
+  learningObjectives?: string[];
+  enrollmentIncludes?: string[];
+  tuitionLabel?: string;
+  discountLabel?: string;
+  courseDirectorLabel?: string;
 };
 
 async function parseJsonSafe<T>(response: Response): Promise<T> {

@@ -15,6 +15,8 @@ const CourseDetailsView: React.FC = () => {
   const tutor = tutors.find(u => u.id === selectedCourse.tutorId);
   const language = languages.find(l => l.id === selectedCourse.languageId);
   const level = levels.find(v => v.id === selectedCourse.levelId);
+  const learningObjectives = selectedCourse.learningObjectives ?? [];
+  const enrollmentIncludes = selectedCourse.enrollmentIncludes ?? [];
 
   const toggleSection = (id: string) => {
     setOpenSection(openSection === id ? null : id);
@@ -100,7 +102,9 @@ const CourseDetailsView: React.FC = () => {
                   alt={tutor?.name || 'Tutor'}
                 />
                 <div>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Course Director</p>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                    {selectedCourse.courseDirectorLabel || 'Course Director'}
+                  </p>
                   <button 
                     onClick={() => {
                       if (!tutor) return;
@@ -125,14 +129,7 @@ const CourseDetailsView: React.FC = () => {
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
               <h2 className="text-2xl font-black text-[#2d3e50] mb-8">Learning Objectives</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-                {[
-                  'Master essential conversational idioms',
-                  'Professional and formal communication skills',
-                  'Deep cultural immersion and history',
-                  'Phonetic mastery and accent reduction',
-                  'Practical vocabulary for daily life',
-                  'Catalina Academy Official Certification'
-                ].map((item, i) => (
+                {learningObjectives.map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
                     <div className="mt-1 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
                       <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
@@ -190,10 +187,14 @@ const CourseDetailsView: React.FC = () => {
               <div className="p-10 space-y-8">
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Tuition Fee</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                      {selectedCourse.tuitionLabel || 'Tuition Fee'}
+                    </p>
                     <span className="text-5xl font-black text-[#2d3e50]">${selectedCourse.price}</span>
                   </div>
-                  <span className="text-[#f47361] font-black text-sm uppercase">65% Off Enrollment</span>
+                  <span className="text-[#f47361] font-black text-sm uppercase">
+                    {selectedCourse.discountLabel || '65% Off Enrollment'}
+                  </span>
                 </div>
                 
                 <button 
@@ -206,16 +207,15 @@ const CourseDetailsView: React.FC = () => {
                 
                 <div className="space-y-5 pt-8 border-t border-slate-100">
                   <p className="text-xs font-black text-[#2d3e50] uppercase tracking-widest">Enrollment Includes:</p>
-                  {[
-                    { icon: Clock, label: 'Lifetime curriculum access' },
-                    { icon: Award, label: 'Catalina Professional Certificate' },
-                    { icon: Users, label: 'Private Discord community' },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-4 text-sm text-slate-600 font-medium">
-                      <item.icon className="w-4 h-4 text-[#ffb821]" />
-                      <span>{item.label}</span>
-                    </div>
-                  ))}
+                  {enrollmentIncludes.map((label, i) => {
+                    const Icon = i === 0 ? Clock : i === 1 ? Award : Users;
+                    return (
+                      <div key={i} className="flex items-center gap-4 text-sm text-slate-600 font-medium">
+                        <Icon className="w-4 h-4 text-[#ffb821]" />
+                        <span>{label}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

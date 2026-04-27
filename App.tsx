@@ -95,31 +95,27 @@ const App: React.FC = () => {
 
       if (!isMounted) return;
 
-      if (fetchedCourses && fetchedCourses.length > 0) {
+      if (fetchedCourses !== null) {
         setCourses(fetchedCourses);
       } else {
         setCourses(MOCK_COURSES);
       }
 
-      if (fetchedTaxonomies && fetchedTaxonomies.languages.length > 0) {
+      if (fetchedTaxonomies !== null) {
         setLanguages(fetchedTaxonomies.languages);
-      } else {
-        setLanguages(LANGUAGES);
-      }
-
-      if (fetchedTaxonomies && fetchedTaxonomies.levels.length > 0) {
         setLevels(fetchedTaxonomies.levels);
       } else {
+        setLanguages(LANGUAGES);
         setLevels(LEVELS);
       }
 
-      if (fetchedTutors && fetchedTutors.length > 0) {
+      if (fetchedTutors !== null) {
         setTutors(fetchedTutors);
       } else {
         setTutors(MOCK_USERS.filter((candidate) => candidate.role === UserRole.TUTOR));
       }
 
-      if (fetchedDemoUsers && fetchedDemoUsers.length > 0) {
+      if (fetchedDemoUsers !== null) {
         setDemoUsers(fetchedDemoUsers);
       } else {
         setDemoUsers(MOCK_USERS);

@@ -21,6 +21,11 @@ type CourseFormState = {
   tutorId: string;
   status: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "ARCHIVED";
   syllabusText: string;
+  learningObjectivesText: string;
+  enrollmentIncludesText: string;
+  tuitionLabel: string;
+  discountLabel: string;
+  courseDirectorLabel: string;
 };
 
 const EMPTY_FORM: CourseFormState = {
@@ -31,8 +36,13 @@ const EMPTY_FORM: CourseFormState = {
   languageId: "",
   levelId: "",
   tutorId: "",
-  status: "DRAFT",
+  status: "PUBLISHED",
   syllabusText: "",
+  learningObjectivesText: "",
+  enrollmentIncludesText: "",
+  tuitionLabel: "Tuition Fee",
+  discountLabel: "65% Off Enrollment",
+  courseDirectorLabel: "Course Director",
 };
 
 function findCourseStatusLabel(course: Course): CourseFormState["status"] {
@@ -167,6 +177,11 @@ export default function AdminCoursesPage() {
       tutorId: course.tutorId,
       status: findCourseStatusLabel(course),
       syllabusText: course.syllabus.map((section) => section.title).join("\n"),
+      learningObjectivesText: (course.learningObjectives ?? []).join("\n"),
+      enrollmentIncludesText: (course.enrollmentIncludes ?? []).join("\n"),
+      tuitionLabel: course.tuitionLabel || "Tuition Fee",
+      discountLabel: course.discountLabel || "65% Off Enrollment",
+      courseDirectorLabel: course.courseDirectorLabel || "Course Director",
     });
   };
 
@@ -183,6 +198,10 @@ export default function AdminCoursesPage() {
       return;
     }
 
+    const syllabus = parseSyllabusSections(form.syllabusText);
+    const learningObjectives = parseSyllabusSections(form.learningObjectivesText);
+    const enrollmentIncludes = parseSyllabusSections(form.enrollmentIncludesText);
+
     const basePayload = {
       title: form.title.trim(),
       description: form.description.trim(),
@@ -191,12 +210,17 @@ export default function AdminCoursesPage() {
       languageId: form.languageId,
       levelId: form.levelId,
       tutorId: form.tutorId,
-      syllabus: parseSyllabusSections(form.syllabusText),
+      syllabus: syllabus.length > 0 ? syllabus : undefined,
+      learningObjectives: learningObjectives.length > 0 ? learningObjectives : undefined,
+      enrollmentIncludes: enrollmentIncludes.length > 0 ? enrollmentIncludes : undefined,
+      tuitionLabel: form.tuitionLabel.trim() || undefined,
+      discountLabel: form.discountLabel.trim() || undefined,
+      courseDirectorLabel: form.courseDirectorLabel.trim() || undefined,
     };
 
     const result = editingCourseId
       ? await updateAdminCourse(editingCourseId, { ...basePayload, status: form.status })
-      : await createAdminCourse(basePayload);
+      : await createAdminCourse({ ...basePayload, status: form.status });
 
     if (!result) {
       setSaving(false);
@@ -383,6 +407,46 @@ export default function AdminCoursesPage() {
                 rows={5}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
               />
+              <textarea
+                value={form.learningObjectivesText}
+                onChange={(event) =>
+                  setForm((current) => ({ ...current, learningObjectivesText: event.target.value }))
+                }
+                placeholder="Learning objectives, one per line"
+                rows={4}
+                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
+              />
+              <textarea
+                value={form.enrollmentIncludesText}
+                onChange={(event) =>
+                  setForm((current) => ({ ...current, enrollmentIncludesText: event.target.value }))
+                }
+                placeholder="Enrollment includes items, one per line"
+                rows={3}
+                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
+              />
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <input
+                  value={form.tuitionLabel}
+                  onChange={(event) => setForm((current) => ({ ...current, tuitionLabel: event.target.value }))}
+                  placeholder="Tuition label"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
+                />
+                <input
+                  value={form.discountLabel}
+                  onChange={(event) => setForm((current) => ({ ...current, discountLabel: event.target.value }))}
+                  placeholder="Discount label"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
+                />
+                <input
+                  value={form.courseDirectorLabel}
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, courseDirectorLabel: event.target.value }))
+                  }
+                  placeholder="Course director label"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
+                />
+              </div>
 
               {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
               {notice ? <p className="text-sm font-bold text-emerald-600">{notice}</p> : null}

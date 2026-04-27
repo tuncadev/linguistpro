@@ -107,6 +107,12 @@ Guest behavior:
 - optional lifecycle: `status` (`DRAFT | PENDING_REVIEW | PUBLISHED | ARCHIVED`)
 - relational IDs: `tutorId`, `languageId`, `levelId`
 - social/progress fields: `studentCount`, `rating`, `reviews`
+- details presentation fields:
+  - `learningObjectives: string[]`
+  - `enrollmentIncludes: string[]`
+  - `tuitionLabel: string`
+  - `discountLabel: string`
+  - `courseDirectorLabel: string`
 - learning tree: `syllabus: SyllabusSection[]`
 
 `SyllabusSection`:
@@ -203,6 +209,9 @@ Migration update:
 - Auth API payloads now include user profile metadata (`avatarUrl`, `bio`, `rating`, `studentCount`, `coursesAuthored`) and frontend auth mapping uses those fields.
 - Admin dashboard cards, recent submissions, and activity feed are backend-driven via `/api/admin/dashboard/overview`.
 - Next.js `/admin/courses` is no longer scaffold and now supports admin add/edit/remove against backend course APIs with dynamic taxonomy/tutor selectors.
+- Admin `/api/courses` creation now supports admin-controlled status (including direct `PUBLISHED`) and detail-page content fields.
+- Seed data now syncs legacy frontend catalog courses into DB with published status and full details-page content fields.
+- `CourseDetailsView` now renders objectives/enrollment/labels from backend course payload instead of frontend hardcoded arrays.
 
 ## 10) Known Gaps and Risks
 
