@@ -403,6 +403,8 @@ Runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
 
 Validation command:
 - `npm run ops:validate-env`
+- `npm run ops:secrets:scan` (fails if tracked files contain secret-like values)
+- `OLD_ENV_FILE=/path/old.env NEW_ENV_FILE=/path/new.env npm run ops:secrets:rotation:drill` (rotation verification + evidence report)
 
 ## Staging UAT Sign-Off
 

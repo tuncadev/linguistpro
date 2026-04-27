@@ -18,6 +18,8 @@
     "db:backup": "bash ops/backup/postgres-backup.sh",
     "db:restore:test": "bash ops/backup/postgres-restore-test.sh",
     "ops:validate-env": "bash ops/secrets/validate-env.sh",
+    "ops:secrets:scan": "bash ops/secrets/check-repo-secrets.sh",
+    "ops:secrets:rotation:drill": "bash ops/secrets/rotation-drill.sh",
     "ops:uat:smoke": "bash ops/uat/smoke-check.sh",
     "ops:uat:roles": "bash ops/uat/role-flow-check.sh",
     "ops:uat:signoff": "bash ops/uat/staging-signoff.sh",

@@ -20,6 +20,7 @@ required_vars=(
   AUTH_SESSION_SECRET
   DATABASE_URL
   GEMINI_API_KEY
+  AUTH_ALLOW_DEV_ROLE_HEADER
 )
 
 missing_vars=()
@@ -50,13 +51,18 @@ if [[ "$AUTH_SESSION_SECRET" == *"change-me"* ]]; then
   exit 1
 fi
 
-if [[ "${AUTH_ALLOW_DEV_ROLE_HEADER:-false}" == "true" ]]; then
+if [[ "${AUTH_ALLOW_DEV_ROLE_HEADER}" == "true" ]]; then
   echo "AUTH_ALLOW_DEV_ROLE_HEADER must be false in production." >&2
   exit 1
 fi
 
 if [[ "$DATABASE_URL" != postgresql://* ]]; then
   echo "DATABASE_URL must use a postgresql:// URL." >&2
+  exit 1
+fi
+
+if [[ "$GEMINI_API_KEY" == *"PLACEHOLDER"* ]] || [[ "$GEMINI_API_KEY" == *"change-me"* ]]; then
+  echo "GEMINI_API_KEY cannot contain placeholder text in production validation." >&2
   exit 1
 fi
 

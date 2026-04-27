@@ -9,6 +9,7 @@ This document defines how production secrets are managed, rotated, and validated
 - Never commit production secrets to git.
 - Use managed secret storage (for example: Vercel/Cloudflare/Render secrets + Neon credentials).
 - Keep `.env.example` as placeholders only.
+- Do not keep production secrets in local project files such as `.env`, `.env.local`, or `.env.production`.
 - Grant least-privilege access to secret managers.
 - Every rotation must be documented with date, owner, and verification result.
 
@@ -49,6 +50,20 @@ Validate from a specific env file:
 ```bash
 ENV_FILE=.env.production npm run ops:validate-env
 ```
+
+Scan tracked repository files for committed secrets:
+
+```bash
+npm run ops:secrets:scan
+```
+
+Run a rotation drill (old vs new env values) and generate evidence report:
+
+```bash
+OLD_ENV_FILE=/path/old.env NEW_ENV_FILE=/path/new.env npm run ops:secrets:rotation:drill
+```
+
+The rotation drill report is generated under `ops/secrets/reports/`.
 
 ## Incident Response
 

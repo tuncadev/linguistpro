@@ -8,8 +8,9 @@ Status baseline: Core app and backend scaffolding exist; production launch gates
 
 - Done:
   - Finalize Production Infrastructure Topology (card implemented with topology + IaC/runbook docs)
+  - Harden Environment and Secret Management (repo secret scan + rotation drill + stricter prod env validation)
 - Next:
-  - Harden Environment and Secret Management
+  - Auth Security Hardening
 
 ## Definition of Production-Ready (v1)
 

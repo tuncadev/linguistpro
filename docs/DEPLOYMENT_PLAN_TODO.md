@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Execute production readiness card: Harden Environment and Secret Management.
+1. Execute production readiness card: Auth Security Hardening.
 
 ## Phase Plan (Target Timeline)
 
@@ -110,3 +110,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-27: Refined legacy tutor profile to support in-place admin editing on the same UI layout (parallel to course details edit flow), instead of forcing a separate admin edit screen.
 - 2026-04-27: Added backend tutor profile modules (location/languages, profile highlights list, stats modules, pedagogical modules) with Prisma migration and tutor API support; wired same-layout in-page editing on `TutorProfileView`.
 - 2026-04-27: Finalized production infrastructure topology with committed environment diagram and provisioning/IaC baseline docs (`docs/PRODUCTION_INFRA_TOPOLOGY.md`, `ops/infra/PROVISIONING_RUNBOOK.md`, `ops/infra/terraform/README.md`).
+- 2026-04-27: Hardened env/secrets workflow with tracked-repo secret scanning (`ops/secrets/check-repo-secrets.sh`), rotation drill evidence generation (`ops/secrets/rotation-drill.sh`), stricter production env checks (`ops/secrets/validate-env.sh`), updated runbook, and drill report `ops/secrets/reports/rotation-drill-20260427T153109Z.md`.
