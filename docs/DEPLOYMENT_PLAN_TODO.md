@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Implement billing/payments foundation (P1) while staging UAT remains temporarily deferred by owner decision.
+1. Continue wiring remaining static frontend hardcoded data to backend sources (taxonomies, tutor metadata, dashboard cards) before billing/payments.
 
 ## Phase Plan (Target Timeline)
 
