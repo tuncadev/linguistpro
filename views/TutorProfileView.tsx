@@ -1,10 +1,11 @@
 
 import React, { useContext } from 'react';
 import { AppContext } from '../App';
-import { Star, Users, Video, BookOpen, MapPin, Globe, CheckCircle } from 'lucide-react';
+import { Star, Video, BookOpen, MapPin, Globe, CheckCircle } from 'lucide-react';
+import { UserRole } from '../types';
 
 const TutorProfileView: React.FC = () => {
-  const { selectedTutor, courses, setView, setSelectedCourse } = useContext(AppContext);
+  const { selectedTutor, courses, setView, setSelectedCourse, user } = useContext(AppContext);
 
   if (!selectedTutor) return null;
 
@@ -22,6 +23,16 @@ const TutorProfileView: React.FC = () => {
             />
             <h1 className="text-4xl font-black text-[#2d3e50] mb-2 tracking-tight">{selectedTutor.name}</h1>
             <p className="text-[#f47361] font-black uppercase tracking-[0.2em] text-xs mb-6">Catalina Senior Fellow</p>
+            {user?.role === UserRole.ADMIN ? (
+              <button
+                onClick={() => {
+                  window.location.href = `/admin/tutors/${selectedTutor.id}`;
+                }}
+                className="mb-6 rounded-xl border border-[#2d3e50] px-4 py-2 text-xs font-black uppercase tracking-widest text-[#2d3e50] transition-colors hover:bg-[#2d3e50] hover:text-white"
+              >
+                Edit Tutor
+              </button>
+            ) : null}
             <div className="flex flex-col gap-3 text-slate-500 mb-10 items-center lg:items-start">
               <span className="flex items-center gap-2 text-sm font-medium"><MapPin className="w-4 h-4 text-[#f47361]" /> Barcelona, Spain HQ</span>
               <span className="flex items-center gap-2 text-sm font-medium"><Globe className="w-4 h-4 text-[#ffb821]" /> Trilingual (ES, EN, FR)</span>

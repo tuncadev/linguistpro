@@ -241,6 +241,7 @@ Implemented behavior:
 - edits tutors through `PATCH /api/admin/tutors/:id`
 - removes tutors through `DELETE /api/admin/tutors/:id`
 - provides dedicated tutor edit screen at `/admin/tutors/:id` plus inline quick-edit from list
+- auto-provisions a default tutor record from legacy frontend profile data when tutor table is empty
 - blocks delete when tutor still owns courses (reassign/remove courses first)
 - preserves existing frontend tutor profile/card style while shifting data source to DB APIs
 
@@ -293,6 +294,7 @@ Course read paths are now API-first:
 - `StudentDashboard` upcoming class card now derives course/tutor details from backend-backed context state.
 - `CourseDetailsView` hero/objectives/enroll-card content (course director label, learning objectives, enrollment includes, tuition/discount labels) now reads backend course fields.
 - `CourseDetailsView` tutor header label now uses `Course Tutor`; edit mode always lists current tutor directory for assignment.
+- `TutorProfileView` now shows an admin-only `Edit Tutor` action that routes to `/admin/tutors/:id`.
 - `CourseDetailsView` now supports admin-only in-place editing on the same frontend layout (`Edit Course`), saving directly to DB via `PATCH /api/courses/:id`.
 - Curriculum editing on course details page now persists section/lesson details through `syllabusSections` payload support in `PATCH /api/courses/:id`.
 - Sidebar admin section now includes a `Courses Page` shortcut that routes to the legacy catalog view (`view='catalog'`).

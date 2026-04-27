@@ -4,6 +4,7 @@ import { z } from "zod";
 import { parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { ensureDefaultTutorAndRepairCourses } from "@/lib/tutors/ensure-default-tutor";
 import { publicTutorSelect, serializeTutor } from "@/lib/tutors/serialize";
 
 const querySchema = z.object({
@@ -14,6 +15,7 @@ const querySchema = z.object({
 
 export const GET = withApiHandler(async (req: NextRequest) => {
   const query = parseQuery(req, querySchema);
+  await ensureDefaultTutorAndRepairCourses();
 
   const tutors = await prisma.user.findMany({
     where: {

@@ -7,6 +7,7 @@ import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth/password";
+import { ensureDefaultTutorAndRepairCourses } from "@/lib/tutors/ensure-default-tutor";
 import { adminTutorSelect, serializeTutorForAdmin } from "@/lib/tutors/serialize";
 
 const listQuerySchema = z.object({
@@ -31,6 +32,8 @@ export const GET = withApiHandler(async (req: NextRequest) => {
   if (auth.ok === false) {
     return auth.response;
   }
+
+  await ensureDefaultTutorAndRepairCourses();
 
   const query = parseQuery(req, listQuerySchema);
   const tutors = await prisma.user.findMany({
