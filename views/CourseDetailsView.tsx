@@ -23,10 +23,8 @@ type CourseEditDraft = {
   title: string;
   description: string;
   price: string;
-  rating: string;
-  reviews: string;
-  studentCount: string;
-  courseDirectorLabel: string;
+  tutorId: string;
+  levelId: string;
   tuitionLabel: string;
   discountLabel: string;
   learningObjectives: string[];
@@ -47,10 +45,8 @@ function buildDraftFromCourse(course: NonNullable<React.ContextType<typeof AppCo
     title: course.title,
     description: course.description,
     price: String(course.price),
-    rating: String(course.rating),
-    reviews: String(course.reviews),
-    studentCount: String(course.studentCount),
-    courseDirectorLabel: course.courseDirectorLabel || 'Course Director',
+    tutorId: course.tutorId,
+    levelId: course.levelId,
     tuitionLabel: course.tuitionLabel || 'Tuition Fee',
     discountLabel: course.discountLabel || '65% Off Enrollment',
     learningObjectives: ensureTextRows(course.learningObjectives ?? []),
@@ -75,20 +71,13 @@ function buildDraftFromCourse(course: NonNullable<React.ContextType<typeof AppCo
   };
 }
 
-function sanitizeNumber(raw: string, fallback: number): number {
-  const parsed = Number(raw);
-  if (!Number.isFinite(parsed)) {
-    return fallback;
-  }
-  return parsed;
-}
-
 const CourseDetailsView: React.FC = () => {
   const {
     selectedCourse,
     tutors,
     languages,
     levels,
+    courses,
     setView,
     setSelectedTutor,
     setActiveLesson,
@@ -114,6 +103,35 @@ const CourseDetailsView: React.FC = () => {
     setEditError(null);
   }, [selectedCourse?.id]);
 
+  const firstLesson = useMemo(
+    () => selectedCourse?.syllabus[0]?.lessons[0],
+    [selectedCourse?.syllabus]
+  );
+  const availableTutorsByLanguage = useMemo(() => {
+    if (!selectedCourse) {
+      return tutors;
+    }
+
+    const tutorIdsForLanguage = new Set(
+      courses
+        .filter((course) => course.languageId === selectedCourse.languageId)
+        .map((course) => course.tutorId)
+    );
+
+    const filtered = tutors.filter((candidate) => tutorIdsForLanguage.has(candidate.id));
+    const currentTutor = tutors.find((candidate) => candidate.id === selectedCourse.tutorId);
+
+    if (filtered.length === 0) {
+      return tutors;
+    }
+
+    if (currentTutor && !filtered.some((candidate) => candidate.id === currentTutor.id)) {
+      return [currentTutor, ...filtered];
+    }
+
+    return filtered;
+  }, [courses, selectedCourse, tutors]);
+
   if (!selectedCourse || !draft) return null;
 
   const isAdmin = user?.role === UserRole.ADMIN;
@@ -124,11 +142,6 @@ const CourseDetailsView: React.FC = () => {
   const toggleSection = (id: string) => {
     setOpenSection(openSection === id ? null : id);
   };
-
-  const firstLesson = useMemo(
-    () => selectedCourse.syllabus[0]?.lessons[0],
-    [selectedCourse.syllabus]
-  );
 
   const startCourse = () => {
     if (!firstLesson) {
@@ -233,10 +246,8 @@ const CourseDetailsView: React.FC = () => {
       title,
       description,
       price,
-      rating: Math.max(0, Math.min(5, sanitizeNumber(draft.rating, selectedCourse.rating))),
-      reviews: Math.max(0, Math.floor(sanitizeNumber(draft.reviews, selectedCourse.reviews))),
-      studentCount: Math.max(0, Math.floor(sanitizeNumber(draft.studentCount, selectedCourse.studentCount))),
-      courseDirectorLabel: draft.courseDirectorLabel.trim() || undefined,
+      tutorId: draft.tutorId,
+      levelId: draft.levelId,
       tuitionLabel: draft.tuitionLabel.trim() || undefined,
       discountLabel: draft.discountLabel.trim() || undefined,
       learningObjectives: draft.learningObjectives.map((item) => item.trim()).filter(Boolean),
@@ -344,46 +355,32 @@ const CourseDetailsView: React.FC = () => {
               <div className="flex flex-wrap items-center gap-6 pt-4">
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#ffb821] fill-[#ffb821]" />
-                  {isEditing ? (
-                    <input
-                      value={draft.rating}
-                      onChange={(event) =>
-                        setDraft((current) => (current ? { ...current, rating: event.target.value } : current))
-                      }
-                      className="w-14 rounded border border-slate-500 bg-transparent px-2 py-1 text-sm font-bold"
-                    />
-                  ) : (
-                    <span className="font-bold">{selectedCourse.rating}</span>
-                  )}
-                  {isEditing ? (
-                    <input
-                      value={draft.reviews}
-                      onChange={(event) =>
-                        setDraft((current) => (current ? { ...current, reviews: event.target.value } : current))
-                      }
-                      className="w-20 rounded border border-slate-500 bg-transparent px-2 py-1 text-sm text-slate-300"
-                    />
-                  ) : (
-                    <span className="text-slate-400">({selectedCourse.reviews} verified reviews)</span>
-                  )}
+                  <span className="font-bold">{selectedCourse.rating}</span>
+                  <span className="text-slate-400">({selectedCourse.reviews} verified reviews)</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-300">
                   <Users className="w-5 h-5 text-[#f47361]" />
-                  {isEditing ? (
-                    <input
-                      value={draft.studentCount}
-                      onChange={(event) =>
-                        setDraft((current) => (current ? { ...current, studentCount: event.target.value } : current))
-                      }
-                      className="w-24 rounded border border-slate-500 bg-transparent px-2 py-1 text-sm"
-                    />
-                  ) : (
-                    <span>{selectedCourse.studentCount} currently learning</span>
-                  )}
+                  <span>{selectedCourse.studentCount} currently learning</span>
                 </div>
-                <span className="bg-[#f47361] px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
-                  {level?.name} Level
-                </span>
+                {isEditing ? (
+                  <select
+                    value={draft.levelId}
+                    onChange={(event) =>
+                      setDraft((current) => (current ? { ...current, levelId: event.target.value } : current))
+                    }
+                    className="bg-[#f47361] px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-white outline-none"
+                  >
+                    {levels.map((candidate) => (
+                      <option key={candidate.id} value={candidate.id}>
+                        {candidate.name} Level
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span className="bg-[#f47361] px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
+                    {level?.name} Level
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center gap-4 pt-4">
@@ -399,32 +396,36 @@ const CourseDetailsView: React.FC = () => {
                   alt={tutor?.name || 'Tutor'}
                 />
                 <div>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                    {selectedCourse.courseDirectorLabel || 'Course Director'}
+                  </p>
                   {isEditing ? (
-                    <input
-                      value={draft.courseDirectorLabel}
+                    <select
+                      value={draft.tutorId}
                       onChange={(event) =>
-                        setDraft((current) =>
-                          current ? { ...current, courseDirectorLabel: event.target.value } : current
-                        )
+                        setDraft((current) => (current ? { ...current, tutorId: event.target.value } : current))
                       }
-                      className="mb-1 rounded border border-slate-500 bg-transparent px-2 py-1 text-xs font-black uppercase tracking-widest text-slate-300"
-                    />
+                      className="mt-1 rounded border border-slate-500 bg-transparent px-2 py-1 text-sm font-bold text-white outline-none"
+                    >
+                      {availableTutorsByLanguage.map((candidate) => (
+                        <option key={candidate.id} value={candidate.id} className="text-slate-900">
+                          {candidate.name}
+                        </option>
+                      ))}
+                    </select>
                   ) : (
-                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                      {selectedCourse.courseDirectorLabel || 'Course Director'}
-                    </p>
+                    <button
+                      onClick={() => {
+                        if (!tutor) return;
+                        setSelectedTutor(tutor);
+                        setView('tutor-profile');
+                        window.scrollTo(0, 0);
+                      }}
+                      className="text-lg font-bold hover:text-[#f47361] transition-colors"
+                    >
+                      {tutor?.name || 'Catalina Tutor'}
+                    </button>
                   )}
-                  <button
-                    onClick={() => {
-                      if (!tutor) return;
-                      setSelectedTutor(tutor);
-                      setView('tutor-profile');
-                      window.scrollTo(0, 0);
-                    }}
-                    className="text-lg font-bold hover:text-[#f47361] transition-colors"
-                  >
-                    {tutor?.name || 'Catalina Tutor'}
-                  </button>
                 </div>
               </div>
 
