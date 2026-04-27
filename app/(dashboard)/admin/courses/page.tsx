@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   createAdminCourse,
@@ -273,6 +274,26 @@ export default function AdminCoursesPage() {
     <main className="min-h-screen bg-slate-50 p-6 lg:p-10">
       <div className="mx-auto max-w-7xl space-y-6">
         <header>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <Link
+              href="/admin/courses"
+              className="rounded-full bg-[#2d3e50] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
+            >
+              Courses
+            </Link>
+            <Link
+              href="/admin/tutors"
+              className="rounded-full border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:bg-slate-100"
+            >
+              Tutors
+            </Link>
+            <Link
+              href="/admin/users"
+              className="rounded-full border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:bg-slate-100"
+            >
+              Users
+            </Link>
+          </div>
           <h1 className="text-3xl font-black text-slate-900">Admin Course Management</h1>
           <p className="mt-2 text-sm text-slate-600">
             Keep existing static cards, and manage dynamic course records from database-backed APIs.

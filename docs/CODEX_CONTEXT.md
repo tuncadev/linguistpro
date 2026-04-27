@@ -28,6 +28,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
+- Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Feature flag APIs: `app/api/feature-flags/route.ts`, `app/api/admin/feature-flags/route.ts`, `app/api/admin/feature-flags/[key]/route.ts`
@@ -39,7 +40,9 @@ Legacy Vite prototype files are still present and used as migration references.
 - Frontend demo-user adapter: `services/demoUserApiService.ts` (`GET /api/demo-users`)
 - Frontend admin overview adapter: `services/adminDashboardApiService.ts` (`GET /api/admin/dashboard/overview`)
 - Frontend admin course CRUD adapter: `services/adminCourseCrudApiService.ts` (`/api/courses` + `/api/courses/:id`)
+- Frontend admin tutor CRUD adapter: `services/adminTutorCrudApiService.ts` (`/api/admin/tutors` + `/api/admin/tutors/:id`)
 - Taxonomy/tutor APIs: `app/api/taxonomies/route.ts`, `app/api/tutors/route.ts`
+- Admin tutor APIs: `app/api/admin/tutors/route.ts`, `app/api/admin/tutors/[id]/route.ts`
 - Demo role user API: `app/api/demo-users/route.ts`
 - Admin overview API: `app/api/admin/dashboard/overview/route.ts`
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
@@ -215,6 +218,7 @@ Migration update:
 - `CourseDetailsView` now has admin-only inline edit mode in legacy UI layout and saves to backend via `updateAdminCourse(...)`.
 - `PATCH /api/courses/:id` now supports structured `syllabusSections` updates (section titles + lesson title/type/duration/content), not only flat `syllabus` section-title arrays.
 - Admin sidebar includes a direct `Courses Page` link in the Administration group.
+- Admin tutor management is implemented at `/admin/tutors` with add/edit/remove wiring via `/api/admin/tutors` and `/api/admin/tutors/:id`.
 
 ## 10) Known Gaps and Risks
 

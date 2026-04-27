@@ -35,6 +35,7 @@ Planning artifacts (`prisma-schema.txt`, `folder-structure.txt`, `rbac-strategy.
 - Tutor profile view with course offerings
 - Navbar role switcher (backend-loaded demo profiles)
 - Next.js admin course page with CRUD (`/admin/courses`) for add/edit/remove via backend APIs
+- Next.js admin tutor page with CRUD (`/admin/tutors`) for add/edit/remove via backend APIs
 
 ## High-Level Architecture
 
@@ -228,11 +229,28 @@ Implemented behavior:
 - uses dynamic taxonomy/tutor selectors from `/api/taxonomies` and `/api/tutors`
 - keeps static summary cards while rendering DB-backed course list/actions
 
+## Admin Tutor CRUD Page (Implemented)
+
+Next.js admin route is now functional:
+- `GET /admin/tutors`
+
+Implemented behavior:
+- loads tutors from `GET /api/admin/tutors`
+- creates tutors through `POST /api/admin/tutors`
+- edits tutors through `PATCH /api/admin/tutors/:id`
+- removes tutors through `DELETE /api/admin/tutors/:id`
+- blocks delete when tutor still owns courses (reassign/remove courses first)
+- preserves existing frontend tutor profile/card style while shifting data source to DB APIs
+
 ## Taxonomy and Tutor Directory APIs (Implemented)
 
 Backend APIs for replacing static frontend taxonomy/tutor data:
 - `GET /api/taxonomies` (public): returns `languages` and `levels`
 - `GET /api/tutors` (public): returns tutor directory metadata for profile cards/details
+- `GET /api/admin/tutors` (`ADMIN`): admin tutor list with login readiness metadata
+- `POST /api/admin/tutors` (`ADMIN`): create tutor user with password
+- `PATCH /api/admin/tutors/:id` (`ADMIN`): edit tutor profile/login fields
+- `DELETE /api/admin/tutors/:id` (`ADMIN`): delete tutor when no courses are assigned
 - `GET /api/demo-users` (public): returns one demo profile per role for navbar quick role switching
 - `GET /api/admin/dashboard/overview` (`ADMIN`): returns admin stats, recent course submissions, and activity feed
 
@@ -267,6 +285,7 @@ Course read paths are now API-first:
 - `services/demoUserApiService.ts` now bridges navbar role-switch profiles to `/api/demo-users`.
 - `services/adminDashboardApiService.ts` now powers `AdminDashboard` cards/submissions/activity from `/api/admin/dashboard/overview`.
 - `services/adminCourseCrudApiService.ts` now powers Next.js admin course management page actions (create/update/delete/list).
+- `services/adminTutorCrudApiService.ts` now powers Next.js admin tutor management page actions (create/update/delete/list).
 - `HomeView`, `CourseCatalog`, `LanguageLandingView`, `TutorDashboard`, and `CourseDetailsView` now use AppContext `languages`, `levels`, and `tutors` loaded from backend-first sources with static fallback.
 - `Navbar` role buttons now use backend-loaded `demoUsers` from `AppContext`; `services/authApiService.ts` maps avatar/profile metadata from auth payloads instead of `MOCK_USERS`.
 - `StudentDashboard` upcoming class card now derives course/tutor details from backend-backed context state.

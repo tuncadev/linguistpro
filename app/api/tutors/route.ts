@@ -4,6 +4,7 @@ import { z } from "zod";
 import { parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { publicTutorSelect, serializeTutor } from "@/lib/tutors/serialize";
 
 const querySchema = z.object({
   q: z.string().trim().max(160).optional(),
@@ -27,36 +28,11 @@ export const GET = withApiHandler(async (req: NextRequest) => {
     orderBy: { createdAt: "asc" },
     take: query.take ?? 50,
     skip: query.skip ?? 0,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      avatarUrl: true,
-      bio: true,
-      rating: true,
-      studentCount: true,
-      coursesAuthored: true,
-      _count: {
-        select: {
-          authoredCourses: true,
-        },
-      },
-    },
+    select: publicTutorSelect,
   });
 
   return NextResponse.json({
-    data: tutors.map((tutor) => ({
-      id: tutor.id,
-      name: tutor.name,
-      email: tutor.email,
-      role: tutor.role,
-      avatarUrl: tutor.avatarUrl,
-      bio: tutor.bio,
-      rating: tutor.rating,
-      studentCount: tutor.studentCount,
-      coursesAuthored: tutor.coursesAuthored ?? tutor._count.authoredCourses,
-    })),
+    data: tutors.map(serializeTutor),
     meta: {
       count: tutors.length,
       take: query.take ?? 50,
@@ -64,4 +40,3 @@ export const GET = withApiHandler(async (req: NextRequest) => {
     },
   });
 });
-

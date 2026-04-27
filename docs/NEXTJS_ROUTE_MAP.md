@@ -1,6 +1,6 @@
 # Next.js Route Map (Migration Scaffold)
 
-Last updated: 2026-04-26
+Last updated: 2026-04-27
 Status: Implemented as scaffold
 
 This document defines the target App Router routes that replace the current Vite view-state navigation.
@@ -26,8 +26,9 @@ This document defines the target App Router routes that replace the current Vite
 4. `/tutor/create`
 5. `/tutor/analytics`
 6. `/admin/courses`
-7. `/admin/users`
-8. `/admin/taxonomies`
+7. `/admin/tutors`
+8. `/admin/users`
+9. `/admin/taxonomies`
 
 ## Lesson Route
 
@@ -38,6 +39,9 @@ This document defines the target App Router routes that replace the current Vite
 1. `/api/courses`
 2. `/api/enroll`
 3. `/api/webhooks`
+4. `/api/tutors`
+5. `/api/admin/tutors`
+6. `/api/admin/tutors/[id]`
 
 ## Middleware Policy (Target)
 

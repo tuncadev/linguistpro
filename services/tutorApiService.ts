@@ -1,6 +1,6 @@
 import { User, UserRole } from "../types";
 
-type ApiTutor = {
+export type ApiTutor = {
   id: string;
   name: string | null;
   email: string;
@@ -10,13 +10,14 @@ type ApiTutor = {
   rating: number | null;
   studentCount: number | null;
   coursesAuthored: number | null;
+  hasPassword?: boolean | null;
 };
 
 type TutorListResponse = {
   data?: ApiTutor[];
 };
 
-function mapTutor(tutor: ApiTutor): User {
+export function mapApiTutorToFrontendTutor(tutor: ApiTutor): User {
   return {
     id: tutor.id,
     name: tutor.name?.trim() || tutor.email,
@@ -29,6 +30,7 @@ function mapTutor(tutor: ApiTutor): User {
     rating: tutor.rating ?? undefined,
     studentCount: tutor.studentCount ?? undefined,
     coursesAuthored: tutor.coursesAuthored ?? undefined,
+    hasPassword: tutor.hasPassword ?? undefined,
   };
 }
 
@@ -44,10 +46,9 @@ export async function fetchTutors(): Promise<User[] | null> {
       return [];
     }
 
-    return payload.data.map(mapTutor);
+    return payload.data.map(mapApiTutorToFrontendTutor);
   } catch (error) {
     console.error("fetchTutors error", error);
     return null;
   }
 }
-

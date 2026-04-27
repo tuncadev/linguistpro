@@ -15,6 +15,7 @@ export interface User {
   rating?: number;
   studentCount?: number;
   coursesAuthored?: number;
+  hasPassword?: boolean;
 }
 
 export interface Language {
