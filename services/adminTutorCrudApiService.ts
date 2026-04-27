@@ -19,6 +19,8 @@ export type TutorMutationPayload = {
   rating?: number | null;
   studentCount?: number | null;
   coursesAuthored?: number | null;
+  tutorApprovalStatus?: "PENDING" | "APPROVED" | "REJECTED";
+  tutorApprovalNotes?: string | null;
   location?: string | null;
   languagesSpoken?: string | null;
   profileHighlights?: string[];

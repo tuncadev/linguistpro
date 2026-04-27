@@ -1,4 +1,4 @@
-import { Prisma, Role } from "@prisma/client";
+import { Prisma, Role, TutorApprovalStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
@@ -48,6 +48,8 @@ const createTutorSchema = z.object({
     )
     .max(20)
     .optional(),
+  tutorApprovalStatus: z.nativeEnum(TutorApprovalStatus).optional(),
+  tutorApprovalNotes: z.string().trim().max(1000).nullable().optional(),
 });
 
 export const GET = withApiHandler(async (req: NextRequest) => {
@@ -111,6 +113,7 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   const created = await prisma.user.create({
     data: {
       role: Role.TUTOR,
+      emailVerifiedAt: new Date(),
       name: payload.name,
       email,
       passwordHash,
@@ -130,6 +133,10 @@ export const POST = withApiHandler(async (req: NextRequest) => {
       pedagogicalModules: payload.pedagogicalModules
         ? (payload.pedagogicalModules as Prisma.InputJsonValue)
         : null,
+      tutorApprovalStatus: payload.tutorApprovalStatus ?? TutorApprovalStatus.PENDING,
+      tutorApprovedAt:
+        payload.tutorApprovalStatus === TutorApprovalStatus.APPROVED ? new Date() : null,
+      tutorApprovalNotes: payload.tutorApprovalNotes ?? null,
     },
     select: adminTutorSelect,
   });

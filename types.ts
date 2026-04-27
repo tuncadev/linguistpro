@@ -5,6 +5,8 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
+export type TutorApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
 export interface TutorStatModule {
   id: string;
   label: string;
@@ -28,6 +30,11 @@ export interface User {
   studentCount?: number;
   coursesAuthored?: number;
   hasPassword?: boolean;
+  emailVerifiedAt?: string | null;
+  onboardingCompletedAt?: string | null;
+  tutorApprovalStatus?: TutorApprovalStatus;
+  tutorApprovedAt?: string | null;
+  tutorApprovalNotes?: string;
   location?: string;
   languagesSpoken?: string;
   profileHighlights?: string[];

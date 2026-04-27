@@ -7,6 +7,8 @@ import { FormEvent, useEffect, useState } from "react";
 type RegisterResponse = {
   message?: string;
   error?: string;
+  verificationRequired?: boolean;
+  verificationToken?: string;
   user?: {
     id: string;
     name: string;
@@ -60,8 +62,18 @@ export default function RegisterPage() {
       });
 
       const payload = (await response.json()) as RegisterResponse;
-      if (!response.ok || !payload.user) {
+      if (!response.ok) {
         setError(payload.error ?? "Registration failed");
+        return;
+      }
+
+      if (payload.verificationRequired) {
+        const tokenHint = payload.verificationToken
+          ? ` Verification token (dev/test): ${payload.verificationToken}`
+          : "";
+        setSuccess(`${payload.message ?? "Registration successful. Verify email before login."}${tokenHint}`);
+        setPassword("");
+        setConfirmPassword("");
         return;
       }
 

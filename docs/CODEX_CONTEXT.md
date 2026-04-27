@@ -18,12 +18,16 @@ Legacy Vite prototype files are still present and used as migration references.
 - Primary runtime: `app/` (Next.js App Router)
 - Proxy/route guard: `middleware.ts` (to be migrated to `proxy.ts` for Next 16 convention)
 - Auth/session APIs: `app/api/auth/*`
+- Auth hardening helpers: `lib/auth/tokens.ts`, `lib/security/rate-limit.ts`
 - Auth UI: `app/(auth)/login/page.tsx`, `app/(auth)/register/page.tsx`
 - Legacy styled auth UI: `components/Navbar.tsx` modal wired to `/api/auth/*`
 - Legacy Vite shell retained: `index.tsx`, `App.tsx`, `views/`, `components/`
 - Prisma pipeline: `prisma/schema.prisma`, `prisma/migrations/`, `lib/prisma.ts`
 - Prisma seed utility: `prisma/seed.mjs`
 - Auth scaffold: `app/api/auth/*`, `lib/auth/password.ts`, `lib/auth/session.ts`
+- Auth token/lockout model fields: `User.emailVerifiedAt`, `User.failedLoginAttempts`, `User.lockedUntil`, `AuthToken`
+- Student onboarding model fields: `User.onboardingCompletedAt`, `User.welcomeDismissedAt`
+- Tutor governance model fields: `User.tutorApprovalStatus`, `User.tutorApprovedAt`, `User.tutorApprovalNotes`
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
 - Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
@@ -32,6 +36,11 @@ Legacy Vite prototype files are still present and used as migration references.
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
 - Next.js admin tutor detail edit page: `app/(dashboard)/admin/tutors/[id]/page.tsx`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
+- Student onboarding APIs: `app/api/student/onboarding/route.ts`, `app/api/student/welcome/route.ts`
+- Tutor onboarding API: `app/api/tutor/onboarding/route.ts`
+- Admin tutor approval API: `app/api/admin/tutors/[id]/approve/route.ts`
+- Student onboarding page: `app/(dashboard)/student/my-learning/page.tsx`
+- Tutor governance page: `app/(dashboard)/tutor/my-courses/page.tsx`
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Feature flag APIs: `app/api/feature-flags/route.ts`, `app/api/admin/feature-flags/route.ts`, `app/api/admin/feature-flags/[key]/route.ts`
 - Feature flag server helper: `lib/feature-flags/is-enabled.ts`
@@ -97,7 +106,7 @@ If these are unset, the corresponding views currently return `null`.
 ## 5) Role Simulation Model
 
 Both real session auth and demo role switching exist in `Navbar`.
-- Real session auth: styled modal calling `/api/auth/login` and `/api/auth/register`.
+- Real session auth: styled modal calling `/api/auth/login` and `/api/auth/register` with verification-required handling.
 - Demo role switch: selecting one of backend-loaded demo users from `/api/demo-users` (or `Guest`) still overrides context for prototype flows.
 
 Guest behavior:
@@ -212,6 +221,9 @@ Migration update:
 - Feature flag foundation is now implemented with Prisma model, seeded defaults, admin CRUD APIs, and public read endpoint.
 - Legacy frontend taxonomy/tutor/demo-role hardcoded paths are now backend-first via `/api/taxonomies`, `/api/tutors`, and `/api/demo-users` with fallback constants in `App.tsx`.
 - Auth API payloads now include user profile metadata (`avatarUrl`, `bio`, `rating`, `studentCount`, `coursesAuthored`) and frontend auth mapping uses those fields.
+- Auth hardening now includes: email verification endpoint pair, password-reset endpoint pair, login brute-force lockout, and route-level IP rate limiting.
+- Student onboarding flow is implemented and tested through `/api/student/onboarding`, `/api/student/welcome`, and `/student/my-learning`.
+- Tutor onboarding/governance is implemented and tested through `/api/tutor/onboarding`, `/api/admin/tutors/:id/approve`, and publish-path approval checks.
 - Admin dashboard cards, recent submissions, and activity feed are backend-driven via `/api/admin/dashboard/overview`.
 - Next.js `/admin/courses` is no longer scaffold and now supports admin add/edit/remove against backend course APIs with dynamic taxonomy/tutor selectors.
 - Admin `/api/courses` creation now supports admin-controlled status (including direct `PUBLISHED`) and detail-page content fields.

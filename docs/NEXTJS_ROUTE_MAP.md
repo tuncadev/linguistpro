@@ -35,7 +35,7 @@ This document defines the target App Router routes that replace the current Vite
 
 1. `/learn/[courseId]/[lessonId]` -> Lesson player and resources
 
-## API Routes (Initial)
+## API Routes (Current)
 
 1. `/api/courses`
 2. `/api/enroll`
@@ -43,6 +43,18 @@ This document defines the target App Router routes that replace the current Vite
 4. `/api/tutors`
 5. `/api/admin/tutors`
 6. `/api/admin/tutors/[id]`
+7. `/api/admin/tutors/[id]/approve`
+8. `/api/auth/register`
+9. `/api/auth/login`
+10. `/api/auth/logout`
+11. `/api/auth/session`
+12. `/api/auth/request-verification`
+13. `/api/auth/verify-email`
+14. `/api/auth/forgot-password`
+15. `/api/auth/reset-password`
+16. `/api/student/onboarding`
+17. `/api/student/welcome`
+18. `/api/tutor/onboarding`
 
 ## Middleware Policy (Target)
 

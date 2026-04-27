@@ -218,12 +218,19 @@ async function upsertUsers() {
 
   for (const user of DEFAULT_USERS) {
     const passwordHash = await bcrypt.hash(user.password, 12);
+    const now = new Date();
+    const isTutor = user.role === "TUTOR";
+    const isStudent = user.role === "STUDENT";
     const saved = await prisma.user.upsert({
       where: { email: user.email },
       update: {
         name: user.name,
         role: user.role,
         passwordHash,
+        emailVerifiedAt: now,
+        tutorApprovalStatus: isTutor ? "APPROVED" : undefined,
+        tutorApprovedAt: isTutor ? now : null,
+        onboardingCompletedAt: isStudent ? now : null,
         avatarUrl: user.avatarUrl ?? null,
         bio: user.bio ?? null,
         rating: user.rating ?? null,
@@ -240,6 +247,10 @@ async function upsertUsers() {
         email: user.email,
         role: user.role,
         passwordHash,
+        emailVerifiedAt: now,
+        tutorApprovalStatus: isTutor ? "APPROVED" : "PENDING",
+        tutorApprovedAt: isTutor ? now : null,
+        onboardingCompletedAt: isStudent ? now : null,
         avatarUrl: user.avatarUrl ?? null,
         bio: user.bio ?? null,
         rating: user.rating ?? null,

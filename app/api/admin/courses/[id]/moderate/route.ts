@@ -6,6 +6,7 @@ import { conflict, notFound } from "@/lib/http/api-error";
 import { parseJsonBody } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { requireApprovedTutor } from "@/lib/tutors/governance";
 
 const moderateSchema = z.object({
   decision: z.enum(["APPROVE", "REJECT"]),
@@ -27,7 +28,7 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
 
   const existing = await prisma.course.findUnique({
     where: { id },
-    select: { id: true, status: true },
+    select: { id: true, status: true, tutorId: true },
   });
   if (!existing) {
     notFound("Course not found");
@@ -38,6 +39,9 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
   }
 
   const approved = parsed.decision === "APPROVE";
+  if (approved) {
+    await requireApprovedTutor(existing.tutorId);
+  }
   const updated = await prisma.course.update({
     where: { id },
     data: {

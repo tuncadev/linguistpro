@@ -14,6 +14,7 @@ const Navbar: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [authLoading, setAuthLoading] = useState(false);
 
   const resetAuthForm = () => {
@@ -22,6 +23,7 @@ const Navbar: React.FC = () => {
     setPassword('');
     setConfirmPassword('');
     setAuthError(null);
+    setAuthNotice(null);
   };
 
   const openAuthModal = (mode: 'login' | 'register') => {
@@ -38,6 +40,7 @@ const Navbar: React.FC = () => {
   const onSubmitAuth = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAuthError(null);
+    setAuthNotice(null);
     setAuthLoading(true);
 
     try {
@@ -46,15 +49,29 @@ const Navbar: React.FC = () => {
           setAuthError('Password confirmation does not match.');
           return;
         }
-        const createdUser = await registerUser(name.trim(), email.trim(), password);
-        setUser(createdUser);
+        const registered = await registerUser(name.trim(), email.trim(), password);
+        if (registered.verificationRequired) {
+          const devTokenHint = registered.verificationToken ? ` Verification token: ${registered.verificationToken}` : '';
+          setAuthNotice(
+            `${registered.message ?? 'Registration successful. Verify email before login.'}${devTokenHint}`
+          );
+          setAuthMode('login');
+          setPassword('');
+          setConfirmPassword('');
+          return;
+        }
+
+        if (registered.user) {
+          setUser(registered.user);
+          setView('dashboard');
+          closeAuthModal();
+        }
       } else {
         const loggedInUser = await loginUser(email.trim(), password);
         setUser(loggedInUser);
+        setView('dashboard');
+        closeAuthModal();
       }
-
-      setView('dashboard');
-      closeAuthModal();
     } catch (error) {
       setAuthError(error instanceof Error ? error.message : 'Authentication failed.');
     } finally {
@@ -259,6 +276,9 @@ const Navbar: React.FC = () => {
 
               {authError ? (
                 <p className="text-sm font-bold text-red-600">{authError}</p>
+              ) : null}
+              {authNotice ? (
+                <p className="text-xs font-bold text-emerald-700 break-all">{authNotice}</p>
               ) : null}
 
               <button

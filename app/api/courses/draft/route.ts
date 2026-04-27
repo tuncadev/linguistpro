@@ -8,6 +8,7 @@ import { badRequest } from "@/lib/http/api-error";
 import { parseJsonBody } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { requireApprovedTutor } from "@/lib/tutors/governance";
 
 const createAiDraftSchema = z.object({
   topic: z.string().trim().min(2).max(160),
@@ -26,6 +27,10 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   const payload = await parseJsonBody(req, createAiDraftSchema);
   const isAdmin = auth.session.role === "ADMIN";
   let tutorId = auth.session.id;
+
+  if (!isAdmin) {
+    await requireApprovedTutor(auth.session.id);
+  }
 
   if (isAdmin) {
     if (payload.tutorId) {

@@ -1,4 +1,4 @@
-import { Prisma, Role } from "@prisma/client";
+import { Prisma, Role, TutorApprovalStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
@@ -42,6 +42,8 @@ const updateTutorSchema = z
       )
       .max(20)
       .optional(),
+    tutorApprovalStatus: z.nativeEnum(TutorApprovalStatus).optional(),
+    tutorApprovalNotes: z.string().trim().max(1000).nullable().optional(),
   })
   .refine(
     (value) =>
@@ -57,7 +59,9 @@ const updateTutorSchema = z
       value.languagesSpoken !== undefined ||
       value.profileHighlights !== undefined ||
       value.profileStats !== undefined ||
-      value.pedagogicalModules !== undefined,
+      value.pedagogicalModules !== undefined ||
+      value.tutorApprovalStatus !== undefined ||
+      value.tutorApprovalNotes !== undefined,
     {
       message: "At least one field must be provided",
     }
@@ -147,6 +151,14 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
           : payload.pedagogicalModules === null
           ? null
           : (payload.pedagogicalModules as Prisma.InputJsonValue),
+      tutorApprovalStatus: payload.tutorApprovalStatus,
+      tutorApprovedAt:
+        payload.tutorApprovalStatus === undefined
+          ? undefined
+          : payload.tutorApprovalStatus === TutorApprovalStatus.APPROVED
+          ? new Date()
+          : null,
+      tutorApprovalNotes: payload.tutorApprovalNotes,
     },
     select: adminTutorSelect,
   });

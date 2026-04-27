@@ -8,6 +8,7 @@ import { badRequest, conflict, forbidden, notFound } from "@/lib/http/api-error"
 import { parseJsonBody } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { requireApprovedTutor } from "@/lib/tutors/governance";
 
 const updateCourseSchema = z.object({
   title: z.string().trim().min(3).max(160).optional(),
@@ -137,6 +138,16 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
     });
     if (!tutor) {
       badRequest("Tutor not found or user is not a tutor");
+    }
+  }
+
+  if (isAdmin) {
+    const effectiveTutorId = payload.tutorId ?? existing.tutorId;
+    const publishingNow = payload.status === "PUBLISHED";
+    const reassigningPublishedCourse =
+      existing.status === "PUBLISHED" && payload.status === undefined && Boolean(payload.tutorId);
+    if (publishingNow || reassigningPublishedCourse) {
+      await requireApprovedTutor(effectiveTutorId);
     }
   }
 

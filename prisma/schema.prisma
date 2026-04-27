@@ -13,6 +13,17 @@ enum Role {
   ADMIN
 }
 
+enum AuthTokenType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+}
+
+enum TutorApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum CourseStatus {
   DRAFT
   PENDING_REVIEW
@@ -32,6 +43,14 @@ model User {
   email           String  @unique
   passwordHash    String?
   role            Role    @default(STUDENT)
+  emailVerifiedAt DateTime?
+  failedLoginAttempts Int @default(0)
+  lockedUntil DateTime?
+  onboardingCompletedAt DateTime?
+  welcomeDismissedAt DateTime?
+  tutorApprovalStatus TutorApprovalStatus @default(PENDING)
+  tutorApprovedAt DateTime?
+  tutorApprovalNotes String?
   avatarUrl       String?
   bio             String?
   rating          Float?
@@ -45,9 +64,23 @@ model User {
 
   authoredCourses Course[]     @relation("CourseTutor")
   enrollments     Enrollment[]
+  authTokens      AuthToken[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AuthToken {
+  id        String        @id @default(cuid())
+  type      AuthTokenType
+  tokenHash String        @unique
+  expiresAt DateTime
+  consumedAt DateTime?
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+
+  @@index([userId, type])
 }
 
 model Language {

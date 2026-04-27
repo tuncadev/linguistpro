@@ -1,4 +1,4 @@
-import { Prisma, Role } from "@prisma/client";
+import { Prisma, Role, TutorApprovalStatus } from "@prisma/client";
 import { hashPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/prisma";
 import {
@@ -38,6 +38,9 @@ async function createDefaultTutor(): Promise<TutorIdentity> {
     const created = await prisma.user.create({
       data: {
         role: Role.TUTOR,
+        emailVerifiedAt: new Date(),
+        tutorApprovalStatus: TutorApprovalStatus.APPROVED,
+        tutorApprovedAt: new Date(),
         name: DEFAULT_TUTOR_PROFILE.name,
         email: DEFAULT_TUTOR_PROFILE.email,
         passwordHash,

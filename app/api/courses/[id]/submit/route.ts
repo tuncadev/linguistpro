@@ -4,6 +4,7 @@ import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
 import { conflict, forbidden, notFound } from "@/lib/http/api-error";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { requireApprovedTutor } from "@/lib/tutors/governance";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -29,6 +30,10 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
   const isOwner = existing.tutorId === auth.session.id;
   if (!isAdmin && !isOwner) {
     forbidden();
+  }
+
+  if (!isAdmin) {
+    await requireApprovedTutor(auth.session.id);
   }
 
   if (existing.status !== "DRAFT") {

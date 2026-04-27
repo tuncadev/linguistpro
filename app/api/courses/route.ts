@@ -15,6 +15,7 @@ import { badRequest, forbidden } from "@/lib/http/api-error";
 import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
+import { requireApprovedTutor } from "@/lib/tutors/governance";
 
 const listQuerySchema = z.object({
   q: z.string().trim().max(160).optional(),
@@ -115,6 +116,10 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     forbidden("Only admin can set status during course creation");
   }
 
+  if (!isAdmin) {
+    await requireApprovedTutor(auth.session.id);
+  }
+
   let tutorId = auth.session.id;
   if (isAdmin) {
     if (payload.tutorId) {
@@ -149,6 +154,10 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   }
   if (!tutor) {
     badRequest("Tutor not found or user is not a tutor");
+  }
+
+  if (isAdmin && status === "PUBLISHED") {
+    await requireApprovedTutor(tutorId);
   }
 
   const created = await prisma.course.create({

@@ -18,6 +18,9 @@ export type ApiTutor = {
   studentCount: number | null;
   coursesAuthored: number | null;
   hasPassword?: boolean | null;
+  tutorApprovalStatus?: "PENDING" | "APPROVED" | "REJECTED" | null;
+  tutorApprovedAt?: string | null;
+  tutorApprovalNotes?: string | null;
   location?: string | null;
   languagesSpoken?: string | null;
   profileHighlights?: string[] | null;
@@ -51,6 +54,9 @@ export function mapApiTutorToFrontendTutor(tutor: ApiTutor): User {
     studentCount: tutor.studentCount ?? undefined,
     coursesAuthored: tutor.coursesAuthored ?? undefined,
     hasPassword: tutor.hasPassword ?? undefined,
+    tutorApprovalStatus: tutor.tutorApprovalStatus ?? undefined,
+    tutorApprovedAt: tutor.tutorApprovedAt ?? undefined,
+    tutorApprovalNotes: tutor.tutorApprovalNotes ?? undefined,
     location: tutor.location || DEFAULT_TUTOR_LOCATION,
     languagesSpoken: tutor.languagesSpoken || DEFAULT_TUTOR_LANGUAGES,
     profileHighlights:

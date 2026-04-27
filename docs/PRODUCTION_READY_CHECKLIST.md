@@ -9,8 +9,11 @@ Status baseline: Core app and backend scaffolding exist; production launch gates
 - Done:
   - Finalize Production Infrastructure Topology (card implemented with topology + IaC/runbook docs)
   - Harden Environment and Secret Management (repo secret scan + rotation drill + stricter prod env validation)
+  - Auth Security Hardening (email verification + password reset + lockout/rate limiting)
+  - Student Onboarding Flow (Real Users) (profile + first enrollment + welcome flow)
+  - Tutor Onboarding and Profile Governance (approval workflow + publish-path guardrails)
 - Next:
-  - Auth Security Hardening
+  - RBAC and Permission Audit
 
 ## Definition of Production-Ready (v1)
 

@@ -156,11 +156,39 @@ Auth API routes:
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
 - `GET /api/auth/session`
+- `POST /api/auth/request-verification`
+- `POST /api/auth/verify-email`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
+
+Auth hardening behavior:
+- registration now issues verification tokens (dev/test token returned in response) and requires verification before login
+- login now enforces account lockout after repeated failed attempts
+- auth endpoints apply in-memory IP rate limiting controls
+- password reset uses short-lived DB-backed hashed tokens
 
 Legacy frontend wiring update:
 - Navbar `Log In` / `Start Free Trial` now use a styled auth modal and call the backend auth APIs.
 - Session is restored on app load via `GET /api/auth/session`.
 - `CourseDetailsView` `Enroll Today` now calls `POST /api/enroll` for student accounts, then continues into lesson view.
+
+## Student Onboarding Flow (Implemented)
+
+- API routes:
+  - `GET/PATCH /api/student/onboarding`
+  - `GET /api/student/welcome`
+- Next page:
+  - `/student/my-learning` now runs profile completion + first enrollment + next-lesson continuation flow.
+
+## Tutor Onboarding and Governance (Implemented)
+
+- Tutor governance routes:
+  - `GET/PATCH /api/tutor/onboarding`
+  - `POST /api/admin/tutors/:id/approve`
+- Data model:
+  - `User.tutorApprovalStatus`, `User.tutorApprovedAt`, `User.tutorApprovalNotes`
+- Guardrails:
+  - tutor course creation/draft submission/publish path now requires approved tutor status.
 
 ## RBAC Middleware and Server Checks (Implemented)
 

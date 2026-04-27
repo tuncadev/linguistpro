@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Execute production readiness card: Auth Security Hardening.
+1. Execute production readiness card: RBAC and Permission Audit.
 
 ## Phase Plan (Target Timeline)
 
@@ -111,3 +111,6 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-27: Added backend tutor profile modules (location/languages, profile highlights list, stats modules, pedagogical modules) with Prisma migration and tutor API support; wired same-layout in-page editing on `TutorProfileView`.
 - 2026-04-27: Finalized production infrastructure topology with committed environment diagram and provisioning/IaC baseline docs (`docs/PRODUCTION_INFRA_TOPOLOGY.md`, `ops/infra/PROVISIONING_RUNBOOK.md`, `ops/infra/terraform/README.md`).
 - 2026-04-27: Hardened env/secrets workflow with tracked-repo secret scanning (`ops/secrets/check-repo-secrets.sh`), rotation drill evidence generation (`ops/secrets/rotation-drill.sh`), stricter production env checks (`ops/secrets/validate-env.sh`), updated runbook, and drill report `ops/secrets/reports/rotation-drill-20260427T153109Z.md`.
+- 2026-04-27: Auth security hardening implemented with DB-backed verification/reset tokens (`AuthToken`), new auth endpoints (`/api/auth/request-verification`, `/api/auth/verify-email`, `/api/auth/forgot-password`, `/api/auth/reset-password`), login lockout + in-memory IP rate limits, and frontend registration verification handling.
+- 2026-04-27: Student onboarding flow implemented via `/api/student/onboarding` + `/api/student/welcome` and fully wired `/student/my-learning` page for profile completion, first-course enrollment, and next-lesson continuation.
+- 2026-04-27: Tutor governance implemented via `TutorApprovalStatus`, `/api/tutor/onboarding`, `/api/admin/tutors/:id/approve`, admin tutor approval fields, and publish-path guardrails requiring approved tutors before draft/create/submit/publish transitions.

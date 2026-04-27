@@ -18,6 +18,8 @@ type TutorFormState = {
   bio: string;
   studentCount: string;
   coursesAuthored: string;
+  tutorApprovalStatus: "PENDING" | "APPROVED" | "REJECTED";
+  tutorApprovalNotes: string;
 };
 
 const EMPTY_FORM: TutorFormState = {
@@ -28,6 +30,8 @@ const EMPTY_FORM: TutorFormState = {
   bio: "",
   studentCount: "",
   coursesAuthored: "",
+  tutorApprovalStatus: "PENDING",
+  tutorApprovalNotes: "",
 };
 
 function toOptionalNonNegativeInt(raw: string): number | null | undefined {
@@ -86,6 +90,8 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
             typeof tutor.coursesAuthored === "number" && Number.isFinite(tutor.coursesAuthored)
               ? String(tutor.coursesAuthored)
               : "",
+          tutorApprovalStatus: tutor.tutorApprovalStatus ?? "PENDING",
+          tutorApprovalNotes: tutor.tutorApprovalNotes ?? "",
         });
         setCourses(allCourses ?? []);
       } catch (loadError) {
@@ -147,6 +153,8 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
         bio: form.bio.trim() || null,
         studentCount,
         coursesAuthored,
+        tutorApprovalStatus: form.tutorApprovalStatus,
+        tutorApprovalNotes: form.tutorApprovalNotes.trim() || null,
       });
 
       setForm((current) => ({ ...current, password: "" }));
@@ -238,6 +246,33 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                     placeholder="Courses authored"
                     className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                     inputMode="numeric"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <select
+                    value={form.tutorApprovalStatus}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        tutorApprovalStatus: event.target.value as TutorFormState["tutorApprovalStatus"],
+                      }))
+                    }
+                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
+                  >
+                    <option value="PENDING">Approval: Pending</option>
+                    <option value="APPROVED">Approval: Approved</option>
+                    <option value="REJECTED">Approval: Rejected</option>
+                  </select>
+                  <input
+                    value={form.tutorApprovalNotes}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        tutorApprovalNotes: event.target.value,
+                      }))
+                    }
+                    placeholder="Approval notes"
+                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                   />
                 </div>
 
