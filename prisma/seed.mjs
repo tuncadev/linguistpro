@@ -3,6 +3,33 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const DEFAULT_TUTOR_LOCATION = "Barcelona, Spain HQ";
+const DEFAULT_TUTOR_LANGUAGES = "Trilingual (ES, EN, FR)";
+const DEFAULT_TUTOR_PROFILE_HIGHLIGHTS = [
+  "Accredited by National Board",
+  "Linguistic Research Fellow",
+  "Catalina Impact Award 2023",
+  "Advanced Curriculum Designer",
+];
+const DEFAULT_TUTOR_PROFILE_STATS = [
+  { id: "stat-graduates", label: "Graduates", value: "15400" },
+  { id: "stat-rating", label: "Rating", value: "4.9" },
+];
+const DEFAULT_TUTOR_PEDAGOGICAL_MODULES = [
+  {
+    id: "module-visual-integration",
+    title: "Visual Integration",
+    description:
+      "Leveraging the latest in cognitive visual learning to create memory anchors that last a lifetime.",
+  },
+  {
+    id: "module-active-fluency",
+    title: "Active Fluency",
+    description:
+      "Focusing on high-output conversation practice from day one, rather than passive absorption.",
+  },
+];
+
 const DEFAULT_USERS = [
   {
     name: "LinguistPro Admin",
@@ -11,16 +38,22 @@ const DEFAULT_USERS = [
     password: "Admin123!",
   },
   {
-    name: "LinguistPro Tutor",
+    name: "Prof. Elena Rodriguez",
     email: "tutor@linguistpro.local",
     role: "TUTOR",
     password: "Tutor123!",
     avatarUrl:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
-    bio: "Senior Catalina tutor focused on practical language fluency and conversational confidence.",
+    bio:
+      "Dedicated linguist with over 12 years of experience in Spanish immersion and corporate communication training at Catalina Academy.",
     rating: 4.9,
     studentCount: 15400,
     coursesAuthored: 8,
+    location: DEFAULT_TUTOR_LOCATION,
+    languagesSpoken: DEFAULT_TUTOR_LANGUAGES,
+    profileHighlights: DEFAULT_TUTOR_PROFILE_HIGHLIGHTS,
+    profileStats: DEFAULT_TUTOR_PROFILE_STATS,
+    pedagogicalModules: DEFAULT_TUTOR_PEDAGOGICAL_MODULES,
   },
   {
     name: "LinguistPro Student",
@@ -196,6 +229,11 @@ async function upsertUsers() {
         rating: user.rating ?? null,
         studentCount: user.studentCount ?? null,
         coursesAuthored: user.coursesAuthored ?? null,
+        location: user.location ?? null,
+        languagesSpoken: user.languagesSpoken ?? null,
+        profileHighlights: user.profileHighlights ?? null,
+        profileStats: user.profileStats ?? null,
+        pedagogicalModules: user.pedagogicalModules ?? null,
       },
       create: {
         name: user.name,
@@ -207,6 +245,11 @@ async function upsertUsers() {
         rating: user.rating ?? null,
         studentCount: user.studentCount ?? null,
         coursesAuthored: user.coursesAuthored ?? null,
+        location: user.location ?? null,
+        languagesSpoken: user.languagesSpoken ?? null,
+        profileHighlights: user.profileHighlights ?? null,
+        profileStats: user.profileStats ?? null,
+        pedagogicalModules: user.pedagogicalModules ?? null,
       },
     });
     users[user.role] = saved;

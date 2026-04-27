@@ -52,6 +52,11 @@ export async function POST(req: Request) {
         rating: true,
         studentCount: true,
         coursesAuthored: true,
+        location: true,
+        languagesSpoken: true,
+        profileHighlights: true,
+        profileStats: true,
+        pedagogicalModules: true,
       },
     });
 

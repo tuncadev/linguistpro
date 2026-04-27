@@ -5,6 +5,18 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
+export interface TutorStatModule {
+  id: string;
+  label: string;
+  value: string;
+}
+
+export interface TutorPedagogicalModule {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -16,6 +28,11 @@ export interface User {
   studentCount?: number;
   coursesAuthored?: number;
   hasPassword?: boolean;
+  location?: string;
+  languagesSpoken?: string;
+  profileHighlights?: string[];
+  profileStats?: TutorStatModule[];
+  pedagogicalModules?: TutorPedagogicalModule[];
 }
 
 export interface Language {

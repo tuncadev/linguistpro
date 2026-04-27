@@ -19,6 +19,19 @@ export type TutorMutationPayload = {
   rating?: number | null;
   studentCount?: number | null;
   coursesAuthored?: number | null;
+  location?: string | null;
+  languagesSpoken?: string | null;
+  profileHighlights?: string[];
+  profileStats?: Array<{
+    id?: string;
+    label: string;
+    value: string;
+  }>;
+  pedagogicalModules?: Array<{
+    id?: string;
+    title: string;
+    description: string;
+  }>;
 };
 
 function readErrorMessage(payload: unknown): string {

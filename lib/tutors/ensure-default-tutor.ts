@@ -1,6 +1,13 @@
 import { Prisma, Role } from "@prisma/client";
 import { hashPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/prisma";
+import {
+  DEFAULT_TUTOR_LANGUAGES,
+  DEFAULT_TUTOR_LOCATION,
+  DEFAULT_TUTOR_PEDAGOGICAL_MODULES,
+  DEFAULT_TUTOR_PROFILE_HIGHLIGHTS,
+  DEFAULT_TUTOR_PROFILE_STATS,
+} from "@/lib/tutors/profile-defaults";
 
 const DEFAULT_TUTOR_PROFILE = {
   name: "Prof. Elena Rodriguez",
@@ -13,6 +20,11 @@ const DEFAULT_TUTOR_PROFILE = {
   rating: 4.9,
   studentCount: 15400,
   coursesAuthored: 8,
+  location: DEFAULT_TUTOR_LOCATION,
+  languagesSpoken: DEFAULT_TUTOR_LANGUAGES,
+  profileHighlights: DEFAULT_TUTOR_PROFILE_HIGHLIGHTS,
+  profileStats: DEFAULT_TUTOR_PROFILE_STATS,
+  pedagogicalModules: DEFAULT_TUTOR_PEDAGOGICAL_MODULES,
 } as const;
 
 type TutorIdentity = {
@@ -34,6 +46,14 @@ async function createDefaultTutor(): Promise<TutorIdentity> {
         rating: DEFAULT_TUTOR_PROFILE.rating,
         studentCount: DEFAULT_TUTOR_PROFILE.studentCount,
         coursesAuthored: DEFAULT_TUTOR_PROFILE.coursesAuthored,
+        location: DEFAULT_TUTOR_PROFILE.location,
+        languagesSpoken: DEFAULT_TUTOR_PROFILE.languagesSpoken,
+        profileHighlights:
+          DEFAULT_TUTOR_PROFILE.profileHighlights as unknown as Prisma.InputJsonValue,
+        profileStats:
+          DEFAULT_TUTOR_PROFILE.profileStats as unknown as Prisma.InputJsonValue,
+        pedagogicalModules:
+          DEFAULT_TUTOR_PROFILE.pedagogicalModules as unknown as Prisma.InputJsonValue,
       },
       select: { id: true },
     });

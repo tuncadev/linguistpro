@@ -20,6 +20,11 @@ export async function GET(req: NextRequest) {
       rating: true,
       studentCount: true,
       coursesAuthored: true,
+      location: true,
+      languagesSpoken: true,
+      profileHighlights: true,
+      profileStats: true,
+      pedagogicalModules: true,
     },
   });
 
@@ -35,6 +40,11 @@ export async function GET(req: NextRequest) {
       rating: null,
       studentCount: null,
       coursesAuthored: null,
+      location: null,
+      languagesSpoken: null,
+      profileHighlights: null,
+      profileStats: null,
+      pedagogicalModules: null,
     },
   });
 }

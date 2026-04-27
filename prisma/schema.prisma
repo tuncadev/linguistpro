@@ -37,6 +37,11 @@ model User {
   rating          Float?
   studentCount    Int?
   coursesAuthored Int?
+  location        String?
+  languagesSpoken String?
+  profileHighlights Json?
+  profileStats      Json?
+  pedagogicalModules Json?
 
   authoredCourses Course[]     @relation("CourseTutor")
   enrollments     Enrollment[]

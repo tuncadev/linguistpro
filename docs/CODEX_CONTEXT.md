@@ -222,6 +222,7 @@ Migration update:
 - Admin sidebar includes a direct `Courses Page` link in the Administration group.
 - Admin tutor management is implemented at `/admin/tutors` with add/edit/remove wiring via `/api/admin/tutors` and `/api/admin/tutors/:id`.
 - Legacy `TutorProfileView` now supports admin-only in-place edit mode (same UI layout with input substitution), matching `CourseDetailsView` edit behavior.
+- Tutor profile metadata now includes backend fields for `location`, `languagesSpoken`, `profileHighlights` (list), `profileStats` (modules), and `pedagogicalModules` (modules); tutor APIs serialize these with defaults.
 - Admin dashboard routes now render with a persistent left navigation (`Courses`, `Tutors`, `Users`, `Taxonomies`).
 - Tutor list APIs now auto-provision a default tutor profile from legacy frontend tutor data when no tutors exist, and also repair course assignments that reference non-tutor users.
 - Course creation and AI draft APIs now enforce `tutorId` to be a real `TUTOR` role account (admins cannot assign non-tutor users).

@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
@@ -19,6 +19,29 @@ const updateTutorSchema = z
     rating: z.number().min(0).max(5).nullable().optional(),
     studentCount: z.number().int().min(0).max(1_000_000).nullable().optional(),
     coursesAuthored: z.number().int().min(0).max(1_000_000).nullable().optional(),
+    location: z.string().trim().max(200).nullable().optional(),
+    languagesSpoken: z.string().trim().max(240).nullable().optional(),
+    profileHighlights: z.array(z.string().trim().min(1).max(240)).max(50).optional(),
+    profileStats: z
+      .array(
+        z.object({
+          id: z.string().trim().min(1).max(80).optional(),
+          label: z.string().trim().min(1).max(120),
+          value: z.string().trim().min(1).max(120),
+        })
+      )
+      .max(20)
+      .optional(),
+    pedagogicalModules: z
+      .array(
+        z.object({
+          id: z.string().trim().min(1).max(80).optional(),
+          title: z.string().trim().min(1).max(160),
+          description: z.string().trim().min(1).max(5000),
+        })
+      )
+      .max(20)
+      .optional(),
   })
   .refine(
     (value) =>
@@ -29,7 +52,12 @@ const updateTutorSchema = z
       value.bio !== undefined ||
       value.rating !== undefined ||
       value.studentCount !== undefined ||
-      value.coursesAuthored !== undefined,
+      value.coursesAuthored !== undefined ||
+      value.location !== undefined ||
+      value.languagesSpoken !== undefined ||
+      value.profileHighlights !== undefined ||
+      value.profileStats !== undefined ||
+      value.pedagogicalModules !== undefined,
     {
       message: "At least one field must be provided",
     }
@@ -99,6 +127,26 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
       rating: payload.rating,
       studentCount: payload.studentCount,
       coursesAuthored: payload.coursesAuthored,
+      location: payload.location,
+      languagesSpoken: payload.languagesSpoken,
+      profileHighlights:
+        payload.profileHighlights === undefined
+          ? undefined
+          : payload.profileHighlights === null
+          ? null
+          : (payload.profileHighlights as Prisma.InputJsonValue),
+      profileStats:
+        payload.profileStats === undefined
+          ? undefined
+          : payload.profileStats === null
+          ? null
+          : (payload.profileStats as Prisma.InputJsonValue),
+      pedagogicalModules:
+        payload.pedagogicalModules === undefined
+          ? undefined
+          : payload.pedagogicalModules === null
+          ? null
+          : (payload.pedagogicalModules as Prisma.InputJsonValue),
     },
     select: adminTutorSelect,
   });

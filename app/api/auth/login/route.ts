@@ -40,6 +40,11 @@ export async function POST(req: Request) {
         rating: true,
         studentCount: true,
         coursesAuthored: true,
+        location: true,
+        languagesSpoken: true,
+        profileHighlights: true,
+        profileStats: true,
+        pedagogicalModules: true,
       },
     });
 
@@ -70,6 +75,11 @@ export async function POST(req: Request) {
         rating: user.rating,
         studentCount: user.studentCount,
         coursesAuthored: user.coursesAuthored,
+        location: user.location,
+        languagesSpoken: user.languagesSpoken,
+        profileHighlights: user.profileHighlights,
+        profileStats: user.profileStats,
+        pedagogicalModules: user.pedagogicalModules,
       },
     });
 

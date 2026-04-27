@@ -12,6 +12,23 @@ type BackendUser = {
   rating?: number | null;
   studentCount?: number | null;
   coursesAuthored?: number | null;
+  location?: string | null;
+  languagesSpoken?: string | null;
+  profileHighlights?: string[] | null;
+  profileStats?:
+    | Array<{
+        id?: string;
+        label: string;
+        value: string;
+      }>
+    | null;
+  pedagogicalModules?:
+    | Array<{
+        id?: string;
+        title: string;
+        description: string;
+      }>
+    | null;
 };
 
 type LoginResponse = {
@@ -50,6 +67,21 @@ function mapBackendUser(user: BackendUser): User {
     rating: user.rating ?? undefined,
     studentCount: user.studentCount ?? undefined,
     coursesAuthored: user.coursesAuthored ?? undefined,
+    location: user.location || undefined,
+    languagesSpoken: user.languagesSpoken || undefined,
+    profileHighlights: user.profileHighlights ?? undefined,
+    profileStats:
+      user.profileStats?.map((item, index) => ({
+        id: item.id || `stat-${index + 1}`,
+        label: item.label,
+        value: item.value,
+      })) ?? undefined,
+    pedagogicalModules:
+      user.pedagogicalModules?.map((item, index) => ({
+        id: item.id || `pedagogy-${index + 1}`,
+        title: item.title,
+        description: item.description,
+      })) ?? undefined,
   };
 }
 

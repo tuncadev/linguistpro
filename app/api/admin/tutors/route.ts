@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
@@ -25,6 +25,29 @@ const createTutorSchema = z.object({
   rating: z.number().min(0).max(5).nullable().optional(),
   studentCount: z.number().int().min(0).max(1_000_000).nullable().optional(),
   coursesAuthored: z.number().int().min(0).max(1_000_000).nullable().optional(),
+  location: z.string().trim().max(200).nullable().optional(),
+  languagesSpoken: z.string().trim().max(240).nullable().optional(),
+  profileHighlights: z.array(z.string().trim().min(1).max(240)).max(50).optional(),
+  profileStats: z
+    .array(
+      z.object({
+        id: z.string().trim().min(1).max(80).optional(),
+        label: z.string().trim().min(1).max(120),
+        value: z.string().trim().min(1).max(120),
+      })
+    )
+    .max(20)
+    .optional(),
+  pedagogicalModules: z
+    .array(
+      z.object({
+        id: z.string().trim().min(1).max(80).optional(),
+        title: z.string().trim().min(1).max(160),
+        description: z.string().trim().min(1).max(5000),
+      })
+    )
+    .max(20)
+    .optional(),
 });
 
 export const GET = withApiHandler(async (req: NextRequest) => {
@@ -96,6 +119,17 @@ export const POST = withApiHandler(async (req: NextRequest) => {
       rating: payload.rating ?? null,
       studentCount: payload.studentCount ?? null,
       coursesAuthored: payload.coursesAuthored ?? null,
+      location: payload.location ?? null,
+      languagesSpoken: payload.languagesSpoken ?? null,
+      profileHighlights: payload.profileHighlights
+        ? (payload.profileHighlights as Prisma.InputJsonValue)
+        : null,
+      profileStats: payload.profileStats
+        ? (payload.profileStats as Prisma.InputJsonValue)
+        : null,
+      pedagogicalModules: payload.pedagogicalModules
+        ? (payload.pedagogicalModules as Prisma.InputJsonValue)
+        : null,
     },
     select: adminTutorSelect,
   });
