@@ -21,6 +21,7 @@ type ApiCourse = {
   description: string;
   price: number;
   imageUrl: string | null;
+  status: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "ARCHIVED";
   tutorId: string;
   languageId: string;
   levelId: string;
@@ -72,6 +73,7 @@ export function mapApiCourseToFrontendCourse(apiCourse: ApiCourse): Course {
     description: apiCourse.description,
     price: apiCourse.price,
     imageUrl: apiCourse.imageUrl ?? "https://picsum.photos/seed/course-fallback/800/450",
+    status: apiCourse.status,
     tutorId: apiCourse.tutorId,
     languageId: apiCourse.languageId,
     levelId: apiCourse.levelId,
@@ -100,4 +102,3 @@ export async function fetchPublishedCourses(): Promise<Course[] | null> {
     return null;
   }
 }
-

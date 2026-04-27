@@ -34,6 +34,7 @@ Planning artifacts (`prisma-schema.txt`, `folder-structure.txt`, `rbac-strategy.
 - `ADMIN` (DB-backed overview stats + recent submissions + activity feed)
 - Tutor profile view with course offerings
 - Navbar role switcher (backend-loaded demo profiles)
+- Next.js admin course page with CRUD (`/admin/courses`) for add/edit/remove via backend APIs
 
 ## High-Level Architecture
 
@@ -213,6 +214,19 @@ Course moderation endpoints:
 - `GET /api/admin/courses/submissions` (`ADMIN`): list pending review queue
 - `POST /api/admin/courses/:id/moderate` (`ADMIN`): `APPROVE` (publish) or `REJECT` (return to draft)
 
+## Admin Course CRUD Page (Implemented)
+
+Next.js admin route is now functional:
+- `GET /admin/courses`
+
+Implemented behavior:
+- loads dynamic courses from `GET /api/courses?includeUnpublished=true`
+- creates courses through `POST /api/courses`
+- edits courses through `PATCH /api/courses/:id`
+- removes courses through `DELETE /api/courses/:id`
+- uses dynamic taxonomy/tutor selectors from `/api/taxonomies` and `/api/tutors`
+- keeps static summary cards while rendering DB-backed course list/actions
+
 ## Taxonomy and Tutor Directory APIs (Implemented)
 
 Backend APIs for replacing static frontend taxonomy/tutor data:
@@ -251,6 +265,7 @@ Course read paths are now API-first:
 - `services/tutorApiService.ts` now bridges frontend tutor metadata to `/api/tutors`.
 - `services/demoUserApiService.ts` now bridges navbar role-switch profiles to `/api/demo-users`.
 - `services/adminDashboardApiService.ts` now powers `AdminDashboard` cards/submissions/activity from `/api/admin/dashboard/overview`.
+- `services/adminCourseCrudApiService.ts` now powers Next.js admin course management page actions (create/update/delete/list).
 - `HomeView`, `CourseCatalog`, `LanguageLandingView`, `TutorDashboard`, and `CourseDetailsView` now use AppContext `languages`, `levels`, and `tutors` loaded from backend-first sources with static fallback.
 - `Navbar` role buttons now use backend-loaded `demoUsers` from `AppContext`; `services/authApiService.ts` maps avatar/profile metadata from auth payloads instead of `MOCK_USERS`.
 - `StudentDashboard` upcoming class card now derives course/tutor details from backend-backed context state.

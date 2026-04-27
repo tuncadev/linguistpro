@@ -27,6 +27,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
 - Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
+- Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Feature flag APIs: `app/api/feature-flags/route.ts`, `app/api/admin/feature-flags/route.ts`, `app/api/admin/feature-flags/[key]/route.ts`
@@ -37,6 +38,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Frontend tutor adapter: `services/tutorApiService.ts` (`GET /api/tutors`)
 - Frontend demo-user adapter: `services/demoUserApiService.ts` (`GET /api/demo-users`)
 - Frontend admin overview adapter: `services/adminDashboardApiService.ts` (`GET /api/admin/dashboard/overview`)
+- Frontend admin course CRUD adapter: `services/adminCourseCrudApiService.ts` (`/api/courses` + `/api/courses/:id`)
 - Taxonomy/tutor APIs: `app/api/taxonomies/route.ts`, `app/api/tutors/route.ts`
 - Demo role user API: `app/api/demo-users/route.ts`
 - Admin overview API: `app/api/admin/dashboard/overview/route.ts`
@@ -102,6 +104,7 @@ Guest behavior:
 
 `Course` shape includes:
 - metadata: `id`, `title`, `description`, `price`, `imageUrl`
+- optional lifecycle: `status` (`DRAFT | PENDING_REVIEW | PUBLISHED | ARCHIVED`)
 - relational IDs: `tutorId`, `languageId`, `levelId`
 - social/progress fields: `studentCount`, `rating`, `reviews`
 - learning tree: `syllabus: SyllabusSection[]`
@@ -199,6 +202,7 @@ Migration update:
 - Legacy frontend taxonomy/tutor/demo-role hardcoded paths are now backend-first via `/api/taxonomies`, `/api/tutors`, and `/api/demo-users` with fallback constants in `App.tsx`.
 - Auth API payloads now include user profile metadata (`avatarUrl`, `bio`, `rating`, `studentCount`, `coursesAuthored`) and frontend auth mapping uses those fields.
 - Admin dashboard cards, recent submissions, and activity feed are backend-driven via `/api/admin/dashboard/overview`.
+- Next.js `/admin/courses` is no longer scaffold and now supports admin add/edit/remove against backend course APIs with dynamic taxonomy/tutor selectors.
 
 ## 10) Known Gaps and Risks
 

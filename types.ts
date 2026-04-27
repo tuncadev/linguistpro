@@ -49,6 +49,7 @@ export interface Course {
   description: string;
   price: number;
   imageUrl: string;
+  status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'ARCHIVED';
   tutorId: string;
   languageId: string;
   levelId: string;
