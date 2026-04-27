@@ -212,6 +212,9 @@ Migration update:
 - Admin `/api/courses` creation now supports admin-controlled status (including direct `PUBLISHED`) and detail-page content fields.
 - Seed data now syncs legacy frontend catalog courses into DB with published status and full details-page content fields.
 - `CourseDetailsView` now renders objectives/enrollment/labels from backend course payload instead of frontend hardcoded arrays.
+- `CourseDetailsView` now has admin-only inline edit mode in legacy UI layout and saves to backend via `updateAdminCourse(...)`.
+- `PATCH /api/courses/:id` now supports structured `syllabusSections` updates (section titles + lesson title/type/duration/content), not only flat `syllabus` section-title arrays.
+- Admin sidebar includes a direct `Courses Page` link in the Administration group.
 
 ## 10) Known Gaps and Risks
 

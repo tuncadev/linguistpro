@@ -11,12 +11,24 @@ type CourseMutationPayload = {
   title?: string;
   description?: string;
   price?: number;
+  rating?: number;
+  reviews?: number;
+  studentCount?: number;
   imageUrl?: string;
   languageId?: string;
   levelId?: string;
   tutorId?: string;
   status?: "DRAFT" | "PENDING_REVIEW" | "PUBLISHED" | "ARCHIVED";
   syllabus?: string[];
+  syllabusSections?: Array<{
+    title: string;
+    lessons?: Array<{
+      title: string;
+      duration?: string;
+      type?: "video" | "quiz" | "reading";
+      content?: string;
+    }>;
+  }>;
   learningObjectives?: string[];
   enrollmentIncludes?: string[];
   tuitionLabel?: string;

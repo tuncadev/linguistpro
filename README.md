@@ -271,6 +271,9 @@ Course read paths are now API-first:
 - `Navbar` role buttons now use backend-loaded `demoUsers` from `AppContext`; `services/authApiService.ts` maps avatar/profile metadata from auth payloads instead of `MOCK_USERS`.
 - `StudentDashboard` upcoming class card now derives course/tutor details from backend-backed context state.
 - `CourseDetailsView` hero/objectives/enroll-card content (course director label, learning objectives, enrollment includes, tuition/discount labels) now reads backend course fields.
+- `CourseDetailsView` now supports admin-only in-place editing on the same frontend layout (`Edit Course`), saving directly to DB via `PATCH /api/courses/:id`.
+- Curriculum editing on course details page now persists section/lesson details through `syllabusSections` payload support in `PATCH /api/courses/:id`.
+- Sidebar admin section now includes a `Courses Page` shortcut that routes to the legacy catalog view (`view='catalog'`).
 
 ## Centralized API Error Handling and Validation (Implemented)
 

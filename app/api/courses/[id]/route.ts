@@ -1,4 +1,4 @@
-import { CourseStatus, Prisma } from "@prisma/client";
+import { CourseStatus, LessonType, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
@@ -13,18 +13,54 @@ const updateCourseSchema = z.object({
   title: z.string().trim().min(3).max(160).optional(),
   description: z.string().trim().min(10).max(5000).optional(),
   price: z.number().min(0).max(100000).optional(),
+  rating: z.number().min(0).max(5).optional(),
+  reviews: z.number().int().min(0).max(1_000_000).optional(),
+  studentCount: z.number().int().min(0).max(1_000_000).optional(),
   imageUrl: z.string().trim().url().nullable().optional(),
   languageId: z.string().trim().min(1).optional(),
   levelId: z.string().trim().min(1).optional(),
   tutorId: z.string().trim().min(1).optional(),
   status: z.nativeEnum(CourseStatus).optional(),
   syllabus: z.array(z.string().trim().min(1).max(180)).max(50).optional(),
+  syllabusSections: z
+    .array(
+      z.object({
+        title: z.string().trim().min(1).max(180),
+        lessons: z
+          .array(
+            z.object({
+              title: z.string().trim().min(1).max(180),
+              duration: z.string().trim().regex(/^\d{1,3}:[0-5]\d$/).optional(),
+              type: z.enum(["video", "quiz", "reading"]).optional(),
+              content: z.string().trim().max(10_000).optional(),
+            })
+          )
+          .max(500)
+          .optional(),
+      })
+    )
+    .max(100)
+    .optional(),
   learningObjectives: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
   enrollmentIncludes: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
   tuitionLabel: z.string().trim().min(1).max(80).nullable().optional(),
   discountLabel: z.string().trim().min(1).max(80).nullable().optional(),
   courseDirectorLabel: z.string().trim().min(1).max(80).nullable().optional(),
 });
+
+function parseDurationToSeconds(duration?: string): number | null {
+  if (!duration) {
+    return null;
+  }
+
+  const [minutesRaw, secondsRaw] = duration.split(":");
+  const minutes = Number(minutesRaw);
+  const seconds = Number(secondsRaw);
+  if (!Number.isFinite(minutes) || !Number.isFinite(seconds)) {
+    return null;
+  }
+  return minutes * 60 + seconds;
+}
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -101,7 +137,7 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
     }
   }
 
-  const { syllabus, ...fields } = payload;
+  const { syllabus, syllabusSections, ...fields } = payload;
   const updateData: Prisma.CourseUpdateInput = { ...fields };
 
   if (isAdmin && payload.status === "PUBLISHED") {
@@ -119,7 +155,39 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
       });
     }
 
-    if (syllabus) {
+    if (syllabusSections) {
+      await tx.syllabusSection.deleteMany({ where: { courseId: id } });
+
+      if (syllabusSections.length > 0) {
+        await tx.course.update({
+          where: { id },
+          data: {
+            syllabusSections: {
+              create: syllabusSections.map((section, sectionIndex) => ({
+                title: section.title,
+                position: sectionIndex + 1,
+                lessons: section.lessons?.length
+                  ? {
+                      create: section.lessons.map((lesson, lessonIndex) => ({
+                        title: lesson.title,
+                        type:
+                          lesson.type === "quiz"
+                            ? LessonType.QUIZ
+                            : lesson.type === "reading"
+                            ? LessonType.READING
+                            : LessonType.VIDEO,
+                        durationSeconds: parseDurationToSeconds(lesson.duration),
+                        content: lesson.content ?? null,
+                        position: lessonIndex + 1,
+                      })),
+                    }
+                  : undefined,
+              })),
+            },
+          },
+        });
+      }
+    } else if (syllabus) {
       await tx.syllabusSection.deleteMany({ where: { courseId: id } });
       if (syllabus.length) {
         await tx.syllabusSection.createMany({
