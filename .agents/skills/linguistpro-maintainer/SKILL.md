@@ -14,6 +14,22 @@ Provide a repeatable workflow so future Codex sessions can:
 - edit safely without breaking context-driven navigation
 - keep project documentation synchronized
 
+## Step 0: Task Control Gate (Mandatory)
+
+For each Trello task, this gate is required:
+1. Move Trello card to `in progress`.
+2. Start Clockify timer for the matching Clockify task.
+3. Set `What are you working on` to the exact Trello card name.
+4. Do not start implementation until the timer is confirmed running.
+
+Before reporting final task status:
+1. Run QA for the implemented scope.
+2. Stop Clockify timer and verify no active in-progress timer remains for the task.
+3. Move Trello card to:
+   - `qa ready` when implementation is complete and unblocked.
+   - `blocked` when any issue blocks completion.
+4. Report only after these steps are done.
+
 ## Step 1: Load project context
 
 Read in this order:

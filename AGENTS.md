@@ -139,8 +139,16 @@ If architecture or workflows change, persist changes in:
 
 - Trello board id is stored in `.env.local` keys `TRELLO_BOARD_ID` and `TRELLO_BOARD_IDo`.
 - Required Trello lists: `backlog`, `ready`, `in progress`, `blocked`, `qa ready`, `qa passed`, `done`.
-- Before starting any Trello card, start a Clockify time entry for the matching Clockify task first.
-- In Clockify, set `What are you working on` to the active Trello task name.
-- When task implementation is complete, stop the active Clockify timer.
-- If implementation has no issues, move Trello card to `qa ready`.
-- If implementation has issues/blockers, move Trello card to `blocked` and report the blocker details.
+- This workflow is mandatory. Do not start implementation work unless the card and timer are in sync.
+- Start gate (must pass before coding):
+1. Move target Trello card to `in progress`.
+2. Start Clockify timer on the matching Clockify task.
+3. Set Clockify `What are you working on` to the exact Trello card name.
+- End gate (must pass before status report):
+1. Run QA checks for the task output.
+2. Stop Clockify timer and verify there are no active in-progress entries for this task.
+3. Move Trello card:
+   - `qa ready` if implementation completed with no blocker.
+   - `blocked` if any blocker/issue remains.
+4. Report status only after end gate is complete.
+- Never mark a task complete or ready while a timer is still running.

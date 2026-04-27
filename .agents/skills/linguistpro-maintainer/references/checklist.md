@@ -1,5 +1,16 @@
 # LinguistPro Maintainer Checklist
 
+## Mandatory Task Control (Trello + Clockify)
+
+- Move card to `in progress` before coding
+- Start Clockify timer on matching task before coding
+- Set Clockify `What are you working on` to exact Trello card name
+- Run QA before status update
+- Stop Clockify timer before moving card out of implementation
+- Move card to `qa ready` if unblocked and complete
+- Move card to `blocked` if any blocker remains
+- Never report task completion while any related timer is still active
+
 ## Quick Audit
 
 - Read `AGENTS.md`
