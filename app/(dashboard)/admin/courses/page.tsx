@@ -43,7 +43,7 @@ const EMPTY_FORM: CourseFormState = {
   enrollmentIncludesText: "",
   tuitionLabel: "Tuition Fee",
   discountLabel: "65% Off Enrollment",
-  courseDirectorLabel: "Course Director",
+  courseDirectorLabel: "Course Tutor",
 };
 
 function findCourseStatusLabel(course: Course): CourseFormState["status"] {
@@ -182,7 +182,7 @@ export default function AdminCoursesPage() {
       enrollmentIncludesText: (course.enrollmentIncludes ?? []).join("\n"),
       tuitionLabel: course.tuitionLabel || "Tuition Fee",
       discountLabel: course.discountLabel || "65% Off Enrollment",
-      courseDirectorLabel: course.courseDirectorLabel || "Course Director",
+      courseDirectorLabel: course.courseDirectorLabel || "Course Tutor",
     });
   };
 
@@ -271,7 +271,7 @@ export default function AdminCoursesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 lg:p-10">
+    <main className="p-4 lg:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
         <header>
           <div className="mb-3 flex flex-wrap items-center gap-2">

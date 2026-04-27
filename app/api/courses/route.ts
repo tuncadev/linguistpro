@@ -1,4 +1,4 @@
-import { CourseStatus, Prisma } from "@prisma/client";
+import { CourseStatus, Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
@@ -11,7 +11,7 @@ import {
   DEFAULT_COURSE_LEARNING_OBJECTIVES,
   DEFAULT_COURSE_TUITION_LABEL,
 } from "@/lib/courses/presentation-defaults";
-import { badRequest, forbidden, notFound } from "@/lib/http/api-error";
+import { badRequest, forbidden } from "@/lib/http/api-error";
 import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
@@ -115,13 +115,30 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     forbidden("Only admin can set status during course creation");
   }
 
-  const tutorId = auth.session.role === "ADMIN" ? payload.tutorId ?? auth.session.id : auth.session.id;
+  let tutorId = auth.session.id;
+  if (isAdmin) {
+    if (payload.tutorId) {
+      tutorId = payload.tutorId;
+    } else {
+      const fallbackTutor = await prisma.user.findFirst({
+        where: { role: Role.TUTOR },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      });
+
+      if (!fallbackTutor) {
+        badRequest("No tutor available. Create a tutor before creating courses.");
+      }
+
+      tutorId = fallbackTutor.id;
+    }
+  }
   const status = isAdmin ? payload.status ?? "PUBLISHED" : "DRAFT";
 
   const [language, level, tutor] = await Promise.all([
     prisma.language.findUnique({ where: { id: payload.languageId } }),
     prisma.level.findUnique({ where: { id: payload.levelId } }),
-    prisma.user.findUnique({ where: { id: tutorId } }),
+    prisma.user.findFirst({ where: { id: tutorId, role: Role.TUTOR } }),
   ]);
 
   if (!language) {
@@ -131,7 +148,7 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     badRequest("Level not found");
   }
   if (!tutor) {
-    notFound("Tutor not found");
+    badRequest("Tutor not found or user is not a tutor");
   }
 
   const created = await prisma.course.create({

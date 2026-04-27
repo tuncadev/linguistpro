@@ -293,7 +293,7 @@ async function upsertCoursePreset({ tutorId, languages, levels, preset }) {
     enrollmentIncludes: DEFAULT_ENROLLMENT_INCLUDES,
     tuitionLabel: "Tuition Fee",
     discountLabel: "65% Off Enrollment",
-    courseDirectorLabel: "Course Director",
+    courseDirectorLabel: "Course Tutor",
   };
 
   if (!existing) {

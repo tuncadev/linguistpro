@@ -15,4 +15,4 @@ export const DEFAULT_COURSE_ENROLLMENT_INCLUDES = [
 
 export const DEFAULT_COURSE_TUITION_LABEL = "Tuition Fee";
 export const DEFAULT_COURSE_DISCOUNT_LABEL = "65% Off Enrollment";
-export const DEFAULT_COURSE_DIRECTOR_LABEL = "Course Director";
+export const DEFAULT_COURSE_DIRECTOR_LABEL = "Course Tutor";

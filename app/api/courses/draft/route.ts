@@ -1,9 +1,10 @@
+import { Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
 import { generateCourseDraft } from "@/lib/ai/course-draft";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
-import { badRequest, notFound } from "@/lib/http/api-error";
+import { badRequest } from "@/lib/http/api-error";
 import { parseJsonBody } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
@@ -23,12 +24,31 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   }
 
   const payload = await parseJsonBody(req, createAiDraftSchema);
-  const tutorId = auth.session.role === "ADMIN" ? payload.tutorId ?? auth.session.id : auth.session.id;
+  const isAdmin = auth.session.role === "ADMIN";
+  let tutorId = auth.session.id;
+
+  if (isAdmin) {
+    if (payload.tutorId) {
+      tutorId = payload.tutorId;
+    } else {
+      const fallbackTutor = await prisma.user.findFirst({
+        where: { role: Role.TUTOR },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      });
+
+      if (!fallbackTutor) {
+        badRequest("No tutor available. Create a tutor before generating AI drafts.");
+      }
+
+      tutorId = fallbackTutor.id;
+    }
+  }
 
   const [language, level, tutor] = await Promise.all([
     prisma.language.findUnique({ where: { id: payload.languageId } }),
     prisma.level.findUnique({ where: { id: payload.levelId } }),
-    prisma.user.findUnique({ where: { id: tutorId } }),
+    prisma.user.findFirst({ where: { id: tutorId, role: Role.TUTOR } }),
   ]);
 
   if (!language) {
@@ -38,7 +58,7 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     badRequest("Level not found");
   }
   if (!tutor) {
-    notFound("Tutor not found");
+    badRequest("Tutor not found or user is not a tutor");
   }
 
   const generated = await generateCourseDraft(payload.topic, language.name, level.name);

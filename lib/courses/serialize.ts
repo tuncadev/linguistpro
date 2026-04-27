@@ -81,7 +81,10 @@ export function serializeCourse(course: CourseWithRelations) {
     ),
     tuitionLabel: course.tuitionLabel ?? DEFAULT_COURSE_TUITION_LABEL,
     discountLabel: course.discountLabel ?? DEFAULT_COURSE_DISCOUNT_LABEL,
-    courseDirectorLabel: course.courseDirectorLabel ?? DEFAULT_COURSE_DIRECTOR_LABEL,
+    courseDirectorLabel:
+      !course.courseDirectorLabel || course.courseDirectorLabel === "Course Director"
+        ? DEFAULT_COURSE_DIRECTOR_LABEL
+        : course.courseDirectorLabel,
     createdAt: course.createdAt.toISOString(),
     updatedAt: course.updatedAt.toISOString(),
     tutor: course.tutor,

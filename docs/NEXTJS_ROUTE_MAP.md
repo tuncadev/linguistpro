@@ -27,8 +27,9 @@ This document defines the target App Router routes that replace the current Vite
 5. `/tutor/analytics`
 6. `/admin/courses`
 7. `/admin/tutors`
-8. `/admin/users`
-9. `/admin/taxonomies`
+8. `/admin/tutors/[id]`
+9. `/admin/users`
+10. `/admin/taxonomies`
 
 ## Lesson Route
 

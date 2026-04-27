@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function AdminUsersPage() {
   return (
-    <main className="min-h-screen bg-slate-50 p-6 lg:p-10">
+    <main className="p-4 lg:p-6">
       <div className="mx-auto max-w-4xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
           <Link

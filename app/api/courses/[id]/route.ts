@@ -1,4 +1,4 @@
-import { CourseStatus, LessonType, Prisma } from "@prisma/client";
+import { CourseStatus, LessonType, Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
@@ -131,9 +131,12 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
     }
   }
   if (payload.tutorId) {
-    const tutor = await prisma.user.findUnique({ where: { id: payload.tutorId } });
+    const tutor = await prisma.user.findFirst({
+      where: { id: payload.tutorId, role: Role.TUTOR },
+      select: { id: true },
+    });
     if (!tutor) {
-      notFound("Tutor not found");
+      badRequest("Tutor not found or user is not a tutor");
     }
   }
 

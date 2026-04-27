@@ -27,8 +27,10 @@ Legacy Vite prototype files are still present and used as migration references.
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
 - Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
+- Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
+- Next.js admin tutor detail edit page: `app/(dashboard)/admin/tutors/[id]/page.tsx`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
 - Moderation APIs: `app/api/courses/[id]/submit/route.ts`, `app/api/admin/courses/submissions/route.ts`, `app/api/admin/courses/[id]/moderate/route.ts`
 - Feature flag APIs: `app/api/feature-flags/route.ts`, `app/api/admin/feature-flags/route.ts`, `app/api/admin/feature-flags/[key]/route.ts`
@@ -219,6 +221,9 @@ Migration update:
 - `PATCH /api/courses/:id` now supports structured `syllabusSections` updates (section titles + lesson title/type/duration/content), not only flat `syllabus` section-title arrays.
 - Admin sidebar includes a direct `Courses Page` link in the Administration group.
 - Admin tutor management is implemented at `/admin/tutors` with add/edit/remove wiring via `/api/admin/tutors` and `/api/admin/tutors/:id`.
+- Admin dashboard routes now render with a persistent left navigation (`Courses`, `Tutors`, `Users`, `Taxonomies`).
+- Course creation and AI draft APIs now enforce `tutorId` to be a real `TUTOR` role account (admins cannot assign non-tutor users).
+- Course presentation label baseline is normalized to `Course Tutor` (including legacy `Course Director` DB values during serialization).
 
 ## 10) Known Gaps and Risks
 

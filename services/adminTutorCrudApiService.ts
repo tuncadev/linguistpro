@@ -68,6 +68,18 @@ export async function fetchAdminTutors(): Promise<User[]> {
   return tutors.map(mapApiTutorToFrontendTutor);
 }
 
+export async function fetchAdminTutorById(tutorId: string): Promise<User> {
+  const response = await fetch(`/api/admin/tutors/${tutorId}`, {
+    method: "GET",
+    credentials: "include",
+  });
+  const payload = await parseResponseOrThrow<TutorMutationResponse>(response);
+  if (!payload.data) {
+    throw new Error("Tutor was not found");
+  }
+  return mapApiTutorToFrontendTutor(payload.data);
+}
+
 export async function createAdminTutor(payload: TutorMutationPayload): Promise<User> {
   const response = await fetch("/api/admin/tutors", {
     method: "POST",

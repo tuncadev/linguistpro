@@ -77,7 +77,6 @@ const CourseDetailsView: React.FC = () => {
     tutors,
     languages,
     levels,
-    courses,
     setView,
     setSelectedTutor,
     setActiveLesson,
@@ -103,34 +102,31 @@ const CourseDetailsView: React.FC = () => {
     setEditError(null);
   }, [selectedCourse?.id]);
 
+  useEffect(() => {
+    if (!draft || tutors.length === 0) {
+      return;
+    }
+
+    const hasAssignedTutor = tutors.some((candidate) => candidate.id === draft.tutorId);
+    if (hasAssignedTutor) {
+      return;
+    }
+
+    setDraft((current) =>
+      current
+        ? {
+            ...current,
+            tutorId: tutors[0].id,
+          }
+        : current
+    );
+  }, [draft, tutors]);
+
   const firstLesson = useMemo(
     () => selectedCourse?.syllabus[0]?.lessons[0],
     [selectedCourse?.syllabus]
   );
-  const availableTutorsByLanguage = useMemo(() => {
-    if (!selectedCourse) {
-      return tutors;
-    }
-
-    const tutorIdsForLanguage = new Set(
-      courses
-        .filter((course) => course.languageId === selectedCourse.languageId)
-        .map((course) => course.tutorId)
-    );
-
-    const filtered = tutors.filter((candidate) => tutorIdsForLanguage.has(candidate.id));
-    const currentTutor = tutors.find((candidate) => candidate.id === selectedCourse.tutorId);
-
-    if (filtered.length === 0) {
-      return tutors;
-    }
-
-    if (currentTutor && !filtered.some((candidate) => candidate.id === currentTutor.id)) {
-      return [currentTutor, ...filtered];
-    }
-
-    return filtered;
-  }, [courses, selectedCourse, tutors]);
+  const availableTutors = useMemo(() => tutors, [tutors]);
 
   if (!selectedCourse || !draft) return null;
 
@@ -396,23 +392,27 @@ const CourseDetailsView: React.FC = () => {
                   alt={tutor?.name || 'Tutor'}
                 />
                 <div>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                    {selectedCourse.courseDirectorLabel || 'Course Director'}
-                  </p>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Course Tutor</p>
                   {isEditing ? (
-                    <select
-                      value={draft.tutorId}
-                      onChange={(event) =>
-                        setDraft((current) => (current ? { ...current, tutorId: event.target.value } : current))
-                      }
-                      className="mt-1 rounded border border-slate-500 bg-transparent px-2 py-1 text-sm font-bold text-white outline-none"
-                    >
-                      {availableTutorsByLanguage.map((candidate) => (
-                        <option key={candidate.id} value={candidate.id} className="text-slate-900">
-                          {candidate.name}
-                        </option>
-                      ))}
-                    </select>
+                    availableTutors.length > 0 ? (
+                      <select
+                        value={draft.tutorId}
+                        onChange={(event) =>
+                          setDraft((current) => (current ? { ...current, tutorId: event.target.value } : current))
+                        }
+                        className="mt-1 rounded border border-slate-500 bg-transparent px-2 py-1 text-sm font-bold text-white outline-none"
+                      >
+                        {availableTutors.map((candidate) => (
+                          <option key={candidate.id} value={candidate.id} className="text-slate-900">
+                            {candidate.name}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className="mt-1 inline-block text-sm font-bold text-amber-300">
+                        No tutors found. Add one in /admin/tutors.
+                      </span>
+                    )
                   ) : (
                     <button
                       onClick={() => {
@@ -423,7 +423,7 @@ const CourseDetailsView: React.FC = () => {
                       }}
                       className="text-lg font-bold hover:text-[#f47361] transition-colors"
                     >
-                      {tutor?.name || 'Catalina Tutor'}
+                      {tutor?.name || 'Unassigned Tutor'}
                     </button>
                   )}
                 </div>
