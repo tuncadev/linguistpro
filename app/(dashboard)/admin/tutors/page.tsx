@@ -405,18 +405,12 @@ export default function AdminTutorsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Link
-                          href={`/admin/tutors/${tutor.id}`}
-                          className="rounded-lg border border-indigo-200 px-3 py-2 text-xs font-bold text-indigo-700 hover:bg-indigo-50"
-                        >
-                          Edit Tutor
-                        </Link>
                         <button
                           onClick={() => startEditing(tutor)}
                           className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"
                           type="button"
                         >
-                          Quick Edit
+                          Edit Tutor
                         </button>
                         <button
                           onClick={() => onDelete(tutor)}
