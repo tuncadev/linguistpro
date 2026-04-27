@@ -1,4 +1,3 @@
-import { MOCK_USERS } from "../constants";
 import { User, UserRole } from "../types";
 
 type BackendRole = "STUDENT" | "TUTOR" | "ADMIN";
@@ -8,6 +7,11 @@ type BackendUser = {
   name?: string | null;
   email: string;
   role: BackendRole;
+  avatarUrl?: string | null;
+  bio?: string | null;
+  rating?: number | null;
+  studentCount?: number | null;
+  coursesAuthored?: number | null;
 };
 
 type LoginResponse = {
@@ -25,8 +29,14 @@ type SessionResponse = {
   user?: BackendUser;
 };
 
-function avatarByRole(role: BackendRole): string | undefined {
-  return MOCK_USERS.find((user) => user.role === role)?.avatar;
+const DEFAULT_AVATAR_BY_ROLE: Record<BackendRole, string> = {
+  ADMIN: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+  TUTOR: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
+  STUDENT: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
+};
+
+function avatarByRole(role: BackendRole): string {
+  return DEFAULT_AVATAR_BY_ROLE[role];
 }
 
 function mapBackendUser(user: BackendUser): User {
@@ -35,7 +45,11 @@ function mapBackendUser(user: BackendUser): User {
     name: user.name?.trim() || user.email,
     email: user.email,
     role: user.role as UserRole,
-    avatar: avatarByRole(user.role),
+    avatar: user.avatarUrl || avatarByRole(user.role),
+    bio: user.bio || undefined,
+    rating: user.rating ?? undefined,
+    studentCount: user.studentCount ?? undefined,
+    coursesAuthored: user.coursesAuthored ?? undefined,
   };
 }
 

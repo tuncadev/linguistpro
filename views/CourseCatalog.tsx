@@ -1,10 +1,9 @@
 
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../App';
-import { LANGUAGES, LEVELS } from '../constants';
 
 const CourseCatalog: React.FC = () => {
-  const { courses, setView, setSelectedCourse } = useContext(AppContext);
+  const { courses, languages, levels, setView, setSelectedCourse } = useContext(AppContext);
   const [filterLang, setFilterLang] = useState<string>('all');
 
   const filteredCourses = filterLang === 'all' 
@@ -25,7 +24,7 @@ const CourseCatalog: React.FC = () => {
         >
           All Languages
         </button>
-        {LANGUAGES.map(lang => (
+        {languages.map(lang => (
           <button 
             key={lang.id}
             onClick={() => setFilterLang(lang.id)}
@@ -38,8 +37,8 @@ const CourseCatalog: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredCourses.map(course => {
-          const lang = LANGUAGES.find(l => l.id === course.languageId);
-          const level = LEVELS.find(v => v.id === course.levelId);
+          const lang = languages.find(l => l.id === course.languageId);
+          const level = levels.find(v => v.id === course.levelId);
           
           return (
             <div 

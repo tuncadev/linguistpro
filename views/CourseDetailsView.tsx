@@ -1,21 +1,20 @@
 
 import React, { useContext, useMemo, useState } from 'react';
 import { AppContext } from '../App';
-import { MOCK_USERS, LANGUAGES, LEVELS } from '../constants';
 import { Star, Clock, Users, ChevronDown, ChevronRight, CheckCircle, Award, Play } from 'lucide-react';
 import { UserRole } from '../types';
 import { enrollInCourse } from '../services/enrollmentApiService';
 
 const CourseDetailsView: React.FC = () => {
-  const { selectedCourse, setView, setSelectedTutor, setActiveLesson, user } = useContext(AppContext);
+  const { selectedCourse, tutors, languages, levels, setView, setSelectedTutor, setActiveLesson, user } = useContext(AppContext);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const [isEnrolling, setIsEnrolling] = useState(false);
 
   if (!selectedCourse) return null;
 
-  const tutor = MOCK_USERS.find(u => u.id === selectedCourse.tutorId);
-  const language = LANGUAGES.find(l => l.id === selectedCourse.languageId);
-  const level = LEVELS.find(v => v.id === selectedCourse.levelId);
+  const tutor = tutors.find(u => u.id === selectedCourse.tutorId);
+  const language = languages.find(l => l.id === selectedCourse.languageId);
+  const level = levels.find(v => v.id === selectedCourse.levelId);
 
   const toggleSection = (id: string) => {
     setOpenSection(openSection === id ? null : id);
@@ -90,18 +89,28 @@ const CourseDetailsView: React.FC = () => {
 
               <div className="flex items-center gap-4 pt-4">
                 <img 
-                  src={tutor?.avatar} 
+                  src={tutor?.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200'} 
                   className="w-14 h-14 rounded-full border-2 border-[#f47361] cursor-pointer object-cover shadow-xl" 
-                  onClick={() => { setSelectedTutor(tutor!); setView('tutor-profile'); window.scrollTo(0,0); }}
-                  alt={tutor?.name}
+                  onClick={() => {
+                    if (!tutor) return;
+                    setSelectedTutor(tutor);
+                    setView('tutor-profile');
+                    window.scrollTo(0,0);
+                  }}
+                  alt={tutor?.name || 'Tutor'}
                 />
                 <div>
                   <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Course Director</p>
                   <button 
-                    onClick={() => { setSelectedTutor(tutor!); setView('tutor-profile'); window.scrollTo(0,0); }}
+                    onClick={() => {
+                      if (!tutor) return;
+                      setSelectedTutor(tutor);
+                      setView('tutor-profile');
+                      window.scrollTo(0,0);
+                    }}
                     className="text-lg font-bold hover:text-[#f47361] transition-colors"
                   >
-                    {tutor?.name}
+                    {tutor?.name || 'Catalina Tutor'}
                   </button>
                 </div>
               </div>

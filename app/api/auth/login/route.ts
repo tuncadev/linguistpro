@@ -35,6 +35,11 @@ export async function POST(req: Request) {
         email: true,
         role: true,
         passwordHash: true,
+        avatarUrl: true,
+        bio: true,
+        rating: true,
+        studentCount: true,
+        coursesAuthored: true,
       },
     });
 
@@ -60,6 +65,11 @@ export async function POST(req: Request) {
         name: user.name,
         email: user.email,
         role: user.role,
+        avatarUrl: user.avatarUrl,
+        bio: user.bio,
+        rating: user.rating,
+        studentCount: user.studentCount,
+        coursesAuthored: user.coursesAuthored,
       },
     });
 
@@ -70,4 +80,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }
-

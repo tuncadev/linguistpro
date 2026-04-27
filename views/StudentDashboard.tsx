@@ -3,7 +3,7 @@ import { AppContext } from '../App';
 import { fetchMyEnrollmentCourseIds } from '../services/enrollmentApiService';
 
 const StudentDashboard: React.FC = () => {
-  const { user, courses, setSelectedCourse, setActiveLesson, setView } = useContext(AppContext);
+  const { user, courses, tutors, setSelectedCourse, setActiveLesson, setView } = useContext(AppContext);
   const [enrollmentCourseIds, setEnrollmentCourseIds] = useState<string[] | null>(null);
 
   useEffect(() => {
@@ -48,6 +48,14 @@ const StudentDashboard: React.FC = () => {
       setView('lesson-view');
     }
   };
+
+  const upcomingCourse = inProgressCourses[0] || courses[0] || null;
+  const upcomingTutor = upcomingCourse
+    ? tutors.find((candidate) => candidate.id === upcomingCourse.tutorId) || null
+    : null;
+  const upcomingTutorName = upcomingTutor?.name || 'Catalina Tutor';
+  const upcomingTutorAvatar =
+    upcomingTutor?.avatar || 'https://picsum.photos/seed/tutor/50';
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-6">
@@ -109,13 +117,27 @@ const StudentDashboard: React.FC = () => {
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
             <h2 className="text-lg font-bold mb-6">Upcoming Class</h2>
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-              <p className="text-xs font-bold text-indigo-600 uppercase mb-2">Today @ 4:00 PM</p>
-              <h4 className="font-bold text-slate-900 leading-tight mb-4">Advanced English Phrasal Verbs</h4>
+              <p className="text-xs font-bold text-indigo-600 uppercase mb-2">
+                {upcomingCourse ? 'Next in your learning track' : 'No class scheduled'}
+              </p>
+              <h4 className="font-bold text-slate-900 leading-tight mb-4">
+                {upcomingCourse ? upcomingCourse.title : 'Enroll in a course to unlock your next class'}
+              </h4>
               <div className="flex items-center gap-3">
-                <img src="https://picsum.photos/seed/tutor/50" className="w-8 h-8 rounded-full shadow-sm" />
-                <span className="text-sm font-medium text-slate-600">Sarah Collins</span>
+                <img src={upcomingTutorAvatar} className="w-8 h-8 rounded-full shadow-sm" />
+                <span className="text-sm font-medium text-slate-600">{upcomingTutorName}</span>
               </div>
-              <button className="w-full mt-6 bg-slate-900 text-white py-3 rounded-xl text-sm font-bold hover:bg-indigo-600 transition-all">Join Zoom Class</button>
+              <button
+                onClick={() => {
+                  if (upcomingCourse) {
+                    handleStartLearning(upcomingCourse.id);
+                  }
+                }}
+                disabled={!upcomingCourse}
+                className="w-full mt-6 bg-slate-900 text-white py-3 rounded-xl text-sm font-bold hover:bg-indigo-600 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {upcomingCourse ? 'Open Course' : 'No Course Available'}
+              </button>
             </div>
           </div>
         </div>

@@ -47,6 +47,11 @@ export async function POST(req: Request) {
         name: true,
         email: true,
         role: true,
+        avatarUrl: true,
+        bio: true,
+        rating: true,
+        studentCount: true,
+        coursesAuthored: true,
       },
     });
 
@@ -71,4 +76,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Registration failed" }, { status: 500 });
   }
 }
-

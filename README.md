@@ -31,15 +31,19 @@ Planning artifacts (`prisma-schema.txt`, `folder-structure.txt`, `rbac-strategy.
 - Role-specific dashboards for:
 - `STUDENT` (in-progress learning, streak card, upcoming class panel)
 - `TUTOR` (AI course generation + authored course list)
-- `ADMIN` (overview stats + recent submissions + system logs mock)
+- `ADMIN` (DB-backed overview stats + recent submissions + activity feed)
 - Tutor profile view with course offerings
-- Navbar role switcher for demoing role states
+- Navbar role switcher (backend-loaded demo profiles)
 
 ## High-Level Architecture
 
 `App.tsx` owns global app state via `AppContext`:
 - `user`
+- `demoUsers`
+- `tutors`
 - `courses`
+- `languages`
+- `levels`
 - `view`
 - `selectedLang`
 - `selectedCourse`
@@ -65,7 +69,7 @@ Defined in `types.ts`:
 - `Course`
 - `Enrollment`
 
-Mock seed data is in `constants.ts`:
+Fallback/mock seed data is in `constants.ts`:
 - `LANGUAGES`
 - `LEVELS`
 - `MOCK_USERS`
@@ -209,6 +213,14 @@ Course moderation endpoints:
 - `GET /api/admin/courses/submissions` (`ADMIN`): list pending review queue
 - `POST /api/admin/courses/:id/moderate` (`ADMIN`): `APPROVE` (publish) or `REJECT` (return to draft)
 
+## Taxonomy and Tutor Directory APIs (Implemented)
+
+Backend APIs for replacing static frontend taxonomy/tutor data:
+- `GET /api/taxonomies` (public): returns `languages` and `levels`
+- `GET /api/tutors` (public): returns tutor directory metadata for profile cards/details
+- `GET /api/demo-users` (public): returns one demo profile per role for navbar quick role switching
+- `GET /api/admin/dashboard/overview` (`ADMIN`): returns admin stats, recent course submissions, and activity feed
+
 ## Feature Flags Foundation (Implemented)
 
 Feature flag data model and APIs are now available:
@@ -235,6 +247,13 @@ Course read paths are now API-first:
 - `LanguageLandingView` and `StudentDashboard` now consume context `courses` instead of hardcoded `MOCK_COURSES`.
 - `services/enrollmentApiService.ts` now bridges legacy frontend enrollment flows to `/api/enroll`.
 - `StudentDashboard` now derives "In Progress" from `GET /api/enroll` course IDs with fallback to existing local slice behavior when backend data is unavailable.
+- `services/taxonomyApiService.ts` now bridges frontend language/level lists to `/api/taxonomies`.
+- `services/tutorApiService.ts` now bridges frontend tutor metadata to `/api/tutors`.
+- `services/demoUserApiService.ts` now bridges navbar role-switch profiles to `/api/demo-users`.
+- `services/adminDashboardApiService.ts` now powers `AdminDashboard` cards/submissions/activity from `/api/admin/dashboard/overview`.
+- `HomeView`, `CourseCatalog`, `LanguageLandingView`, `TutorDashboard`, and `CourseDetailsView` now use AppContext `languages`, `levels`, and `tutors` loaded from backend-first sources with static fallback.
+- `Navbar` role buttons now use backend-loaded `demoUsers` from `AppContext`; `services/authApiService.ts` maps avatar/profile metadata from auth payloads instead of `MOCK_USERS`.
+- `StudentDashboard` upcoming class card now derives course/tutor details from backend-backed context state.
 
 ## Centralized API Error Handling and Validation (Implemented)
 

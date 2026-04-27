@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { User, UserRole, Course, Language, Lesson } from './types';
-import { MOCK_COURSES } from './constants';
+import { User, UserRole, Course, Language, Lesson, Level } from './types';
+import { LANGUAGES, LEVELS, MOCK_COURSES, MOCK_USERS } from './constants';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import StudentDashboard from './views/StudentDashboard';
@@ -17,12 +17,23 @@ import TutorProfileView from './views/TutorProfileView';
 import LessonView from './views/LessonView';
 import { fetchPublishedCourses } from './services/courseApiService';
 import { fetchSessionUser } from './services/authApiService';
+import { fetchTaxonomies } from './services/taxonomyApiService';
+import { fetchTutors } from './services/tutorApiService';
+import { fetchDemoUsers } from './services/demoUserApiService';
 
 export const AppContext = React.createContext<{
   user: User | null;
   setUser: (u: User | null) => void;
+  demoUsers: User[];
+  setDemoUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  tutors: User[];
+  setTutors: React.Dispatch<React.SetStateAction<User[]>>;
   courses: Course[];
   setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+  languages: Language[];
+  setLanguages: React.Dispatch<React.SetStateAction<Language[]>>;
+  levels: Level[];
+  setLevels: React.Dispatch<React.SetStateAction<Level[]>>;
   view: string;
   setView: (v: string) => void;
   selectedLang: Language | null;
@@ -36,8 +47,16 @@ export const AppContext = React.createContext<{
 }>({
   user: null,
   setUser: () => {},
+  demoUsers: [],
+  setDemoUsers: () => {},
+  tutors: [],
+  setTutors: () => {},
   courses: [],
   setCourses: () => {},
+  languages: [],
+  setLanguages: () => {},
+  levels: [],
+  setLevels: () => {},
   view: 'home',
   setView: () => {},
   selectedLang: null,
@@ -52,7 +71,11 @@ export const AppContext = React.createContext<{
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [demoUsers, setDemoUsers] = useState<User[]>([]);
+  const [tutors, setTutors] = useState<User[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [levels, setLevels] = useState<Level[]>([]);
   const [view, setView] = useState<string>('home');
   const [selectedLang, setSelectedLang] = useState<Language | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -62,18 +85,48 @@ const App: React.FC = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const loadCourses = async () => {
-      const fetched = await fetchPublishedCourses();
+    const loadCatalogData = async () => {
+      const [fetchedCourses, fetchedTaxonomies, fetchedTutors, fetchedDemoUsers] = await Promise.all([
+        fetchPublishedCourses(),
+        fetchTaxonomies(),
+        fetchTutors(),
+        fetchDemoUsers(),
+      ]);
+
       if (!isMounted) return;
 
-      if (fetched && fetched.length > 0) {
-        setCourses(fetched);
+      if (fetchedCourses && fetchedCourses.length > 0) {
+        setCourses(fetchedCourses);
       } else {
         setCourses(MOCK_COURSES);
       }
+
+      if (fetchedTaxonomies && fetchedTaxonomies.languages.length > 0) {
+        setLanguages(fetchedTaxonomies.languages);
+      } else {
+        setLanguages(LANGUAGES);
+      }
+
+      if (fetchedTaxonomies && fetchedTaxonomies.levels.length > 0) {
+        setLevels(fetchedTaxonomies.levels);
+      } else {
+        setLevels(LEVELS);
+      }
+
+      if (fetchedTutors && fetchedTutors.length > 0) {
+        setTutors(fetchedTutors);
+      } else {
+        setTutors(MOCK_USERS.filter((candidate) => candidate.role === UserRole.TUTOR));
+      }
+
+      if (fetchedDemoUsers && fetchedDemoUsers.length > 0) {
+        setDemoUsers(fetchedDemoUsers);
+      } else {
+        setDemoUsers(MOCK_USERS);
+      }
     };
 
-    void loadCourses();
+    void loadCatalogData();
 
     return () => {
       isMounted = false;
@@ -123,7 +176,11 @@ const App: React.FC = () => {
   return (
     <AppContext.Provider value={{ 
       user, setUser, 
+      demoUsers, setDemoUsers,
+      tutors, setTutors,
       courses, setCourses, 
+      languages, setLanguages,
+      levels, setLevels,
       view, setView,
       selectedLang, setSelectedLang,
       selectedCourse, setSelectedCourse,

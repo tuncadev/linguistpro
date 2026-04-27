@@ -1,24 +1,26 @@
 
 import React, { useContext } from 'react';
 import { AppContext } from '../App';
-import { LEVELS } from '../constants';
 import { CheckCircle2, Star, BookOpen, MessageCircle } from 'lucide-react';
 
 const LANGUAGE_HEADER_IMAGES: Record<string, string> = {
-  'l1': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800', // English
-  'l2': 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&q=80&w=800', // Spanish
-  'l3': 'https://images.unsplash.com/photo-1431274172761-fca41d93e114?auto=format&fit=crop&q=80&w=800', // French
-  'l4': 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=800', // Japanese
-  'l5': 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&q=80&w=800', // German
+  en: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
+  es: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&q=80&w=800',
+  fr: 'https://images.unsplash.com/photo-1431274172761-fca41d93e114?auto=format&fit=crop&q=80&w=800',
+  jp: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=800',
+  ja: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=800',
+  de: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&q=80&w=800',
 };
 
 const LanguageLandingView: React.FC = () => {
-  const { selectedLang, setView, setSelectedCourse, courses } = useContext(AppContext);
+  const { selectedLang, levels, setView, setSelectedCourse, courses } = useContext(AppContext);
 
   if (!selectedLang) return null;
 
   const relevantCourses = courses.filter(c => c.languageId === selectedLang.id);
-  const headerImage = LANGUAGE_HEADER_IMAGES[selectedLang.id] || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800';
+  const headerImage =
+    LANGUAGE_HEADER_IMAGES[selectedLang.code.toLowerCase()] ||
+    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800';
 
   return (
     <div className="animate-in slide-in-from-bottom-8 duration-500">
@@ -72,7 +74,7 @@ const LanguageLandingView: React.FC = () => {
             <p className="text-slate-500">Structured according to the Common European Framework of Reference (CEFR).</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {LEVELS.map(level => (
+            {levels.map(level => (
               <div key={level.id} className="bg-white p-6 rounded-2xl border border-slate-200 text-center hover:border-[#f47361] transition-all group">
                 <span className="block text-2xl font-black text-[#f47361] mb-2">{level.name}</span>
                 <p className="text-sm font-bold text-[#2d3e50] mb-1">{level.description}</p>

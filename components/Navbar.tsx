@@ -1,13 +1,12 @@
 
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../App';
-import { MOCK_USERS } from '../constants';
 import { UserRole } from '../types';
 import { LayoutGrid, Info, Menu } from 'lucide-react';
 import { loginUser, logoutUser, registerUser } from '../services/authApiService';
 
 const Navbar: React.FC = () => {
-  const { user, setUser, setView, view } = useContext(AppContext);
+  const { user, setUser, setView, view, demoUsers } = useContext(AppContext);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [name, setName] = useState('');
@@ -115,7 +114,7 @@ const Navbar: React.FC = () => {
             >
               Guest
             </button>
-            {MOCK_USERS.map((u) => (
+            {demoUsers.map((u) => (
               <button
                 key={u.id}
                 onClick={() => {

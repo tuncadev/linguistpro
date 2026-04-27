@@ -1,15 +1,93 @@
-
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../App';
+import {
+  AdminDashboardOverview,
+  fetchAdminDashboardOverview,
+} from '../services/adminDashboardApiService';
+
+function formatRelativeTime(isoTimestamp: string): string {
+  const diffMs = Date.now() - new Date(isoTimestamp).getTime();
+  const minuteMs = 60_000;
+  const hourMs = 60 * minuteMs;
+  const dayMs = 24 * hourMs;
+
+  if (diffMs < hourMs) {
+    const minutes = Math.max(1, Math.floor(diffMs / minuteMs));
+    return `${minutes} min${minutes === 1 ? '' : 's'} ago`;
+  }
+
+  if (diffMs < dayMs) {
+    const hours = Math.max(1, Math.floor(diffMs / hourMs));
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  }
+
+  const days = Math.max(1, Math.floor(diffMs / dayMs));
+  return `${days} day${days === 1 ? '' : 's'} ago`;
+}
 
 const AdminDashboard: React.FC = () => {
   const { courses } = useContext(AppContext);
+  const [overview, setOverview] = useState<AdminDashboardOverview | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadOverview = async () => {
+      const payload = await fetchAdminDashboardOverview();
+      if (!isMounted) {
+        return;
+      }
+      setOverview(payload);
+    };
+
+    void loadOverview();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const formattedRevenue = useMemo(() => {
+    const revenue = overview?.stats.totalRevenue;
+    if (typeof revenue !== 'number') {
+      return '$84,200';
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(revenue);
+  }, [overview]);
 
   const stats = [
-    { label: 'Total Users', value: '1,284', change: '+12%', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-    { label: 'Courses', value: courses.length.toString(), change: '+2', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-    { label: 'Revenue', value: '$84,200', change: '+18.5%', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    {
+      label: 'Total Users',
+      value: (overview?.stats.totalUsers ?? 1284).toString(),
+      change: overview ? `${overview.stats.totalEnrollments} enrollments` : '+12%',
+      icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+    },
+    {
+      label: 'Courses',
+      value: (overview?.stats.totalCourses ?? courses.length).toString(),
+      change: overview ? `${overview.recentSubmissions.length} recent` : '+2',
+      icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+    },
+    {
+      label: 'Revenue',
+      value: formattedRevenue,
+      change: overview ? 'Live' : '+18.5%',
+      icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    },
   ];
+
+  const recentSubmissions = overview?.recentSubmissions ?? [];
+  const activity =
+    overview?.activity ??
+    [
+      { id: 'fallback-1', message: 'New student enrollment in "Mastering Spanish"', createdAt: new Date().toISOString() },
+      { id: 'fallback-2', message: 'Tutor "Prof. Elena" updated curriculum', createdAt: new Date(Date.now() - 15 * 60_000).toISOString() },
+      { id: 'fallback-3', message: 'System backup completed successfully', createdAt: new Date(Date.now() - 60 * 60_000).toISOString() },
+    ];
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -42,7 +120,14 @@ const AdminDashboard: React.FC = () => {
             <button className="text-indigo-600 text-sm font-bold hover:underline">View All</button>
           </div>
           <div className="divide-y divide-slate-50">
-            {courses.slice(0, 3).map(c => (
+            {(recentSubmissions.length > 0 ? recentSubmissions : courses.slice(0, 3).map((course) => ({
+              id: course.id,
+              title: course.title,
+              tutorId: course.tutorId,
+              tutorName: course.tutorId,
+              status: 'PUBLISHED',
+              createdAt: new Date().toISOString(),
+            }))).map(c => (
               <div key={c.id} className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded bg-slate-100 flex items-center justify-center text-slate-400">
@@ -50,7 +135,7 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div>
                     <p className="font-bold text-slate-900 text-sm">{c.title}</p>
-                    <p className="text-xs text-slate-500">Submission by Tutor ID: {c.tutorId}</p>
+                    <p className="text-xs text-slate-500">Submission by {c.tutorName} ({c.status})</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -71,16 +156,12 @@ const AdminDashboard: React.FC = () => {
             <h2 className="text-lg font-bold">System Logs</h2>
           </div>
           <div className="p-6 space-y-4">
-            {[
-              { time: '2 mins ago', msg: 'New student enrollment in "Mastering Spanish"', type: 'enrollment' },
-              { time: '15 mins ago', msg: 'Tutor "Prof. Elena" updated curriculum', type: 'update' },
-              { time: '1 hour ago', msg: 'System backup completed successfully', type: 'system' },
-            ].map((log, i) => (
-              <div key={i} className="flex gap-4">
+            {activity.map((log) => (
+              <div key={log.id} className="flex gap-4">
                 <div className="w-1 bg-indigo-500 rounded-full"></div>
                 <div>
-                  <p className="text-sm font-medium text-slate-800">{log.msg}</p>
-                  <p className="text-[10px] text-slate-400 uppercase font-bold">{log.time}</p>
+                  <p className="text-sm font-medium text-slate-800">{log.message}</p>
+                  <p className="text-[10px] text-slate-400 uppercase font-bold">{formatRelativeTime(log.createdAt)}</p>
                 </div>
               </div>
             ))}

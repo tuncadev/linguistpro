@@ -1,6 +1,6 @@
 # LinguistPro Production Deployment Plan and ToDo
 
-Last updated: 2026-04-26
+Last updated: 2026-04-27
 Status owner: Codex session tracker
 
 This is the canonical execution tracker for production readiness in this repo.
@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Continue wiring remaining static frontend hardcoded data to backend sources (taxonomies, tutor metadata, dashboard cards) before billing/payments.
+1. Continue wiring remaining static frontend hardcoded widgets to backend sources (student streak/achievements/upcoming metadata and remaining placeholder panels) before billing/payments.
 
 ## Phase Plan (Target Timeline)
 
@@ -99,3 +99,5 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Validated staging sign-off orchestrator locally with passing summary report `ops/uat/reports/staging-signoff-20260426T165842Z.md`.
 - 2026-04-26: Staging QA temporarily deferred by owner decision; executed launch checklist with waiver override (`STAGING_UAT_SIGNED_OFF=true CI_GREEN=true ENV_FILE=.env.local PRODUCTION_BASE_URL=http://127.0.0.1:3001`) and passing report `ops/deploy/reports/launch-checklist-20260426T170059Z.md`.
 - 2026-04-26: Feature flag foundation implemented with DB model + migration + seed defaults, admin CRUD APIs (`/api/admin/feature-flags`), public read API (`/api/feature-flags`), and server helper (`lib/feature-flags/is-enabled.ts`).
+- 2026-04-27: Wired taxonomy+tutor hardcoded frontend paths to backend (`/api/taxonomies`, `/api/tutors`) via new services and AppContext state; updated Home/Catalog/LanguageLanding/TutorDashboard/CourseDetails to consume backend-first data with fallback.
+- 2026-04-27: Wired navbar role-switch users and admin dashboard hardcoded blocks to backend (`/api/demo-users`, `/api/admin/dashboard/overview`), updated auth payload/profile mapping, and made `StudentDashboard` upcoming class card backend-context driven.

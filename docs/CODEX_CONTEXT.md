@@ -1,6 +1,6 @@
 # Codex Context: LinguistPro
 
-Last verified: 2026-04-26
+Last verified: 2026-04-27
 
 This file is a technical handoff reference for future Codex sessions.
 
@@ -33,6 +33,13 @@ Legacy Vite prototype files are still present and used as migration references.
 - Feature flag server helper: `lib/feature-flags/is-enabled.ts`
 - Frontend course adapter: `services/courseApiService.ts` (API payload -> frontend model mapping)
 - Frontend enrollment adapter: `services/enrollmentApiService.ts` (`GET/POST /api/enroll` bridge for legacy views)
+- Frontend taxonomy adapter: `services/taxonomyApiService.ts` (`GET /api/taxonomies`)
+- Frontend tutor adapter: `services/tutorApiService.ts` (`GET /api/tutors`)
+- Frontend demo-user adapter: `services/demoUserApiService.ts` (`GET /api/demo-users`)
+- Frontend admin overview adapter: `services/adminDashboardApiService.ts` (`GET /api/admin/dashboard/overview`)
+- Taxonomy/tutor APIs: `app/api/taxonomies/route.ts`, `app/api/tutors/route.ts`
+- Demo role user API: `app/api/demo-users/route.ts`
+- Admin overview API: `app/api/admin/dashboard/overview/route.ts`
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`
 - Observability layer: `lib/observability/logger.ts`, `lib/observability/metrics.ts`, `lib/observability/error-tracker.ts`
 - Operational endpoints: `app/api/health/route.ts`, `app/api/metrics/route.ts`
@@ -82,9 +89,9 @@ If these are unset, the corresponding views currently return `null`.
 
 ## 5) Role Simulation Model
 
-Both real session auth and mock role switching exist in `Navbar`.
+Both real session auth and demo role switching exist in `Navbar`.
 - Real session auth: styled modal calling `/api/auth/login` and `/api/auth/register`.
-- Demo role switch: selecting one of `MOCK_USERS` (or `Guest`) still overrides context for prototype flows.
+- Demo role switch: selecting one of backend-loaded demo users from `/api/demo-users` (or `Guest`) still overrides context for prototype flows.
 
 Guest behavior:
 - can browse public views
@@ -189,17 +196,20 @@ Migration update:
 - Automated production launch checklist exists at `ops/deploy/launch-checklist.sh` and supports dry-run evidence generation.
 - Latest launch checklist was executed with explicit staging waiver override pending real staging QA completion.
 - Feature flag foundation is now implemented with Prisma model, seeded defaults, admin CRUD APIs, and public read endpoint.
+- Legacy frontend taxonomy/tutor/demo-role hardcoded paths are now backend-first via `/api/taxonomies`, `/api/tutors`, and `/api/demo-users` with fallback constants in `App.tsx`.
+- Auth API payloads now include user profile metadata (`avatarUrl`, `bio`, `rating`, `studentCount`, `coursesAuthored`) and frontend auth mapping uses those fields.
+- Admin dashboard cards, recent submissions, and activity feed are backend-driven via `/api/admin/dashboard/overview`.
 
 ## 10) Known Gaps and Risks
 
-- Legacy Vite shell still contains mock-role simulation and fallback data paths.
+- Legacy Vite shell still contains fallback data paths in `App.tsx` when API data is unavailable.
 - Next.js 16 warns that `middleware.ts` should migrate to `proxy.ts`.
 - Metrics store is in-memory per process (no long-term retention/export yet).
 - Error webhook reporting is optional and requires `OBSERVABILITY_ERROR_WEBHOOK_URL`.
 - Secret validation is local-script based; no automated secret-manager sync yet.
 - Local UAT smoke can warn if pointed at legacy Vite runtime instead of Next service URL.
 - No route-level URL deep linking
-- Several UI actions are placeholders (logs, approvals, notes, discussion posting)
+- Several UI actions are placeholders (approval/reject buttons, notes, discussion posting)
 - Vite legacy build emits warning because `index.html` references `/index.css` that is not present in repo
 
 Potential maintenance risk:

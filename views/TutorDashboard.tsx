@@ -1,24 +1,35 @@
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../App';
 import { generateCourseDetails } from '../services/geminiService';
-import { LANGUAGES, LEVELS } from '../constants';
 import { Course } from '../types';
 
 const TutorDashboard: React.FC = () => {
-  const { user, courses, setCourses } = useContext(AppContext);
+  const { user, courses, languages, levels, setCourses } = useContext(AppContext);
   const [isGenerating, setIsGenerating] = useState(false);
   const [topic, setTopic] = useState('');
-  const [selectedLang, setSelectedLang] = useState('l1');
-  const [selectedLevel, setSelectedLevel] = useState('v1');
+  const [selectedLang, setSelectedLang] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState('');
 
   const myCourses = courses.filter(c => c.tutorId === user?.id);
 
+  useEffect(() => {
+    if (!selectedLang && languages.length > 0) {
+      setSelectedLang(languages[0].id);
+    }
+  }, [languages, selectedLang]);
+
+  useEffect(() => {
+    if (!selectedLevel && levels.length > 0) {
+      setSelectedLevel(levels[0].id);
+    }
+  }, [levels, selectedLevel]);
+
   const handleGenerate = async () => {
-    if (!topic) return;
+    if (!topic || !selectedLang || !selectedLevel) return;
     setIsGenerating(true);
-    const langObj = LANGUAGES.find(l => l.id === selectedLang);
-    const levelObj = LEVELS.find(v => v.id === selectedLevel);
+    const langObj = languages.find(l => l.id === selectedLang);
+    const levelObj = levels.find(v => v.id === selectedLevel);
     
     const result = await generateCourseDetails(topic, langObj?.name || 'English', levelObj?.name || 'A1');
     
@@ -85,7 +96,7 @@ const TutorDashboard: React.FC = () => {
               onChange={(e) => setSelectedLang(e.target.value)}
               className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none"
             >
-              {LANGUAGES.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+              {languages.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
             </select>
           </div>
           <div className="md:col-span-1">
@@ -95,7 +106,7 @@ const TutorDashboard: React.FC = () => {
               onChange={(e) => setSelectedLevel(e.target.value)}
               className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none"
             >
-              {LEVELS.map(l => <option key={l.id} value={l.id}>{l.name} - {l.description}</option>)}
+              {levels.map(l => <option key={l.id} value={l.id}>{l.name} - {l.description}</option>)}
             </select>
           </div>
           <div className="md:col-span-1">
@@ -111,7 +122,7 @@ const TutorDashboard: React.FC = () => {
         </div>
         <button 
           onClick={handleGenerate}
-          disabled={isGenerating || !topic}
+          disabled={isGenerating || !topic || !selectedLang || !selectedLevel}
           className="mt-6 w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {isGenerating ? (

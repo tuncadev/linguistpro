@@ -16,7 +16,7 @@ const TutorProfileView: React.FC = () => {
         <div className="lg:w-1/3 space-y-10">
           <div className="text-center lg:text-left">
             <img 
-              src={selectedTutor.avatar} 
+              src={selectedTutor.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200'} 
               className="w-56 h-56 rounded-[4rem] border-8 border-white shadow-2xl mx-auto lg:mx-0 object-cover mb-8" 
               alt={selectedTutor.name}
             />
@@ -33,7 +33,7 @@ const TutorProfileView: React.FC = () => {
                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Graduates</p>
               </div>
               <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
-                <p className="text-3xl font-black text-[#f47361]">{selectedTutor.rating}</p>
+                <p className="text-3xl font-black text-[#f47361]">{selectedTutor.rating ?? '-'}</p>
                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Rating</p>
               </div>
             </div>
@@ -42,7 +42,7 @@ const TutorProfileView: React.FC = () => {
           <div className="bg-[#2d3e50] p-10 rounded-[3rem] text-white space-y-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#f47361]/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
             <h3 className="text-xl font-black uppercase tracking-widest relative z-10">Faculty Profile</h3>
-            <p className="text-slate-300 text-sm leading-relaxed relative z-10">{selectedTutor.bio}</p>
+            <p className="text-slate-300 text-sm leading-relaxed relative z-10">{selectedTutor.bio || 'Profile details are being updated.'}</p>
             <div className="space-y-4 pt-6 border-t border-white/5 relative z-10">
                {[
                  'Accredited by National Board',

@@ -1,13 +1,12 @@
 
 import React, { useContext } from 'react';
 import { AppContext } from '../App';
-import { LANGUAGES } from '../constants';
 import Hero from '../components/Hero';
 import LanguageCard from '../components/LanguageCard';
 import { Search, Users, Trophy, Sparkles } from 'lucide-react';
 
 const HomeView: React.FC = () => {
-  const { setView, setSelectedLang } = useContext(AppContext);
+  const { setView, setSelectedLang, languages } = useContext(AppContext);
 
   const steps = [
     { icon: Search, title: 'Tailored Programs', desc: 'Find specialized courses for travel, business, or academic certification.' },
@@ -28,7 +27,7 @@ const HomeView: React.FC = () => {
             <p className="text-slate-600">Explore our comprehensive departments and find your native-level fluency.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {LANGUAGES.map(lang => (
+            {languages.map(lang => (
               <LanguageCard 
                 key={lang.id} 
                 language={lang} 

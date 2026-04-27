@@ -15,6 +15,12 @@ const DEFAULT_USERS = [
     email: "tutor@linguistpro.local",
     role: "TUTOR",
     password: "Tutor123!",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
+    bio: "Senior Catalina tutor focused on practical language fluency and conversational confidence.",
+    rating: 4.9,
+    studentCount: 15400,
+    coursesAuthored: 8,
   },
   {
     name: "LinguistPro Student",
@@ -65,12 +71,22 @@ async function upsertUsers() {
         name: user.name,
         role: user.role,
         passwordHash,
+        avatarUrl: user.avatarUrl ?? null,
+        bio: user.bio ?? null,
+        rating: user.rating ?? null,
+        studentCount: user.studentCount ?? null,
+        coursesAuthored: user.coursesAuthored ?? null,
       },
       create: {
         name: user.name,
         email: user.email,
         role: user.role,
         passwordHash,
+        avatarUrl: user.avatarUrl ?? null,
+        bio: user.bio ?? null,
+        rating: user.rating ?? null,
+        studentCount: user.studentCount ?? null,
+        coursesAuthored: user.coursesAuthored ?? null,
       },
     });
     users[user.role] = saved;
