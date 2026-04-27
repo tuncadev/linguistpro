@@ -4,6 +4,13 @@ Last updated: 2026-04-27
 Owner: Engineering Lead / Codex
 Status baseline: Core app and backend scaffolding exist; production launch gates are partially automated.
 
+## Execution Status Snapshot
+
+- Done:
+  - Finalize Production Infrastructure Topology (card implemented with topology + IaC/runbook docs)
+- Next:
+  - Harden Environment and Secret Management
+
 ## Definition of Production-Ready (v1)
 
 - Platform can safely onboard real students and tutors.
