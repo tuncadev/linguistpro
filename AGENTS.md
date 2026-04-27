@@ -131,3 +131,13 @@ If architecture or workflows change, persist changes in:
 - `docs/DEPLOYMENT_PLAN_TODO.md` for execution status and next deploy step
 - this `AGENTS.md` for stable project-level agent behavior
 - `.agents/skills/linguistpro-maintainer/` for repeatable agent workflow
+
+## Task Execution Workflow (Trello + Clockify)
+
+- Trello board id is stored in `.env.local` keys `TRELLO_BOARD_ID` and `TRELLO_BOARD_IDo`.
+- Required Trello lists: `backlog`, `ready`, `in progress`, `blocked`, `qa ready`, `qa passed`, `done`.
+- Before starting any Trello card, start a Clockify time entry for the matching Clockify task first.
+- In Clockify, set `What are you working on` to the active Trello task name.
+- When task implementation is complete, stop the active Clockify timer.
+- If implementation has no issues, move Trello card to `qa ready`.
+- If implementation has issues/blockers, move Trello card to `blocked` and report the blocker details.

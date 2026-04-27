@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Finalize Production Infrastructure Topology",
+    "description": "Decide final production deployment targets, DNS, TLS, CDN, and network boundaries. Acceptance: environment diagram + approved IaC/runbook committed."
+  },
+  {
+    "name": "Harden Environment and Secret Management",
+    "description": "Move all production secrets to managed secret store and enforce rotation policy. Acceptance: no production secrets in repo/local files and rotation checklist tested."
+  },
+  {
+    "name": "Auth Security Hardening",
+    "description": "Add email verification, password reset, and brute-force/rate-limiting controls. Acceptance: auth threat-model checklist passes and e2e auth tests pass."
+  },
+  {
+    "name": "Student Onboarding Flow (Real Users)",
+    "description": "Complete registration, profile setup, welcome messaging, and first-course enrollment UX. Acceptance: new student can register, enroll, and access learning without manual intervention."
+  },
+  {
+    "name": "Tutor Onboarding and Profile Governance",
+    "description": "Implement complete tutor onboarding, profile validation, and publishing controls. Acceptance: admin can approve tutor and tutor can publish approved course path."
+  },
+  {
+    "name": "RBAC and Permission Audit",
+    "description": "Verify every admin/tutor/student route and API for least privilege. Acceptance: permission matrix documented and automated permission tests pass."
+  },
+  {
+    "name": "Course Lifecycle Completion",
+    "description": "Enforce robust draft-to-review-to-publish-to-archive lifecycle with audit fields. Acceptance: all lifecycle transitions are validated and logged."
+  },
+  {
+    "name": "Enrollment and Access Consistency",
+    "description": "Validate enrollment state against lesson/course access checks across frontend and backend. Acceptance: no unauthorized access and enrollment edge-case tests pass."
+  },
+  {
+    "name": "Billing Provider Integration (Stripe or Equivalent)",
+    "description": "Implement checkout, webhook verification, payment status sync, and failure handling. Acceptance: test and live mode payment lifecycle works end-to-end."
+  },
+  {
+    "name": "Subscription, Invoicing, and Receipt Flow",
+    "description": "Add plan management, invoice records, receipt delivery, and renewal/cancel handling. Acceptance: subscription events reconcile correctly in DB and user dashboard."
+  },
+  {
+    "name": "Refund and Charge Dispute Workflow",
+    "description": "Define and implement admin workflows for refunds and disputes. Acceptance: documented process and tested admin UI/API flow."
+  },
+  {
+    "name": "Zoom Integration Foundation",
+    "description": "Implement Zoom OAuth/app credentials and secure token storage/refresh. Acceptance: platform can create authenticated Zoom resources without manual token handling."
+  },
+  {
+    "name": "Live Class Scheduling via Zoom",
+    "description": "Create tutor-driven Zoom session scheduling and student join-link delivery. Acceptance: tutor schedules class, students receive valid links, and metadata is persisted."
+  },
+  {
+    "name": "Attendance and Recording Sync (Zoom)",
+    "description": "Sync Zoom attendance and recording metadata back to platform records. Acceptance: session attendance appears in dashboards/admin reporting."
+  },
+  {
+    "name": "Transactional Communications",
+    "description": "Add email workflows: welcome, enrollment, payment receipt, class reminder, cancellation. Acceptance: templates, retries, and failure observability in place."
+  },
+  {
+    "name": "Admin KPI and Operational Dashboard",
+    "description": "Replace placeholder admin panels with production KPIs (MRR, enrollments, conversion, churn, support load). Acceptance: metrics query real data and match KPI definitions."
+  },
+  {
+    "name": "Content Moderation and Abuse Reporting",
+    "description": "Add report and moderation workflow for user-generated content and interactions. Acceptance: report-triage-action flow is audited and tested."
+  },
+  {
+    "name": "Security Controls and Compliance Baseline",
+    "description": "Add WAF/rate limits, CSP and secure headers, dependency checks, and audit logging. Acceptance: security checklist pass and recurring scans integrated in CI."
+  },
+  {
+    "name": "Backup, Restore, and Disaster Recovery Drill",
+    "description": "Formalize backup cadence and run restore drills with measured RPO/RTO. Acceptance: restore drill evidence for latest window is archived."
+  },
+  {
+    "name": "Observability and Alerting",
+    "description": "Add log aggregation, metrics dashboards, SLO alerts, and on-call escalation paths. Acceptance: synthetic checks and alert routes verified."
+  },
+  {
+    "name": "Performance and Capacity Validation",
+    "description": "Run load tests for browse, checkout, enroll, and lesson access paths. Acceptance: latency and error thresholds met at expected peak load."
+  },
+  {
+    "name": "QA Automation Expansion and Regression Gates",
+    "description": "Expand integration/e2e coverage for payments, Zoom, onboarding, and admin ops. Acceptance: CI gates block merges on critical regression failures."
+  },
+  {
+    "name": "Staging UAT and Business Sign-Off",
+    "description": "Execute staging smoke, role-flow, billing, and Zoom scripts with approvals. Acceptance: signed checklist and stakeholder approval recorded."
+  },
+  {
+    "name": "Legal, Policy, and User-Facing Trust Artifacts",
+    "description": "Publish Terms, Privacy, Refund policy, and support/incident contact pathways. Acceptance: policy pages live and linked in onboarding/checkout."
+  },
+  {
+    "name": "Support and Incident Runbook Readiness",
+    "description": "Define severity matrix, response SLA, and support triage workflow. Acceptance: support dry-run performed and documented."
+  },
+  {
+    "name": "Production Cutover and Launch Readiness Review",
+    "description": "Execute final preflight, change freeze, launch checklist, and rollback simulation. Acceptance: launch review sign-off complete."
+  },
+  {
+    "name": "Post-Launch Stabilization Window Plan",
+    "description": "Define first 14-day monitoring cadence and hotfix protocol. Acceptance: daily review ritual and owners assigned."
+  }
+]
