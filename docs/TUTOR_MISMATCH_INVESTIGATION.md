@@ -40,10 +40,15 @@ This outputs:
 Run:
 
 ```bash
-systemctl cat catalina-next.service
+npm run ops:uat:runtime
 ```
 
-Verify `WorkingDirectory` points to this repository. If it points elsewhere, UI data may come from a different app/env/DB.
+This verifies:
+- target user service is active (default: `linguistpro-dev.service`)
+- service `WorkingDirectory` matches this repository
+- `/api/tutors` count matches DB `User(role=TUTOR)` count
+
+If this fails, UI data may come from a different app/env/DB.
 
 ### 3) App env source check
 

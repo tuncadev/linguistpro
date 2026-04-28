@@ -83,6 +83,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Secrets runbook: `docs/SECRETS_POLICY_RUNBOOK.md`
 - UAT smoke script: `ops/uat/smoke-check.sh`
 - UAT tutor consistency script: `ops/uat/tutor-consistency-check.mjs`
+- UAT runtime/data-source parity script: `ops/uat/runtime-data-source-check.mjs`
 - UAT sign-off template: `docs/STAGING_UAT_SIGNOFF.md`
 - Tutor mismatch investigation runbook: `docs/TUTOR_MISMATCH_INVESTIGATION.md`
 - Deploy preflight script: `ops/deploy/preflight.sh`

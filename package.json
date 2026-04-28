@@ -23,6 +23,7 @@
     "ops:uat:smoke": "bash ops/uat/smoke-check.sh",
     "ops:uat:roles": "bash ops/uat/role-flow-check.sh",
     "ops:uat:tutors": "node ops/uat/tutor-consistency-check.mjs",
+    "ops:uat:runtime": "node ops/uat/runtime-data-source-check.mjs",
     "ops:uat:signoff": "bash ops/uat/staging-signoff.sh",
     "ops:deploy:preflight": "bash ops/deploy/preflight.sh",
     "ops:deploy:launch": "bash ops/deploy/launch-checklist.sh",

@@ -533,6 +533,7 @@ Smoke command:
 - `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:smoke`
 - `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:roles`
 - `npm run ops:uat:tutors`
+- `npm run ops:uat:runtime`
 - `STAGING_BASE_URL=https://staging.example.com QA_OWNER="QA Lead" PRODUCT_OWNER="PO Name" NOTES="RC1" npm run ops:uat:signoff`
 
 ## Deploy and Rollback
