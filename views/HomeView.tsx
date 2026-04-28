@@ -89,6 +89,12 @@ const HomeView: React.FC = () => {
           <p className="mt-8 text-slate-400 font-medium text-sm">
             Official Catalina Academy Certification Included
           </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-4 text-xs font-bold uppercase tracking-wide text-slate-300">
+            <a href="/terms" className="hover:text-white transition-colors">Terms</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
+            <a href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</a>
+            <a href="/support" className="hover:text-white transition-colors">Support</a>
+          </div>
         </div>
       </section>
     </div>

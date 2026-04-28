@@ -376,6 +376,10 @@ Backend APIs for replacing static frontend taxonomy/tutor data:
 - `DELETE /api/admin/tutors/:id` (`ADMIN`): delete tutor when no courses are assigned
 - `GET /api/demo-users` (public): returns one demo profile per role for navbar quick role switching
 - `GET /api/admin/dashboard/overview` (`ADMIN`): returns admin stats, recent course submissions, and activity feed
+- `POST /api/abuse-reports` (authenticated): submit abuse/moderation report
+- `GET /api/abuse-reports` (authenticated): list reporter's own reports
+- `GET /api/admin/abuse-reports` (`ADMIN`): list and search abuse reports
+- `PATCH /api/admin/abuse-reports/:id` (`ADMIN`): update moderation status/notes
 
 ## Feature Flags Foundation (Implemented)
 

@@ -56,6 +56,9 @@ This document defines the target App Router routes that replace the current Vite
 17. `/api/student/onboarding`
 18. `/api/student/welcome`
 19. `/api/tutor/onboarding`
+20. `/api/abuse-reports`
+21. `/api/admin/abuse-reports`
+22. `/api/admin/abuse-reports/[id]`
 
 ## Middleware Policy (Target)
 

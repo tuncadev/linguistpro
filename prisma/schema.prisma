@@ -57,6 +57,21 @@ enum CommunicationStatus {
   FAILED
 }
 
+enum AbuseTargetType {
+  COURSE
+  TUTOR
+  USER
+  MESSAGE
+  OTHER
+}
+
+enum AbuseReportStatus {
+  OPEN
+  UNDER_REVIEW
+  ACTIONED
+  REJECTED
+}
+
 model User {
   id              String  @id @default(cuid())
   name            String?
@@ -88,9 +103,34 @@ model User {
   zoomConnection  ZoomConnection?
   liveClassSessions LiveClassSession[]
   communications CommunicationMessage[]
+  abuseReports    AbuseReport[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model AbuseReport {
+  id String @id @default(cuid())
+
+  reporterId String
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  targetType AbuseTargetType
+  targetId String
+  reason String
+  details String? @db.Text
+
+  status AbuseReportStatus @default(OPEN)
+  moderationNotes String? @db.Text
+  reviewedById String?
+  reviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+  @@index([reporterId, createdAt])
 }
 
 model AuthToken {
