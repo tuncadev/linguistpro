@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
+import type { NextRequest } from "next/server";
 import { SESSION_COOKIE_NAME, SESSION_TTL_SECONDS } from "@/lib/auth/constants";
 import type { AppRole } from "@/lib/auth/rbac";
 
@@ -62,20 +63,43 @@ export async function verifySessionToken(token: string): Promise<SessionUser | n
   }
 }
 
-export function sessionCookieOptions() {
+function normalizeProto(raw: string | null | undefined): string {
+  return raw?.split(",")[0]?.trim().toLowerCase() ?? "";
+}
+
+export function isHttpsRequest(req: NextRequest): boolean {
+  const forwardedProto = normalizeProto(req.headers.get("x-forwarded-proto"));
+  if (forwardedProto) {
+    return forwardedProto === "https";
+  }
+  return req.nextUrl.protocol === "https:";
+}
+
+function resolveCookieSecureFlag(isHttps: boolean): boolean {
+  const override = process.env.AUTH_COOKIE_SECURE?.trim().toLowerCase();
+  if (override === "true") {
+    return true;
+  }
+  if (override === "false") {
+    return false;
+  }
+  return process.env.NODE_ENV === "production" ? isHttps : false;
+}
+
+export function sessionCookieOptions(isHttps: boolean) {
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: resolveCookieSecureFlag(isHttps),
     sameSite: "lax" as const,
     path: "/",
     maxAge: SESSION_TTL_SECONDS,
   };
 }
 
-export function clearSessionCookieOptions() {
+export function clearSessionCookieOptions(isHttps: boolean) {
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: resolveCookieSecureFlag(isHttps),
     sameSite: "lax" as const,
     path: "/",
     maxAge: 0,

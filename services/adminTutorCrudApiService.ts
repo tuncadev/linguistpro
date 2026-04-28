@@ -100,7 +100,7 @@ async function parseResponseOrThrow<T>(response: Response): Promise<T> {
 }
 
 export async function fetchAdminTutors(): Promise<User[]> {
-  const response = await fetch("/api/admin/tutors?take=200", {
+  const response = await fetch("/api/admin/tutors?take=100", {
     method: "GET",
     credentials: "include",
   });

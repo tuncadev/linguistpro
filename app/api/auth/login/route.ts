@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth/password";
 import {
   createSessionToken,
+  isHttpsRequest,
   sessionCookieOptions,
   SESSION_COOKIE_NAME,
 } from "@/lib/auth/session";
@@ -150,7 +151,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    res.cookies.set(SESSION_COOKIE_NAME, token, sessionCookieOptions());
+    res.cookies.set(SESSION_COOKIE_NAME, token, sessionCookieOptions(isHttpsRequest(req)));
     return res;
   } catch (error) {
     console.error("login error", error);

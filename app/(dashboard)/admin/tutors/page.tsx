@@ -76,37 +76,54 @@ export default function AdminTutorsPage() {
     const loadPageData = async () => {
       setLoading(true);
       setError(null);
+      let auxiliaryError: string | null = null;
 
-      try {
-        const [fetchedTutors, fetchedCourses, fetchedIntegrity] = await Promise.all([
-          fetchAdminTutors(),
-          fetchAdminCourses(),
-          fetchAdminTutorIntegrity(),
-        ]);
+      const [tutorsResult, coursesResult, integrityResult] = await Promise.allSettled([
+        fetchAdminTutors(),
+        fetchAdminCourses(),
+        fetchAdminTutorIntegrity(),
+      ]);
 
-        if (!isMounted) {
-          return;
-        }
+      if (!isMounted) {
+        return;
+      }
 
-        setTutors(fetchedTutors);
-        setIntegrity(fetchedIntegrity);
+      if (tutorsResult.status === "fulfilled") {
+        setTutors(tutorsResult.value);
+      } else {
+        const message =
+          tutorsResult.reason instanceof Error
+            ? tutorsResult.reason.message
+            : "Failed to load tutor management data.";
+        setError(message);
+        setTutors([]);
+      }
 
-        const counts = (fetchedCourses ?? []).reduce<Record<string, number>>((acc, course) => {
+      if (coursesResult.status === "fulfilled") {
+        const counts = (coursesResult.value ?? []).reduce<Record<string, number>>((acc, course) => {
           acc[course.tutorId] = (acc[course.tutorId] ?? 0) + 1;
           return acc;
         }, {});
         setAssignedCourseCountByTutor(counts);
-      } catch (loadError) {
-        if (!isMounted) {
-          return;
-        }
-        const message = loadError instanceof Error ? loadError.message : "Failed to load tutor management data.";
-        setError(message);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
+      } else {
+        setAssignedCourseCountByTutor({});
+        auxiliaryError = "Tutor list loaded, but course assignment counts could not be loaded.";
+      }
+
+      if (integrityResult.status === "fulfilled") {
+        setIntegrity(integrityResult.value);
+      } else {
+        setIntegrity(null);
+        if (!auxiliaryError) {
+          auxiliaryError = "Tutor list loaded, but integrity summary could not be loaded.";
         }
       }
+
+      if (tutorsResult.status === "fulfilled" && auxiliaryError) {
+        setError(auxiliaryError);
+      }
+
+      setLoading(false);
     };
 
     void loadPageData();
