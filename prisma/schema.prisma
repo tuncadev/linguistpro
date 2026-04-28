@@ -37,6 +37,12 @@ enum LessonType {
   READING
 }
 
+enum LiveClassStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+}
+
 model User {
   id              String  @id @default(cuid())
   name            String?
@@ -66,6 +72,7 @@ model User {
   enrollments     Enrollment[]
   authTokens      AuthToken[]
   zoomConnection  ZoomConnection?
+  liveClassSessions LiveClassSession[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -137,6 +144,7 @@ model Course {
   syllabusSections SyllabusSection[]
   enrollments      Enrollment[]
   lifecycleEvents  CourseLifecycleEvent[]
+  liveClassSessions LiveClassSession[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -193,6 +201,38 @@ model Enrollment {
   createdAt DateTime @default(now())
 
   @@unique([courseId, studentId])
+}
+
+model LiveClassSession {
+  id String @id @default(cuid())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  tutorId String
+  tutor   User @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+
+  title String
+  agenda String?
+  startsAt DateTime
+  durationMinutes Int
+  timezone String
+  status LiveClassStatus @default(SCHEDULED)
+
+  zoomMeetingId String
+  zoomJoinUrl String
+  zoomStartUrl String?
+  zoomPassword String?
+  zoomHostEmail String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cancelledAt DateTime?
+  cancelledById String?
+
+  @@index([courseId, startsAt])
+  @@index([tutorId, startsAt])
+  @@index([zoomMeetingId])
 }
 
 model FeatureFlag {

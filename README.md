@@ -269,6 +269,17 @@ Security/storage details:
 - Automatic refresh contract for future Zoom consumers is exposed via `lib/integrations/zoom/token-store.ts`.
 - Full implementation notes: `docs/ZOOM_INTEGRATION.md`.
 
+## Live Class Scheduling via Zoom (Implemented)
+
+Tutor-driven scheduling and student join-link delivery are now backend-supported:
+- `POST /api/live-classes` (`TUTOR`/`ADMIN`): creates Zoom meeting and persists class metadata
+- `GET /api/live-classes` (`STUDENT`/`TUTOR`/`ADMIN`): role-scoped class listing
+- `GET /api/live-classes/:id/join` (`STUDENT`/`TUTOR`/`ADMIN`): returns join URL with enrollment/ownership checks
+
+Persistence:
+- `LiveClassSession` model tracks schedule + Zoom meeting metadata in DB.
+- Implementation details: `docs/ZOOM_LIVE_CLASSES.md`.
+
 ## Admin Moderation Flow (Implemented)
 
 Course moderation endpoints:

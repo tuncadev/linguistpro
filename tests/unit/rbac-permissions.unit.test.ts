@@ -119,6 +119,14 @@ describe("rbac protected API route matrix", () => {
         guards: [new Set<Role>(["TUTOR", "ADMIN"]), new Set<Role>(["TUTOR", "ADMIN"])],
       },
       {
+        file: path.join(projectRoot, "app", "api", "live-classes", "route.ts"),
+        guards: [new Set<Role>(["STUDENT", "TUTOR", "ADMIN"]), new Set<Role>(["TUTOR", "ADMIN"])],
+      },
+      {
+        file: path.join(projectRoot, "app", "api", "live-classes", "[id]", "join", "route.ts"),
+        guards: [new Set<Role>(["STUDENT", "TUTOR", "ADMIN"])],
+      },
+      {
         file: path.join(projectRoot, "app", "api", "metrics", "route.ts"),
         guards: [new Set<Role>(["ADMIN"])],
       },

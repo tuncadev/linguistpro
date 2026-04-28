@@ -32,6 +32,9 @@ This document is the source of truth for route and API access expectations used 
 | `/api/integrations/zoom/oauth-url` | `GET` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
 | `/api/integrations/zoom/connect` | `POST` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
 | `/api/integrations/zoom/status` | `GET`, `POST` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
+| `/api/live-classes` | `GET` | `STUDENT`, `TUTOR`, `ADMIN` | `requireRoles(req, ["STUDENT", "TUTOR", "ADMIN"])` |
+| `/api/live-classes` | `POST` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
+| `/api/live-classes/[id]/join` | `GET` | `STUDENT`, `TUTOR`, `ADMIN` | `requireRoles(req, ["STUDENT", "TUTOR", "ADMIN"])` |
 | `/api/metrics` | `GET` | `ADMIN` | `requireRoles(req, ["ADMIN"])` |
 | `/api/webhooks` | `GET` | `ADMIN` | `requireRoles(req, ["ADMIN"])` |
 

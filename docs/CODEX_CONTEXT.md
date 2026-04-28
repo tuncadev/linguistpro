@@ -38,6 +38,9 @@ Legacy Vite prototype files are still present and used as migration references.
 - Zoom OAuth integration APIs: `app/api/integrations/zoom/oauth-url/route.ts`, `app/api/integrations/zoom/connect/route.ts`, `app/api/integrations/zoom/status/route.ts`
 - Zoom token helpers + storage: `lib/integrations/zoom/oauth.ts`, `lib/integrations/zoom/token-store.ts`, `lib/security/sealed-secrets.ts`
 - Zoom integration runbook: `docs/ZOOM_INTEGRATION.md`
+- Live class APIs: `app/api/live-classes/route.ts`, `app/api/live-classes/[id]/join/route.ts`
+- Live class serialization: `lib/live-classes/serialize.ts`
+- Live class runbook: `docs/ZOOM_LIVE_CLASSES.md`
 - Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
@@ -257,6 +260,7 @@ Migration update:
 - Course presentation label baseline is normalized to `Course Tutor` (including legacy `Course Director` DB values during serialization).
 - Course lifecycle is now transition-guarded with persisted audit events (`CourseLifecycleEvent`) and status snapshots (`submittedAt`, `reviewedAt`, `archivedAt`, actor/reason fields).
 - Zoom integration foundation is now implemented with encrypted OAuth token storage (`ZoomConnection`) and token refresh-capable integration endpoints under `/api/integrations/zoom/*`.
+- Live class scheduling is now implemented with persisted `LiveClassSession` records and Zoom-backed meeting creation/join-link delivery (`/api/live-classes*`).
 
 ## 10) Known Gaps and Risks
 
