@@ -5,6 +5,27 @@ type ApiAdminStats = {
   totalRevenue: number;
 };
 
+type ApiAdminKpis = {
+  mrrProxy30d: number;
+  onboardingCompletionRate: number;
+  tutorApprovalRate: number;
+  pendingTutorApprovals: number;
+  pendingCourseSubmissions: number;
+  upcomingLiveClasses: number;
+  completedLiveClasses: number;
+  cancelledLiveClasses: number;
+  attendanceParticipants: number;
+  averageAttendanceJoins: number;
+  averageAttendanceMinutes: number;
+  recordingAssets: number;
+  communicationSent: number;
+  communicationFailed: number;
+  communicationPending: number;
+  communicationSent7d: number;
+  communicationFailed7d: number;
+  communicationSuccessRate7d: number;
+};
+
 type ApiRecentSubmission = {
   id: string;
   title: string;
@@ -16,7 +37,7 @@ type ApiRecentSubmission = {
 
 type ApiActivityItem = {
   id: string;
-  type: "enrollment" | "course_update";
+  type: "enrollment" | "course_update" | "communication" | "live_class";
   message: string;
   createdAt: string;
 };
@@ -24,6 +45,7 @@ type ApiActivityItem = {
 type ApiOverviewPayload = {
   data?: {
     stats: ApiAdminStats;
+    kpis: ApiAdminKpis;
     recentSubmissions: ApiRecentSubmission[];
     activity: ApiActivityItem[];
   };
@@ -31,6 +53,7 @@ type ApiOverviewPayload = {
 
 export type AdminDashboardOverview = {
   stats: ApiAdminStats;
+  kpis: ApiAdminKpis;
   recentSubmissions: ApiRecentSubmission[];
   activity: ApiActivityItem[];
 };

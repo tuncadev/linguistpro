@@ -349,6 +349,20 @@ Implemented behavior:
 - blocks delete when tutor still owns courses (reassign/remove courses first)
 - preserves existing frontend tutor profile/card style while shifting data source to DB APIs
 
+## Admin KPI and Operational Dashboard (Implemented)
+
+Admin overview now exposes real KPI metrics sourced from DB:
+- backend endpoint: `GET /api/admin/dashboard/overview`
+- frontend service/view: `services/adminDashboardApiService.ts`, `views/AdminDashboard.tsx`
+- KPI domains:
+  - revenue proxy (last 30 days)
+  - onboarding and tutor approval funnel
+  - pending moderation load
+  - live class and attendance/recording metrics
+  - communications delivery success/failure
+
+Reference: `docs/ADMIN_KPI_DASHBOARD.md`.
+
 ## Taxonomy and Tutor Directory APIs (Implemented)
 
 Backend APIs for replacing static frontend taxonomy/tutor data:

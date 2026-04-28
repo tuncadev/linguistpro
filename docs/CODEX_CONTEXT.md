@@ -47,6 +47,7 @@ Legacy Vite prototype files are still present and used as migration references.
 - Transactional communications dispatcher/workflows: `lib/communications/dispatcher.ts`, `lib/communications/workflows.ts`, `lib/communications/templates.ts`
 - Transactional communications APIs: `app/api/live-classes/[id]/remind/route.ts`, `app/api/live-classes/[id]/cancel/route.ts`, `app/api/admin/communications/send/route.ts`
 - Transactional communications runbook: `docs/TRANSACTIONAL_COMMUNICATIONS.md`
+- Admin KPI dashboard runbook: `docs/ADMIN_KPI_DASHBOARD.md`
 - Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
@@ -270,6 +271,7 @@ Migration update:
 - Live class scheduling is now implemented with persisted `LiveClassSession` records and Zoom-backed meeting creation/join-link delivery (`/api/live-classes*`).
 - Zoom attendance and recording sync is now implemented with webhook verification and persistence (`LiveClassAttendance`, `LiveClassRecording`).
 - Transactional communications are now implemented with persisted outbox/attempts, retries, and workflow triggers for welcome/enrollment/reminder/cancellation.
+- Admin dashboard overview now includes production KPI payloads for funnel, live-class, attendance/recording, and communications performance metrics.
 
 ## 10) Known Gaps and Risks
 

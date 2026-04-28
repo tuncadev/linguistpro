@@ -80,6 +80,63 @@ const AdminDashboard: React.FC = () => {
     },
   ];
 
+  const kpiCards = [
+    {
+      label: 'MRR Proxy (30d)',
+      value:
+        typeof overview?.kpis.mrrProxy30d === 'number'
+          ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
+              overview.kpis.mrrProxy30d
+            )
+          : '$0',
+      hint: 'Enrollment revenue in last 30 days',
+    },
+    {
+      label: 'Onboarding Completion',
+      value:
+        typeof overview?.kpis.onboardingCompletionRate === 'number'
+          ? `${overview.kpis.onboardingCompletionRate.toFixed(1)}%`
+          : '0.0%',
+      hint: 'Students with completed onboarding',
+    },
+    {
+      label: 'Tutor Approval Rate',
+      value:
+        typeof overview?.kpis.tutorApprovalRate === 'number'
+          ? `${overview.kpis.tutorApprovalRate.toFixed(1)}%`
+          : '0.0%',
+      hint: `${overview?.kpis.pendingTutorApprovals ?? 0} pending approvals`,
+    },
+    {
+      label: 'Live Classes (Upcoming)',
+      value: `${overview?.kpis.upcomingLiveClasses ?? 0}`,
+      hint: `${overview?.kpis.completedLiveClasses ?? 0} completed / ${overview?.kpis.cancelledLiveClasses ?? 0} cancelled`,
+    },
+    {
+      label: 'Attendance Participants',
+      value: `${overview?.kpis.attendanceParticipants ?? 0}`,
+      hint: `Avg joins ${Number(overview?.kpis.averageAttendanceJoins ?? 0).toFixed(1)}`,
+    },
+    {
+      label: 'Recordings',
+      value: `${overview?.kpis.recordingAssets ?? 0}`,
+      hint: 'Synced recording assets',
+    },
+    {
+      label: 'Comms Success (7d)',
+      value:
+        typeof overview?.kpis.communicationSuccessRate7d === 'number'
+          ? `${overview.kpis.communicationSuccessRate7d.toFixed(1)}%`
+          : '100.0%',
+      hint: `${overview?.kpis.communicationSent7d ?? 0} sent / ${overview?.kpis.communicationFailed7d ?? 0} failed`,
+    },
+    {
+      label: 'Pending Submissions',
+      value: `${overview?.kpis.pendingCourseSubmissions ?? 0}`,
+      hint: 'Courses waiting for review',
+    },
+  ];
+
   const recentSubmissions = overview?.recentSubmissions ?? [];
   const activity =
     overview?.activity ??
@@ -109,6 +166,16 @@ const AdminDashboard: React.FC = () => {
             </div>
             <p className="text-sm font-medium text-slate-500">{stat.label}</p>
             <p className="text-3xl font-black text-slate-900">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        {kpiCards.map((kpi) => (
+          <div key={kpi.label} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{kpi.label}</p>
+            <p className="mt-2 text-2xl font-black text-slate-900">{kpi.value}</p>
+            <p className="mt-1 text-xs text-slate-500">{kpi.hint}</p>
           </div>
         ))}
       </div>
