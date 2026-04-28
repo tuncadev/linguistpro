@@ -126,3 +126,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-28: Added runtime/data-source parity check (`ops/uat/runtime-data-source-check.mjs`, `npm run ops:uat:runtime`) to verify active service working directory and tutor-count parity between API and DB.
 - 2026-04-28: Added tutor-course data integrity guardrails with reusable snapshot helper (`lib/tutors/integrity.ts`), protected diagnostics endpoint (`GET /api/admin/tutors/integrity`), and admin tutor dashboard integrity metrics/warnings.
 - 2026-04-28: Added safe tutor-course backfill tooling (`ops/data/backfill-tutor-assignments.mjs`) and operator runbook (`docs/TUTOR_BACKFILL_RUNBOOK.md`) with dry-run/apply modes and post-fix QA steps.
+- 2026-04-28: Completed tutor consistency end-to-end QA card with passing runtime+tutor checks, authenticated admin/public API parity validation, and evidence report `ops/uat/reports/qa-tutor-consistency-20260428T111658Z.md`.
