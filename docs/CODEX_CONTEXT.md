@@ -44,6 +44,9 @@ Legacy Vite prototype files are still present and used as migration references.
 - Zoom webhook sync endpoint: `app/api/webhooks/zoom/route.ts`
 - Zoom webhook helpers: `lib/integrations/zoom/webhook.ts`, `lib/integrations/zoom/sync.ts`
 - Attendance/recording runbook: `docs/ZOOM_ATTENDANCE_RECORDINGS.md`
+- Transactional communications dispatcher/workflows: `lib/communications/dispatcher.ts`, `lib/communications/workflows.ts`, `lib/communications/templates.ts`
+- Transactional communications APIs: `app/api/live-classes/[id]/remind/route.ts`, `app/api/live-classes/[id]/cancel/route.ts`, `app/api/admin/communications/send/route.ts`
+- Transactional communications runbook: `docs/TRANSACTIONAL_COMMUNICATIONS.md`
 - Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
@@ -179,6 +182,7 @@ Environment variables:
 - `.env.local`: `ZOOM_REDIRECT_URI=...`
 - `.env.local`: `INTEGRATION_ENCRYPTION_KEY=...` (base64-encoded 32-byte key)
 - `.env.local`: `OBSERVABILITY_ERROR_WEBHOOK_URL=...` (optional)
+- `.env.local`: `EMAIL_DELIVERY_WEBHOOK_URL=...` (optional delivery provider endpoint; production should set)
 - `.env.local`: `RESTORE_TEST_DATABASE_URL=...` (required for restore verification)
 
 Expected commands:
@@ -265,6 +269,7 @@ Migration update:
 - Zoom integration foundation is now implemented with encrypted OAuth token storage (`ZoomConnection`) and token refresh-capable integration endpoints under `/api/integrations/zoom/*`.
 - Live class scheduling is now implemented with persisted `LiveClassSession` records and Zoom-backed meeting creation/join-link delivery (`/api/live-classes*`).
 - Zoom attendance and recording sync is now implemented with webhook verification and persistence (`LiveClassAttendance`, `LiveClassRecording`).
+- Transactional communications are now implemented with persisted outbox/attempts, retries, and workflow triggers for welcome/enrollment/reminder/cancellation.
 
 ## 10) Known Gaps and Risks
 

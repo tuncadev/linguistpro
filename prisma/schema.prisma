@@ -43,6 +43,20 @@ enum LiveClassStatus {
   COMPLETED
 }
 
+enum CommunicationTemplate {
+  WELCOME
+  ENROLLMENT_CONFIRMATION
+  PAYMENT_RECEIPT
+  CLASS_REMINDER
+  CLASS_CANCELLATION
+}
+
+enum CommunicationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 model User {
   id              String  @id @default(cuid())
   name            String?
@@ -73,6 +87,7 @@ model User {
   authTokens      AuthToken[]
   zoomConnection  ZoomConnection?
   liveClassSessions LiveClassSession[]
+  communications CommunicationMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -145,6 +160,7 @@ model Course {
   enrollments      Enrollment[]
   lifecycleEvents  CourseLifecycleEvent[]
   liveClassSessions LiveClassSession[]
+  communications CommunicationMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -232,6 +248,7 @@ model LiveClassSession {
 
   attendanceLogs LiveClassAttendance[]
   recordings LiveClassRecording[]
+  communications CommunicationMessage[]
 
   @@index([courseId, startsAt])
   @@index([tutorId, startsAt])
@@ -288,6 +305,60 @@ model FeatureFlag {
   enabled     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model CommunicationMessage {
+  id String @id @default(cuid())
+
+  template CommunicationTemplate
+  triggerKey String?
+  status CommunicationStatus @default(PENDING)
+
+  recipientEmail String
+  recipientName String?
+  subject String
+  bodyText String @db.Text
+  bodyHtml String? @db.Text
+
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  courseId String?
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  liveClassSessionId String?
+  liveClassSession LiveClassSession? @relation(fields: [liveClassSessionId], references: [id], onDelete: SetNull)
+
+  attemptCount Int @default(0)
+  sentAt DateTime?
+  failedAt DateTime?
+  lastError String?
+  lastAttemptAt DateTime?
+  meta Json?
+
+  attempts CommunicationAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([template, status])
+  @@index([recipientEmail, createdAt])
+}
+
+model CommunicationAttempt {
+  id String @id @default(cuid())
+
+  messageId String
+  message CommunicationMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  attemptNumber Int
+  status CommunicationStatus
+  provider String?
+  providerMessageId String?
+  responseCode Int?
+  errorMessage String?
+  responseBody String?
+  attemptedAt DateTime @default(now())
+
+  @@index([messageId, attemptNumber])
 }
 
 model ZoomConnection {

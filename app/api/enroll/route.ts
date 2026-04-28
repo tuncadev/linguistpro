@@ -2,6 +2,7 @@ import { Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
+import { sendEnrollmentConfirmation } from "@/lib/communications/workflows";
 import { conflict, forbidden, notFound } from "@/lib/http/api-error";
 import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
@@ -167,6 +168,13 @@ export const POST = withApiHandler(async (req: NextRequest) => {
       });
 
       return enrollment;
+    });
+
+    void sendEnrollmentConfirmation({
+      studentId,
+      courseId: payload.courseId,
+    }).catch((error) => {
+      console.error("enrollment communication error", error);
     });
 
     return NextResponse.json(

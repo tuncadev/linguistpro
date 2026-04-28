@@ -35,6 +35,9 @@ This document is the source of truth for route and API access expectations used 
 | `/api/live-classes` | `GET` | `STUDENT`, `TUTOR`, `ADMIN` | `requireRoles(req, ["STUDENT", "TUTOR", "ADMIN"])` |
 | `/api/live-classes` | `POST` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
 | `/api/live-classes/[id]/join` | `GET` | `STUDENT`, `TUTOR`, `ADMIN` | `requireRoles(req, ["STUDENT", "TUTOR", "ADMIN"])` |
+| `/api/live-classes/[id]/remind` | `POST` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
+| `/api/live-classes/[id]/cancel` | `POST` | `TUTOR`, `ADMIN` | `requireRoles(req, ["TUTOR", "ADMIN"])` |
+| `/api/admin/communications/send` | `POST` | `ADMIN` | `requireRoles(req, ["ADMIN"])` |
 | `/api/metrics` | `GET` | `ADMIN` | `requireRoles(req, ["ADMIN"])` |
 | `/api/webhooks` | `GET` | `ADMIN` | `requireRoles(req, ["ADMIN"])` |
 

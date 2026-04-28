@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Execute production readiness card: Transactional Communications.
+1. Execute production readiness card: Admin KPI and Operational Dashboard.
 
 ## Phase Plan (Target Timeline)
 
@@ -120,3 +120,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-28: Completed Zoom Integration Foundation card with encrypted Zoom OAuth token storage (`ZoomConnection`), backend OAuth/refresh endpoints (`/api/integrations/zoom/*`), refresh-capable token helper contract (`lib/integrations/zoom/token-store.ts`), env policy updates, and implementation runbook (`docs/ZOOM_INTEGRATION.md`).
 - 2026-04-28: Completed Live Class Scheduling via Zoom card with persisted `LiveClassSession` model, tutor/admin scheduling endpoint (`POST /api/live-classes`), role-scoped listing (`GET /api/live-classes`), student enrollment-gated join-link delivery (`GET /api/live-classes/:id/join`), and Zoom meeting creation bridge (`lib/integrations/zoom/meetings.ts`).
 - 2026-04-28: Completed Attendance and Recording Sync (Zoom) card with signature-verified Zoom webhook endpoint (`/api/webhooks/zoom`) and persisted sync targets for participant telemetry (`LiveClassAttendance`) and recording assets (`LiveClassRecording`).
+- 2026-04-28: Completed Transactional Communications card with DB-backed message/attempt models (`CommunicationMessage`, `CommunicationAttempt`), retry-capable dispatcher, template workflow coverage (welcome, enrollment, class reminder, class cancellation, payment receipt placeholder), and admin/manual dispatch endpoint.

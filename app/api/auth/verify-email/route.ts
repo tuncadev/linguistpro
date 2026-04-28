@@ -2,6 +2,7 @@ import { AuthTokenType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { consumeAuthToken } from "@/lib/auth/tokens";
+import { sendWelcomeMessage } from "@/lib/communications/workflows";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 
@@ -41,6 +42,10 @@ export async function POST(req: NextRequest) {
   await prisma.user.update({
     where: { id: token.userId },
     data: { emailVerifiedAt: new Date() },
+  });
+
+  void sendWelcomeMessage(token.userId).catch((error) => {
+    console.error("welcome communication error", error);
   });
 
   return NextResponse.json({ message: "Email verification successful." });

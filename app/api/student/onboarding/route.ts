@@ -2,6 +2,7 @@ import { CourseStatus, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
+import { sendEnrollmentConfirmation } from "@/lib/communications/workflows";
 import { badRequest, conflict, notFound } from "@/lib/http/api-error";
 import { parseJsonBody } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
@@ -79,6 +80,7 @@ export const PATCH = withApiHandler(async (req: NextRequest) => {
         createdAt: string;
       }
     | null = null;
+  let createdNewEnrollment = false;
   let nextLessonPath: string | null = null;
 
   if (payload.targetCourseId) {
@@ -143,6 +145,7 @@ export const PATCH = withApiHandler(async (req: NextRequest) => {
         courseId: createdEnrollment.courseId,
         createdAt: createdEnrollment.createdAt.toISOString(),
       };
+      createdNewEnrollment = true;
     }
 
     const firstLessonId = targetCourse.syllabusSections[0]?.lessons[0]?.id ?? null;
@@ -170,6 +173,15 @@ export const PATCH = withApiHandler(async (req: NextRequest) => {
       welcomeDismissedAt: true,
     },
   });
+
+  if (createdNewEnrollment && enrollment) {
+    void sendEnrollmentConfirmation({
+      studentId,
+      courseId: enrollment.courseId,
+    }).catch((error) => {
+      console.error("onboarding enrollment communication error", error);
+    });
+  }
 
   return NextResponse.json({
     data: {

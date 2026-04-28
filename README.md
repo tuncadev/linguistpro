@@ -294,6 +294,25 @@ Persistence:
 - `LiveClassRecording` stores recording file metadata and links by class session.
 - Implementation details: `docs/ZOOM_ATTENDANCE_RECORDINGS.md`.
 
+## Transactional Communications (Implemented)
+
+Template-based transactional communications are now persisted and dispatched with retry tracking:
+- storage: `CommunicationMessage`, `CommunicationAttempt`
+- templates: `WELCOME`, `ENROLLMENT_CONFIRMATION`, `PAYMENT_RECEIPT`, `CLASS_REMINDER`, `CLASS_CANCELLATION`
+- dispatch + retries: `lib/communications/dispatcher.ts`
+- workflow triggers: `lib/communications/workflows.ts`
+
+Wired triggers:
+- welcome after email verification
+- enrollment confirmation on new enrollment
+- live class reminder endpoint: `POST /api/live-classes/:id/remind`
+- live class cancellation endpoint: `POST /api/live-classes/:id/cancel`
+- admin manual dispatch endpoint: `POST /api/admin/communications/send`
+
+Configuration:
+- optional provider webhook: `EMAIL_DELIVERY_WEBHOOK_URL`
+- local non-production fallback uses mock delivery mode when provider webhook is not configured.
+
 ## Admin Moderation Flow (Implemented)
 
 Course moderation endpoints:
