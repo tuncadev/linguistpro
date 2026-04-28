@@ -65,6 +65,7 @@ model User {
   authoredCourses Course[]     @relation("CourseTutor")
   enrollments     Enrollment[]
   authTokens      AuthToken[]
+  zoomConnection  ZoomConnection?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -201,4 +202,31 @@ model FeatureFlag {
   enabled     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ZoomConnection {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  zoomUserId    String
+  zoomAccountId String?
+  zoomEmail     String?
+
+  accessTokenEnc  String @db.Text
+  refreshTokenEnc String @db.Text
+  tokenType       String?
+  scope           String?
+  expiresAt       DateTime
+
+  connectedAt     DateTime @default(now())
+  lastRefreshedAt DateTime?
+  revokedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([zoomUserId])
+  @@index([expiresAt])
 }

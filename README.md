@@ -113,6 +113,11 @@ Authentication/session env:
 - `AUTH_SESSION_SECRET` must be set for signed session cookies.
 - `AUTH_ALLOW_DEV_ROLE_HEADER` controls whether `x-dev-role` header fallback is accepted (`false` by default).
 
+Zoom integration env:
+- `ZOOM_CLIENT_ID` and `ZOOM_CLIENT_SECRET` for OAuth token exchange.
+- `ZOOM_REDIRECT_URI` for OAuth callback alignment with Zoom app config.
+- `INTEGRATION_ENCRYPTION_KEY` as base64-encoded 32-byte key for AES-256-GCM token sealing.
+
 Observability env:
 - `OBSERVABILITY_ERROR_WEBHOOK_URL` (optional): receives JSON error events for 5xx API failures.
 
@@ -249,6 +254,20 @@ Learning access consistency:
 - `GET /api/learning/access` validates role + ownership/enrollment + lesson existence before learning access.
 - `app/learn/[courseId]/[lessonId]/page.tsx` now enforces session + backend access checks and redirects unauthorized users.
 - Supports optional `Idempotency-Key` header echo for client retry tracing.
+
+## Zoom Integration Foundation (Implemented)
+
+Zoom OAuth and token handling APIs:
+- `GET /api/integrations/zoom/oauth-url` (`TUTOR`/`ADMIN`)
+- `POST /api/integrations/zoom/connect` (`TUTOR`/`ADMIN`)
+- `GET /api/integrations/zoom/status` (`TUTOR`/`ADMIN`)
+- `POST /api/integrations/zoom/status` (`TUTOR`/`ADMIN`)
+
+Security/storage details:
+- `ZoomConnection` Prisma model persists Zoom identity and token metadata.
+- Access and refresh tokens are encrypted at rest via `lib/security/sealed-secrets.ts`.
+- Automatic refresh contract for future Zoom consumers is exposed via `lib/integrations/zoom/token-store.ts`.
+- Full implementation notes: `docs/ZOOM_INTEGRATION.md`.
 
 ## Admin Moderation Flow (Implemented)
 

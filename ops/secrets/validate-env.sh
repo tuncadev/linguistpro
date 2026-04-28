@@ -20,6 +20,10 @@ required_vars=(
   AUTH_SESSION_SECRET
   DATABASE_URL
   GEMINI_API_KEY
+  ZOOM_CLIENT_ID
+  ZOOM_CLIENT_SECRET
+  ZOOM_REDIRECT_URI
+  INTEGRATION_ENCRYPTION_KEY
   AUTH_ALLOW_DEV_ROLE_HEADER
 )
 
@@ -63,6 +67,32 @@ fi
 
 if [[ "$GEMINI_API_KEY" == *"PLACEHOLDER"* ]] || [[ "$GEMINI_API_KEY" == *"change-me"* ]]; then
   echo "GEMINI_API_KEY cannot contain placeholder text in production validation." >&2
+  exit 1
+fi
+
+if [[ "${#ZOOM_CLIENT_ID}" -lt 5 ]] || [[ "$ZOOM_CLIENT_ID" == *"change-me"* ]]; then
+  echo "ZOOM_CLIENT_ID appears invalid for production validation." >&2
+  exit 1
+fi
+
+if [[ "${#ZOOM_CLIENT_SECRET}" -lt 12 ]] || [[ "$ZOOM_CLIENT_SECRET" == *"change-me"* ]]; then
+  echo "ZOOM_CLIENT_SECRET appears invalid for production validation." >&2
+  exit 1
+fi
+
+if [[ "$ZOOM_REDIRECT_URI" != https://* ]]; then
+  echo "ZOOM_REDIRECT_URI must be an https:// URL for production validation." >&2
+  exit 1
+fi
+
+if ! printf '%s' "$INTEGRATION_ENCRYPTION_KEY" | base64 -d >/dev/null 2>&1; then
+  echo "INTEGRATION_ENCRYPTION_KEY must be valid base64." >&2
+  exit 1
+fi
+
+decoded_key_len="$(printf '%s' "$INTEGRATION_ENCRYPTION_KEY" | base64 -d | wc -c | tr -d ' ')"
+if [[ "$decoded_key_len" -ne 32 ]]; then
+  echo "INTEGRATION_ENCRYPTION_KEY must decode to exactly 32 bytes." >&2
   exit 1
 fi
 

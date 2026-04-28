@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Execute production readiness card: Billing Provider Integration (Stripe or Equivalent).
+1. Execute production readiness card: Live Class Scheduling via Zoom.
 
 ## Phase Plan (Target Timeline)
 
@@ -117,3 +117,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-28: Completed RBAC and Permission Audit card with formal policy doc (`docs/RBAC_PERMISSION_MATRIX.md`) and automated permission regression tests (`tests/unit/rbac-permissions.unit.test.ts`) covering app route prefixes and protected API role guards.
 - 2026-04-28: Completed Course Lifecycle Completion card by enforcing explicit status-transition rules (`lib/courses/lifecycle.ts`), adding lifecycle audit persistence (`CourseLifecycleEvent` + migration `20260428130500_course_lifecycle_audit`), and wiring transition logging into create/submit/moderate/patch course flows.
 - 2026-04-28: Completed Enrollment and Access Consistency card by adding backend learning-access validation (`/api/learning/access`, `lib/learning/access.ts`), protecting lesson route rendering with session + access checks (`app/learn/[courseId]/[lessonId]/page.tsx`), and adding policy tests (`tests/unit/learning-access.unit.test.ts`).
+- 2026-04-28: Completed Zoom Integration Foundation card with encrypted Zoom OAuth token storage (`ZoomConnection`), backend OAuth/refresh endpoints (`/api/integrations/zoom/*`), refresh-capable token helper contract (`lib/integrations/zoom/token-store.ts`), env policy updates, and implementation runbook (`docs/ZOOM_INTEGRATION.md`).

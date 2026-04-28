@@ -35,6 +35,9 @@ Legacy Vite prototype files are still present and used as migration references.
 - Course lifecycle policy + audit helper: `docs/COURSE_LIFECYCLE.md`, `lib/courses/lifecycle.ts`
 - Learning access guard API + helper: `app/api/learning/access/route.ts`, `lib/learning/access.ts`
 - Server component session helper: `lib/auth/server-session.ts`
+- Zoom OAuth integration APIs: `app/api/integrations/zoom/oauth-url/route.ts`, `app/api/integrations/zoom/connect/route.ts`, `app/api/integrations/zoom/status/route.ts`
+- Zoom token helpers + storage: `lib/integrations/zoom/oauth.ts`, `lib/integrations/zoom/token-store.ts`, `lib/security/sealed-secrets.ts`
+- Zoom integration runbook: `docs/ZOOM_INTEGRATION.md`
 - Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
@@ -165,6 +168,10 @@ Important details:
 Environment variables:
 - `.env.local`: `GEMINI_API_KEY=...`
 - `.env.local`: `AUTH_SESSION_SECRET=...`
+- `.env.local`: `ZOOM_CLIENT_ID=...`
+- `.env.local`: `ZOOM_CLIENT_SECRET=...`
+- `.env.local`: `ZOOM_REDIRECT_URI=...`
+- `.env.local`: `INTEGRATION_ENCRYPTION_KEY=...` (base64-encoded 32-byte key)
 - `.env.local`: `OBSERVABILITY_ERROR_WEBHOOK_URL=...` (optional)
 - `.env.local`: `RESTORE_TEST_DATABASE_URL=...` (required for restore verification)
 
@@ -248,6 +255,8 @@ Migration update:
 - Tutor list APIs now auto-provision a default tutor profile from legacy frontend tutor data when no tutors exist, and also repair course assignments that reference non-tutor users.
 - Course creation and AI draft APIs now enforce `tutorId` to be a real `TUTOR` role account (admins cannot assign non-tutor users).
 - Course presentation label baseline is normalized to `Course Tutor` (including legacy `Course Director` DB values during serialization).
+- Course lifecycle is now transition-guarded with persisted audit events (`CourseLifecycleEvent`) and status snapshots (`submittedAt`, `reviewedAt`, `archivedAt`, actor/reason fields).
+- Zoom integration foundation is now implemented with encrypted OAuth token storage (`ZoomConnection`) and token refresh-capable integration endpoints under `/api/integrations/zoom/*`.
 
 ## 10) Known Gaps and Risks
 
