@@ -532,6 +532,7 @@ Runbook/template: `docs/STAGING_UAT_SIGNOFF.md`
 Smoke command:
 - `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:smoke`
 - `STAGING_BASE_URL=https://staging.example.com npm run ops:uat:roles`
+- `npm run ops:uat:tutors`
 - `STAGING_BASE_URL=https://staging.example.com QA_OWNER="QA Lead" PRODUCT_OWNER="PO Name" NOTES="RC1" npm run ops:uat:signoff`
 
 ## Deploy and Rollback
@@ -620,5 +621,6 @@ For future agent sessions, see:
 - `docs/POSTGRES_BACKUP_RUNBOOK.md` (backup/restore policy + scripts usage)
 - `docs/SECRETS_POLICY_RUNBOOK.md` (production env/secrets rotation + validation)
 - `docs/STAGING_UAT_SIGNOFF.md` (staging acceptance checklist + sign-off log)
+- `docs/TUTOR_MISMATCH_INVESTIGATION.md` (admin tutors vs course tutor mismatch diagnostics)
 - `docs/DEPLOY_ROLLBACK_RUNBOOK.md` (deploy preflight + rollback process)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

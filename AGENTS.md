@@ -158,7 +158,9 @@ If architecture or workflows change, persist changes in:
 1. Run QA checks for the task output.
 2. Stop Clockify timer and verify there are no active in-progress entries for this task.
 3. Move Trello card:
-   - `qa ready` if implementation completed with no blocker.
+   - `done` if QA checks were executed and passed.
+   - `qa ready` only when QA cannot be fully executed by the agent and must be completed by a human (add a card comment with exact QA gap).
    - `blocked` if any blocker/issue remains.
 4. Report status only after end gate is complete.
 - Never mark a task complete or ready while a timer is still running.
+- Clockify start/stop discipline is mandatory: no coding starts before timer start, and no status report or card transition happens before timer stop.
