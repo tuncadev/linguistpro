@@ -143,6 +143,7 @@ Available scripts:
 - `npm run prisma:migrate:dev`
 - `npm run prisma:migrate:deploy`
 - `npm run prisma:studio`
+- `npm run ops:data:backfill:tutors` (dry-run by default; add `-- --apply` to write)
 
 Local seed defaults (for auth testing):
 - `admin@linguistpro.local / Admin123!`
@@ -624,5 +625,6 @@ For future agent sessions, see:
 - `docs/SECRETS_POLICY_RUNBOOK.md` (production env/secrets rotation + validation)
 - `docs/STAGING_UAT_SIGNOFF.md` (staging acceptance checklist + sign-off log)
 - `docs/TUTOR_MISMATCH_INVESTIGATION.md` (admin tutors vs course tutor mismatch diagnostics)
+- `docs/TUTOR_BACKFILL_RUNBOOK.md` (safe tutor-course assignment backfill workflow)
 - `docs/DEPLOY_ROLLBACK_RUNBOOK.md` (deploy preflight + rollback process)
 - `.agents/skills/linguistpro-maintainer/` (project-local reusable Codex skill)

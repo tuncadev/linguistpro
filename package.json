@@ -33,7 +33,8 @@
     "prisma:seed": "node prisma/seed.mjs",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "ops:data:backfill:tutors": "node ops/data/backfill-tutor-assignments.mjs"
   },
   "dependencies": {
     "@google/genai": "1.40.0",

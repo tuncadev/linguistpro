@@ -88,6 +88,8 @@ Legacy Vite prototype files are still present and used as migration references.
 - UAT runtime/data-source parity script: `ops/uat/runtime-data-source-check.mjs`
 - UAT sign-off template: `docs/STAGING_UAT_SIGNOFF.md`
 - Tutor mismatch investigation runbook: `docs/TUTOR_MISMATCH_INVESTIGATION.md`
+- Tutor backfill script: `ops/data/backfill-tutor-assignments.mjs`
+- Tutor backfill runbook: `docs/TUTOR_BACKFILL_RUNBOOK.md`
 - Deploy preflight script: `ops/deploy/preflight.sh`
 - Deploy/rollback runbook: `docs/DEPLOY_ROLLBACK_RUNBOOK.md`
 - Test suite: `tests/unit/`, `tests/integration/`, `tests/e2e/`, `vitest.config.ts`
