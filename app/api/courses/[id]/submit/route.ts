@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRoles } from "@/lib/auth/server-checks";
+import {
+  assertCourseStatusTransition,
+  buildLifecycleTimestamps,
+  logCourseLifecycleEvent,
+} from "@/lib/courses/lifecycle";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
 import { conflict, forbidden, notFound } from "@/lib/http/api-error";
 import { withApiHandler } from "@/lib/http/with-api-handler";
@@ -36,14 +41,38 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
     await requireApprovedTutor(auth.session.id);
   }
 
-  if (existing.status !== "DRAFT") {
-    conflict("Only draft courses can be submitted for review");
-  }
+  assertCourseStatusTransition(existing.status, "PENDING_REVIEW", auth.session.role);
 
-  const updated = await prisma.course.update({
-    where: { id },
-    data: { status: "PENDING_REVIEW", publishedAt: null },
-    include: courseInclude,
+  const now = new Date();
+  const lifecycleTimestamps = buildLifecycleTimestamps("PENDING_REVIEW", now);
+
+  const updated = await prisma.$transaction(async (tx) => {
+    const course = await tx.course.update({
+      where: { id },
+      data: {
+        status: "PENDING_REVIEW",
+        publishedAt: lifecycleTimestamps.publishedAt ?? null,
+        submittedAt: lifecycleTimestamps.submittedAt ?? now,
+        reviewedAt: lifecycleTimestamps.reviewedAt ?? null,
+        archivedAt: lifecycleTimestamps.archivedAt ?? null,
+        statusReason: "Submitted for review",
+        statusChangedById: auth.session.id,
+        statusChangedAt: now,
+      },
+      include: courseInclude,
+    });
+
+    await logCourseLifecycleEvent(tx, {
+      courseId: id,
+      fromStatus: existing.status,
+      toStatus: "PENDING_REVIEW",
+      actorId: auth.session.id,
+      actorRole: auth.session.role,
+      reason: "Submitted for review",
+      metadata: { source: "api/courses/[id]/submit#post" },
+    });
+
+    return course;
   });
 
   return NextResponse.json({

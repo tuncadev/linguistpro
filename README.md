@@ -200,6 +200,11 @@ Protected API examples:
 - `POST /api/courses` -> `TUTOR` or `ADMIN`
 - `POST /api/enroll` -> `STUDENT`
 - `POST /api/webhooks` -> `ADMIN`
+- `GET /api/learning/access` -> `STUDENT`, `TUTOR`, or `ADMIN`
+
+Permission audit artifacts:
+- `docs/RBAC_PERMISSION_MATRIX.md`
+- `tests/unit/rbac-permissions.unit.test.ts`
 
 ## Gemini Server-Only Integration (Implemented)
 
@@ -222,6 +227,11 @@ Core course APIs (Next.js migration path):
 - `DELETE /api/courses/:id` (owner tutor for non-published, or admin)
 - `POST /api/courses/draft` (`TUTOR`/`ADMIN`: generate + persist AI draft)
 
+Course lifecycle controls:
+- Canonical statuses: `DRAFT` -> `PENDING_REVIEW` -> `PUBLISHED` -> `ARCHIVED`
+- Lifecycle policy and transitions: `docs/COURSE_LIFECYCLE.md`
+- Lifecycle audit persistence: `CourseLifecycleEvent` model + migration `20260428130500_course_lifecycle_audit`
+
 Serialization helper:
 - `lib/courses/serialize.ts` normalizes Prisma payloads (including Decimal to number).
 
@@ -234,6 +244,10 @@ Enrollment endpoints:
 Idempotency behavior:
 - DB uniqueness on `(courseId, studentId)` prevents duplicates.
 - Repeated enrollment calls for the same user/course return existing enrollment (`idempotentReplay: true`) instead of creating a new record.
+
+Learning access consistency:
+- `GET /api/learning/access` validates role + ownership/enrollment + lesson existence before learning access.
+- `app/learn/[courseId]/[lessonId]/page.tsx` now enforces session + backend access checks and redirects unauthorized users.
 - Supports optional `Idempotency-Key` header echo for client retry tracing.
 
 ## Admin Moderation Flow (Implemented)

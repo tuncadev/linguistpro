@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireRoles } from "@/lib/auth/server-checks";
+import {
+  assertCourseStatusTransition,
+  buildLifecycleTimestamps,
+  logCourseLifecycleEvent,
+} from "@/lib/courses/lifecycle";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
 import { conflict, notFound } from "@/lib/http/api-error";
 import { parseJsonBody } from "@/lib/http/validation";
@@ -34,21 +39,41 @@ export const POST = withApiHandler(async (req: NextRequest, { params }: Params) 
     notFound("Course not found");
   }
 
-  if (existing.status !== "PENDING_REVIEW") {
-    conflict("Only pending_review courses can be moderated");
-  }
-
   const approved = parsed.decision === "APPROVE";
+  const nextStatus = approved ? "PUBLISHED" : "DRAFT";
+  assertCourseStatusTransition(existing.status, nextStatus, auth.session.role);
+
   if (approved) {
     await requireApprovedTutor(existing.tutorId);
   }
-  const updated = await prisma.course.update({
-    where: { id },
-    data: {
-      status: approved ? "PUBLISHED" : "DRAFT",
-      publishedAt: approved ? new Date() : null,
-    },
-    include: courseInclude,
+  const now = new Date();
+  const lifecycleTimestamps = buildLifecycleTimestamps(nextStatus, now);
+  const updated = await prisma.$transaction(async (tx) => {
+    const course = await tx.course.update({
+      where: { id },
+      data: {
+        status: nextStatus,
+        publishedAt: lifecycleTimestamps.publishedAt ?? null,
+        reviewedAt: lifecycleTimestamps.reviewedAt ?? now,
+        archivedAt: lifecycleTimestamps.archivedAt ?? null,
+        statusReason: parsed.reason ?? null,
+        statusChangedById: auth.session.id,
+        statusChangedAt: now,
+      },
+      include: courseInclude,
+    });
+
+    await logCourseLifecycleEvent(tx, {
+      courseId: id,
+      fromStatus: existing.status,
+      toStatus: nextStatus,
+      actorId: auth.session.id,
+      actorRole: auth.session.role,
+      reason: parsed.reason ?? (approved ? "Approved by admin" : "Rejected by admin"),
+      metadata: { source: "api/admin/courses/[id]/moderate#post", decision: parsed.decision },
+    });
+
+    return course;
   });
 
   return NextResponse.json({

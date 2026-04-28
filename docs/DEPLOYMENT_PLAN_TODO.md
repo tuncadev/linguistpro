@@ -1,6 +1,6 @@
 # LinguistPro Production Deployment Plan and ToDo
 
-Last updated: 2026-04-27
+Last updated: 2026-04-28
 Status owner: Codex session tracker
 
 This is the canonical execution tracker for production readiness in this repo.
@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Execute production readiness card: RBAC and Permission Audit.
+1. Execute production readiness card: Billing Provider Integration (Stripe or Equivalent).
 
 ## Phase Plan (Target Timeline)
 
@@ -114,3 +114,6 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-27: Auth security hardening implemented with DB-backed verification/reset tokens (`AuthToken`), new auth endpoints (`/api/auth/request-verification`, `/api/auth/verify-email`, `/api/auth/forgot-password`, `/api/auth/reset-password`), login lockout + in-memory IP rate limits, and frontend registration verification handling.
 - 2026-04-27: Student onboarding flow implemented via `/api/student/onboarding` + `/api/student/welcome` and fully wired `/student/my-learning` page for profile completion, first-course enrollment, and next-lesson continuation.
 - 2026-04-27: Tutor governance implemented via `TutorApprovalStatus`, `/api/tutor/onboarding`, `/api/admin/tutors/:id/approve`, admin tutor approval fields, and publish-path guardrails requiring approved tutors before draft/create/submit/publish transitions.
+- 2026-04-28: Completed RBAC and Permission Audit card with formal policy doc (`docs/RBAC_PERMISSION_MATRIX.md`) and automated permission regression tests (`tests/unit/rbac-permissions.unit.test.ts`) covering app route prefixes and protected API role guards.
+- 2026-04-28: Completed Course Lifecycle Completion card by enforcing explicit status-transition rules (`lib/courses/lifecycle.ts`), adding lifecycle audit persistence (`CourseLifecycleEvent` + migration `20260428130500_course_lifecycle_audit`), and wiring transition logging into create/submit/moderate/patch course flows.
+- 2026-04-28: Completed Enrollment and Access Consistency card by adding backend learning-access validation (`/api/learning/access`, `lib/learning/access.ts`), protecting lesson route rendering with session + access checks (`app/learn/[courseId]/[lessonId]/page.tsx`), and adding policy tests (`tests/unit/learning-access.unit.test.ts`).

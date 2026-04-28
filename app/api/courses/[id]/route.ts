@@ -3,6 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
 import { requireRoles } from "@/lib/auth/server-checks";
+import {
+  assertCourseStatusTransition,
+  buildLifecycleTimestamps,
+  logCourseLifecycleEvent,
+} from "@/lib/courses/lifecycle";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
 import { badRequest, conflict, forbidden, notFound } from "@/lib/http/api-error";
 import { parseJsonBody } from "@/lib/http/validation";
@@ -47,6 +52,7 @@ const updateCourseSchema = z.object({
   tuitionLabel: z.string().trim().min(1).max(80).nullable().optional(),
   discountLabel: z.string().trim().min(1).max(80).nullable().optional(),
   courseDirectorLabel: z.string().trim().min(1).max(80).nullable().optional(),
+  statusReason: z.string().trim().max(500).nullable().optional(),
 });
 
 function parseDurationToSeconds(duration?: string): number | null {
@@ -100,7 +106,7 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
 
   const existing = await prisma.course.findUnique({
     where: { id },
-    select: { id: true, tutorId: true, status: true },
+    select: { id: true, tutorId: true, status: true, statusReason: true },
   });
   if (!existing) {
     notFound("Course not found");
@@ -151,14 +157,30 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
     }
   }
 
+  if (payload.status) {
+    assertCourseStatusTransition(existing.status, payload.status, auth.session.role);
+  }
+
   const { syllabus, syllabusSections, ...fields } = payload;
   const updateData: Prisma.CourseUpdateInput = { ...fields };
 
-  if (isAdmin && payload.status === "PUBLISHED") {
-    updateData.publishedAt = new Date();
-  }
-  if (isAdmin && payload.status && payload.status !== "PUBLISHED") {
-    updateData.publishedAt = null;
+  const now = new Date();
+  if (payload.status) {
+    const timestamps = buildLifecycleTimestamps(payload.status, now);
+    if ("publishedAt" in timestamps) {
+      updateData.publishedAt = timestamps.publishedAt ?? null;
+    }
+    if ("submittedAt" in timestamps) {
+      updateData.submittedAt = timestamps.submittedAt;
+    }
+    if ("reviewedAt" in timestamps) {
+      updateData.reviewedAt = timestamps.reviewedAt;
+    }
+    if ("archivedAt" in timestamps) {
+      updateData.archivedAt = timestamps.archivedAt;
+    }
+    updateData.statusChangedById = auth.session.id;
+    updateData.statusChangedAt = now;
   }
 
   const updated = await prisma.$transaction(async (tx) => {
@@ -214,10 +236,24 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
       }
     }
 
-    return tx.course.findUniqueOrThrow({
+    const course = await tx.course.findUniqueOrThrow({
       where: { id },
       include: courseInclude,
     });
+
+    if (payload.status && payload.status !== existing.status) {
+      await logCourseLifecycleEvent(tx, {
+        courseId: id,
+        fromStatus: existing.status,
+        toStatus: payload.status,
+        actorId: auth.session.id,
+        actorRole: auth.session.role,
+        reason: payload.statusReason ?? "Status updated",
+        metadata: { source: "api/courses/[id]#patch" },
+      });
+    }
+
+    return course;
   });
 
   return NextResponse.json({ data: serializeCourse(updated) });

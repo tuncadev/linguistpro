@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
 import { requireRoles } from "@/lib/auth/server-checks";
+import {
+  buildLifecycleTimestamps,
+  logCourseLifecycleEvent,
+} from "@/lib/courses/lifecycle";
 import { courseInclude, serializeCourse } from "@/lib/courses/serialize";
 import {
   DEFAULT_COURSE_DIRECTOR_LABEL,
@@ -11,7 +15,7 @@ import {
   DEFAULT_COURSE_LEARNING_OBJECTIVES,
   DEFAULT_COURSE_TUITION_LABEL,
 } from "@/lib/courses/presentation-defaults";
-import { badRequest, forbidden } from "@/lib/http/api-error";
+import { badRequest, conflict, forbidden } from "@/lib/http/api-error";
 import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
@@ -44,6 +48,7 @@ const createCourseSchema = z.object({
   tuitionLabel: z.string().trim().min(1).max(80).optional(),
   discountLabel: z.string().trim().min(1).max(80).optional(),
   courseDirectorLabel: z.string().trim().min(1).max(80).optional(),
+  statusReason: z.string().trim().max(500).optional(),
 });
 
 export const GET = withApiHandler(async (req: NextRequest) => {
@@ -139,6 +144,9 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     }
   }
   const status = isAdmin ? payload.status ?? "PUBLISHED" : "DRAFT";
+  if (isAdmin && payload.status && payload.status !== "DRAFT" && payload.status !== "PUBLISHED") {
+    conflict("Admin creation supports only DRAFT or PUBLISHED status");
+  }
 
   const [language, level, tutor] = await Promise.all([
     prisma.language.findUnique({ where: { id: payload.languageId } }),
@@ -160,32 +168,55 @@ export const POST = withApiHandler(async (req: NextRequest) => {
     await requireApprovedTutor(tutorId);
   }
 
-  const created = await prisma.course.create({
-    data: {
-      title: payload.title,
-      description: payload.description,
-      price: payload.price,
-      imageUrl: payload.imageUrl,
-      status,
-      publishedAt: status === "PUBLISHED" ? new Date() : null,
-      tutorId,
-      languageId: payload.languageId,
-      levelId: payload.levelId,
-      learningObjectives: payload.learningObjectives ?? DEFAULT_COURSE_LEARNING_OBJECTIVES,
-      enrollmentIncludes: payload.enrollmentIncludes ?? DEFAULT_COURSE_ENROLLMENT_INCLUDES,
-      tuitionLabel: payload.tuitionLabel ?? DEFAULT_COURSE_TUITION_LABEL,
-      discountLabel: payload.discountLabel ?? DEFAULT_COURSE_DISCOUNT_LABEL,
-      courseDirectorLabel: payload.courseDirectorLabel ?? DEFAULT_COURSE_DIRECTOR_LABEL,
-      syllabusSections: payload.syllabus?.length
-        ? {
-            create: payload.syllabus.map((title, index) => ({
-              title,
-              position: index + 1,
-            })),
-          }
-        : undefined,
-    },
-    include: courseInclude,
+  const now = new Date();
+  const lifecycleTimestamps = buildLifecycleTimestamps(status, now);
+
+  const created = await prisma.$transaction(async (tx) => {
+    const course = await tx.course.create({
+      data: {
+        title: payload.title,
+        description: payload.description,
+        price: payload.price,
+        imageUrl: payload.imageUrl,
+        status,
+        publishedAt: lifecycleTimestamps.publishedAt ?? null,
+        submittedAt: lifecycleTimestamps.submittedAt ?? null,
+        reviewedAt: lifecycleTimestamps.reviewedAt ?? null,
+        archivedAt: lifecycleTimestamps.archivedAt ?? null,
+        statusReason: payload.statusReason ?? null,
+        statusChangedById: auth.session.id,
+        statusChangedAt: now,
+        tutorId,
+        languageId: payload.languageId,
+        levelId: payload.levelId,
+        learningObjectives: payload.learningObjectives ?? DEFAULT_COURSE_LEARNING_OBJECTIVES,
+        enrollmentIncludes: payload.enrollmentIncludes ?? DEFAULT_COURSE_ENROLLMENT_INCLUDES,
+        tuitionLabel: payload.tuitionLabel ?? DEFAULT_COURSE_TUITION_LABEL,
+        discountLabel: payload.discountLabel ?? DEFAULT_COURSE_DISCOUNT_LABEL,
+        courseDirectorLabel: payload.courseDirectorLabel ?? DEFAULT_COURSE_DIRECTOR_LABEL,
+        syllabusSections: payload.syllabus?.length
+          ? {
+              create: payload.syllabus.map((title, index) => ({
+                title,
+                position: index + 1,
+              })),
+            }
+          : undefined,
+      },
+      include: courseInclude,
+    });
+
+    await logCourseLifecycleEvent(tx, {
+      courseId: course.id,
+      fromStatus: null,
+      toStatus: status,
+      actorId: auth.session.id,
+      actorRole: auth.session.role,
+      reason: payload.statusReason ?? "Course created",
+      metadata: { source: "api/courses#create" },
+    });
+
+    return course;
   });
 
   return NextResponse.json({ data: serializeCourse(created) }, { status: 201 });

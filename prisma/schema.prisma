@@ -108,6 +108,12 @@ model Course {
   imageUrl    String?
   status      CourseStatus @default(DRAFT)
   publishedAt DateTime?
+  submittedAt DateTime?
+  reviewedAt  DateTime?
+  archivedAt  DateTime?
+  statusReason String?
+  statusChangedById String?
+  statusChangedAt DateTime?
   learningObjectives Json?
   enrollmentIncludes Json?
   tuitionLabel       String? @default("Tuition Fee")
@@ -129,9 +135,26 @@ model Course {
 
   syllabusSections SyllabusSection[]
   enrollments      Enrollment[]
+  lifecycleEvents  CourseLifecycleEvent[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CourseLifecycleEvent {
+  id        String       @id @default(cuid())
+  courseId  String
+  fromStatus CourseStatus?
+  toStatus  CourseStatus
+  reason    String?
+  actorId   String
+  actorRole Role
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId, createdAt])
 }
 
 model SyllabusSection {

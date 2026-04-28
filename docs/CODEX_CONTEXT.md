@@ -1,6 +1,6 @@
 # Codex Context: LinguistPro
 
-Last verified: 2026-04-27
+Last verified: 2026-04-28
 
 This file is a technical handoff reference for future Codex sessions.
 
@@ -29,13 +29,18 @@ Legacy Vite prototype files are still present and used as migration references.
 - Student onboarding model fields: `User.onboardingCompletedAt`, `User.welcomeDismissedAt`
 - Tutor governance model fields: `User.tutorApprovalStatus`, `User.tutorApprovedAt`, `User.tutorApprovalNotes`
 - RBAC server checks: `lib/auth/server-checks.ts`, `lib/auth/request-session.ts`
+- RBAC matrix + audit tests: `docs/RBAC_PERMISSION_MATRIX.md`, `tests/unit/rbac-permissions.unit.test.ts`
 - Server-only Gemini path: `app/api/ai/course-draft/route.ts`, `lib/ai/course-draft.ts`
 - Courses CRUD APIs: `app/api/courses/route.ts`, `app/api/courses/[id]/route.ts`, `app/api/courses/draft/route.ts`
+- Course lifecycle policy + audit helper: `docs/COURSE_LIFECYCLE.md`, `lib/courses/lifecycle.ts`
+- Learning access guard API + helper: `app/api/learning/access/route.ts`, `lib/learning/access.ts`
+- Server component session helper: `lib/auth/server-session.ts`
 - Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
 - Next.js admin tutor detail edit page: `app/(dashboard)/admin/tutors/[id]/page.tsx`
 - Enrollments API: `app/api/enroll/route.ts` (idempotent create via DB unique key handling)
+- Learning route guard page: `app/learn/[courseId]/[lessonId]/page.tsx` (server-side session + enrollment/ownership enforcement)
 - Student onboarding APIs: `app/api/student/onboarding/route.ts`, `app/api/student/welcome/route.ts`
 - Tutor onboarding API: `app/api/tutor/onboarding/route.ts`
 - Admin tutor approval API: `app/api/admin/tutors/[id]/approve/route.ts`
@@ -119,6 +124,7 @@ Guest behavior:
 `Course` shape includes:
 - metadata: `id`, `title`, `description`, `price`, `imageUrl`
 - optional lifecycle: `status` (`DRAFT | PENDING_REVIEW | PUBLISHED | ARCHIVED`)
+- lifecycle audit snapshot: `publishedAt`, `submittedAt`, `reviewedAt`, `archivedAt`, `statusReason`, `statusChangedById`, `statusChangedAt`
 - relational IDs: `tutorId`, `languageId`, `levelId`
 - social/progress fields: `studentCount`, `rating`, `reviews`
 - details presentation fields:
@@ -134,6 +140,9 @@ Guest behavior:
 
 `Lesson`:
 - `id`, `title`, `duration`, `type`, optional `content`
+
+Lifecycle audit persistence:
+- `CourseLifecycleEvent` table logs every status transition with `fromStatus`, `toStatus`, actor, reason, metadata, and timestamp.
 
 ## 7) AI Generation Flow (Tutor Dashboard)
 
