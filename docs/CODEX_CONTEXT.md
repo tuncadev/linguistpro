@@ -41,6 +41,9 @@ Legacy Vite prototype files are still present and used as migration references.
 - Live class APIs: `app/api/live-classes/route.ts`, `app/api/live-classes/[id]/join/route.ts`
 - Live class serialization: `lib/live-classes/serialize.ts`
 - Live class runbook: `docs/ZOOM_LIVE_CLASSES.md`
+- Zoom webhook sync endpoint: `app/api/webhooks/zoom/route.ts`
+- Zoom webhook helpers: `lib/integrations/zoom/webhook.ts`, `lib/integrations/zoom/sync.ts`
+- Attendance/recording runbook: `docs/ZOOM_ATTENDANCE_RECORDINGS.md`
 - Next.js admin section layout (left navigation): `app/(dashboard)/admin/layout.tsx`
 - Next.js admin course CRUD page: `app/(dashboard)/admin/courses/page.tsx`
 - Next.js admin tutor CRUD page: `app/(dashboard)/admin/tutors/page.tsx`
@@ -261,6 +264,7 @@ Migration update:
 - Course lifecycle is now transition-guarded with persisted audit events (`CourseLifecycleEvent`) and status snapshots (`submittedAt`, `reviewedAt`, `archivedAt`, actor/reason fields).
 - Zoom integration foundation is now implemented with encrypted OAuth token storage (`ZoomConnection`) and token refresh-capable integration endpoints under `/api/integrations/zoom/*`.
 - Live class scheduling is now implemented with persisted `LiveClassSession` records and Zoom-backed meeting creation/join-link delivery (`/api/live-classes*`).
+- Zoom attendance and recording sync is now implemented with webhook verification and persistence (`LiveClassAttendance`, `LiveClassRecording`).
 
 ## 10) Known Gaps and Risks
 

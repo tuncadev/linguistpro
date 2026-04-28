@@ -280,6 +280,20 @@ Persistence:
 - `LiveClassSession` model tracks schedule + Zoom meeting metadata in DB.
 - Implementation details: `docs/ZOOM_LIVE_CLASSES.md`.
 
+## Attendance and Recording Sync (Zoom) (Implemented)
+
+Zoom webhook sync is now implemented:
+- `POST /api/webhooks/zoom` handles:
+  - `endpoint.url_validation`
+  - `meeting.participant_joined`
+  - `meeting.participant_left`
+  - `recording.completed`
+
+Persistence:
+- `LiveClassAttendance` stores participant join/leave telemetry by class session.
+- `LiveClassRecording` stores recording file metadata and links by class session.
+- Implementation details: `docs/ZOOM_ATTENDANCE_RECORDINGS.md`.
+
 ## Admin Moderation Flow (Implemented)
 
 Course moderation endpoints:

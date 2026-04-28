@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Execute production readiness card: Attendance and Recording Sync (Zoom).
+1. Execute production readiness card: Transactional Communications.
 
 ## Phase Plan (Target Timeline)
 
@@ -119,3 +119,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-28: Completed Enrollment and Access Consistency card by adding backend learning-access validation (`/api/learning/access`, `lib/learning/access.ts`), protecting lesson route rendering with session + access checks (`app/learn/[courseId]/[lessonId]/page.tsx`), and adding policy tests (`tests/unit/learning-access.unit.test.ts`).
 - 2026-04-28: Completed Zoom Integration Foundation card with encrypted Zoom OAuth token storage (`ZoomConnection`), backend OAuth/refresh endpoints (`/api/integrations/zoom/*`), refresh-capable token helper contract (`lib/integrations/zoom/token-store.ts`), env policy updates, and implementation runbook (`docs/ZOOM_INTEGRATION.md`).
 - 2026-04-28: Completed Live Class Scheduling via Zoom card with persisted `LiveClassSession` model, tutor/admin scheduling endpoint (`POST /api/live-classes`), role-scoped listing (`GET /api/live-classes`), student enrollment-gated join-link delivery (`GET /api/live-classes/:id/join`), and Zoom meeting creation bridge (`lib/integrations/zoom/meetings.ts`).
+- 2026-04-28: Completed Attendance and Recording Sync (Zoom) card with signature-verified Zoom webhook endpoint (`/api/webhooks/zoom`) and persisted sync targets for participant telemetry (`LiveClassAttendance`) and recording assets (`LiveClassRecording`).

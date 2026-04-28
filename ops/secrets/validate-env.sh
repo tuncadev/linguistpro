@@ -23,6 +23,7 @@ required_vars=(
   ZOOM_CLIENT_ID
   ZOOM_CLIENT_SECRET
   ZOOM_REDIRECT_URI
+  ZOOM_WEBHOOK_SECRET
   INTEGRATION_ENCRYPTION_KEY
   AUTH_ALLOW_DEV_ROLE_HEADER
 )
@@ -82,6 +83,11 @@ fi
 
 if [[ "$ZOOM_REDIRECT_URI" != https://* ]]; then
   echo "ZOOM_REDIRECT_URI must be an https:// URL for production validation." >&2
+  exit 1
+fi
+
+if [[ "${#ZOOM_WEBHOOK_SECRET}" -lt 12 ]] || [[ "$ZOOM_WEBHOOK_SECRET" == *"change-me"* ]]; then
+  echo "ZOOM_WEBHOOK_SECRET appears invalid for production validation." >&2
   exit 1
 fi
 

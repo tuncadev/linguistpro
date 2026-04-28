@@ -230,9 +230,55 @@ model LiveClassSession {
   cancelledAt DateTime?
   cancelledById String?
 
+  attendanceLogs LiveClassAttendance[]
+  recordings LiveClassRecording[]
+
   @@index([courseId, startsAt])
   @@index([tutorId, startsAt])
   @@index([zoomMeetingId])
+}
+
+model LiveClassAttendance {
+  id String @id @default(cuid())
+
+  liveClassSessionId String
+  liveClassSession LiveClassSession @relation(fields: [liveClassSessionId], references: [id], onDelete: Cascade)
+
+  participantId String
+  participantName String?
+  participantEmail String?
+  firstJoinAt DateTime?
+  lastLeaveAt DateTime?
+  totalDurationMinutes Int?
+  joinCount Int @default(0)
+  sourceEventIds Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([liveClassSessionId, participantId])
+  @@index([liveClassSessionId, firstJoinAt])
+}
+
+model LiveClassRecording {
+  id String @id @default(cuid())
+
+  liveClassSessionId String
+  liveClassSession LiveClassSession @relation(fields: [liveClassSessionId], references: [id], onDelete: Cascade)
+
+  externalFileId String @unique
+  recordingType String?
+  fileType String?
+  fileSizeBytes BigInt?
+  playUrl String?
+  downloadUrl String?
+  recordingStart DateTime?
+  recordingEnd DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([liveClassSessionId, recordingStart])
 }
 
 model FeatureFlag {
