@@ -369,6 +369,7 @@ Backend APIs for replacing static frontend taxonomy/tutor data:
 - `GET /api/taxonomies` (public): returns `languages` and `levels`
 - `GET /api/tutors` (public): returns tutor directory metadata for profile cards/details
 - `GET /api/admin/tutors` (`ADMIN`): admin tutor list with login readiness metadata
+- `GET /api/admin/tutors/integrity` (`ADMIN`): tutor/course assignment integrity snapshot (assigned vs unassigned/orphaned tutor references)
 - `POST /api/admin/tutors` (`ADMIN`): create tutor user with password
 - `PATCH /api/admin/tutors/:id` (`ADMIN`): edit tutor profile/login fields
 - `DELETE /api/admin/tutors/:id` (`ADMIN`): delete tutor when no courses are assigned

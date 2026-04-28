@@ -42,19 +42,20 @@ This document defines the target App Router routes that replace the current Vite
 3. `/api/webhooks`
 4. `/api/tutors`
 5. `/api/admin/tutors`
-6. `/api/admin/tutors/[id]`
-7. `/api/admin/tutors/[id]/approve`
-8. `/api/auth/register`
-9. `/api/auth/login`
-10. `/api/auth/logout`
-11. `/api/auth/session`
-12. `/api/auth/request-verification`
-13. `/api/auth/verify-email`
-14. `/api/auth/forgot-password`
-15. `/api/auth/reset-password`
-16. `/api/student/onboarding`
-17. `/api/student/welcome`
-18. `/api/tutor/onboarding`
+6. `/api/admin/tutors/integrity`
+7. `/api/admin/tutors/[id]`
+8. `/api/admin/tutors/[id]/approve`
+9. `/api/auth/register`
+10. `/api/auth/login`
+11. `/api/auth/logout`
+12. `/api/auth/session`
+13. `/api/auth/request-verification`
+14. `/api/auth/verify-email`
+15. `/api/auth/forgot-password`
+16. `/api/auth/reset-password`
+17. `/api/student/onboarding`
+18. `/api/student/welcome`
+19. `/api/tutor/onboarding`
 
 ## Middleware Policy (Target)
 

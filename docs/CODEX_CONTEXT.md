@@ -72,6 +72,8 @@ Legacy Vite prototype files are still present and used as migration references.
 - Frontend admin tutor CRUD adapter: `services/adminTutorCrudApiService.ts` (`/api/admin/tutors` + `/api/admin/tutors/:id`)
 - Taxonomy/tutor APIs: `app/api/taxonomies/route.ts`, `app/api/tutors/route.ts`
 - Admin tutor APIs: `app/api/admin/tutors/route.ts`, `app/api/admin/tutors/[id]/route.ts`
+- Admin tutor integrity API: `app/api/admin/tutors/integrity/route.ts`
+- Tutor/course integrity helper: `lib/tutors/integrity.ts`
 - Demo role user API: `app/api/demo-users/route.ts`
 - Admin overview API: `app/api/admin/dashboard/overview/route.ts`
 - HTTP utility layer: `lib/http/api-error.ts`, `lib/http/validation.ts`, `lib/http/with-api-handler.ts`

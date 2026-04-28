@@ -4,8 +4,10 @@ import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { User } from "@/types";
 import {
+  AdminTutorIntegritySnapshot,
   createAdminTutor,
   deleteAdminTutor,
+  fetchAdminTutorIntegrity,
   fetchAdminTutors,
   updateAdminTutor,
 } from "@/services/adminTutorCrudApiService";
@@ -58,6 +60,7 @@ function fallbackAvatar(value: string | undefined): string {
 
 export default function AdminTutorsPage() {
   const [tutors, setTutors] = useState<User[]>([]);
+  const [integrity, setIntegrity] = useState<AdminTutorIntegritySnapshot | null>(null);
   const [assignedCourseCountByTutor, setAssignedCourseCountByTutor] = useState<Record<string, number>>({});
   const [form, setForm] = useState<TutorFormState>(EMPTY_FORM);
   const [editingTutorId, setEditingTutorId] = useState<string | null>(null);
@@ -75,9 +78,10 @@ export default function AdminTutorsPage() {
       setError(null);
 
       try {
-        const [fetchedTutors, fetchedCourses] = await Promise.all([
+        const [fetchedTutors, fetchedCourses, fetchedIntegrity] = await Promise.all([
           fetchAdminTutors(),
           fetchAdminCourses(),
+          fetchAdminTutorIntegrity(),
         ]);
 
         if (!isMounted) {
@@ -85,6 +89,7 @@ export default function AdminTutorsPage() {
         }
 
         setTutors(fetchedTutors);
+        setIntegrity(fetchedIntegrity);
 
         const counts = (fetchedCourses ?? []).reduce<Record<string, number>>((acc, course) => {
           acc[course.tutorId] = (acc[course.tutorId] ?? 0) + 1;
@@ -126,8 +131,10 @@ export default function AdminTutorsPage() {
       tutorsWithLogin,
       avgRating,
       totalStudents,
+      distinctTutorIdsInCourses: integrity?.distinctTutorIdsInCourses ?? 0,
+      unassignedTutorCount: integrity?.unassignedTutorCount ?? 0,
     };
-  }, [tutors]);
+  }, [integrity, tutors]);
 
   const resetForm = () => {
     setEditingTutorId(null);
@@ -203,6 +210,13 @@ export default function AdminTutorsPage() {
         setNotice("Tutor created.");
       }
 
+      try {
+        const snapshot = await fetchAdminTutorIntegrity();
+        setIntegrity(snapshot);
+      } catch {
+        // Keep UI usable even if integrity refresh fails after successful write.
+      }
+
       resetForm();
     } catch (saveError) {
       const message = saveError instanceof Error ? saveError.message : "Failed to save tutor.";
@@ -233,6 +247,14 @@ export default function AdminTutorsPage() {
       if (editingTutorId === tutor.id) {
         resetForm();
       }
+
+      try {
+        const snapshot = await fetchAdminTutorIntegrity();
+        setIntegrity(snapshot);
+      } catch {
+        // Keep UI usable even if integrity refresh fails after successful delete.
+      }
+
       setNotice("Tutor removed.");
     } catch (deleteError) {
       const message = deleteError instanceof Error ? deleteError.message : "Failed to remove tutor.";
@@ -291,7 +313,25 @@ export default function AdminTutorsPage() {
             <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Total Students</p>
             <p className="mt-2 text-3xl font-black text-indigo-600">{totals.totalStudents.toLocaleString()}</p>
           </article>
+          <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Tutors On Courses</p>
+            <p className="mt-2 text-3xl font-black text-sky-700">{totals.distinctTutorIdsInCourses}</p>
+          </article>
+          <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Unassigned Tutors</p>
+            <p className="mt-2 text-3xl font-black text-fuchsia-700">{totals.unassignedTutorCount}</p>
+          </article>
         </section>
+
+        {integrity?.status === "warning" ? (
+          <section className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4">
+            <p className="text-sm font-black uppercase tracking-wider text-amber-700">Tutor Integrity Warning</p>
+            <p className="mt-1 text-sm text-amber-900">
+              Some courses reference tutor IDs that are not valid tutor records. Run
+              <span className="font-bold"> npm run ops:uat:tutors</span> and repair assignments.
+            </p>
+          </section>
+        ) : null}
 
         <section className="grid gap-6 lg:grid-cols-5">
           <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">

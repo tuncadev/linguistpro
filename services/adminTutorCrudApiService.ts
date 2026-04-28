@@ -5,6 +5,32 @@ type ListTutorsResponse = {
   data?: ApiTutor[];
 };
 
+export type AdminTutorIntegritySnapshot = {
+  generatedAt: string;
+  totalTutors: number;
+  totalCourses: number;
+  totalPublishedCourses: number;
+  distinctTutorIdsInCourses: number;
+  distinctTutorIdsInPublishedCourses: number;
+  orphanedTutorIdsInCourses: string[];
+  orphanedTutorIdsInPublishedCourses: string[];
+  unassignedTutorCount: number;
+  unassignedTutorIds: string[];
+  tutorAssignments: Array<{
+    tutorId: string;
+    name: string | null;
+    email: string;
+    assignedCourses: number;
+    assignedPublishedCourses: number;
+  }>;
+  status: "ok" | "warning";
+};
+
+type TutorIntegrityResponse = {
+  data?: AdminTutorIntegritySnapshot;
+  error?: string | { message?: string };
+};
+
 type TutorMutationResponse = {
   data?: ApiTutor;
   error?: string | { message?: string };
@@ -81,6 +107,18 @@ export async function fetchAdminTutors(): Promise<User[]> {
   const payload = await parseResponseOrThrow<ListTutorsResponse>(response);
   const tutors = payload.data ?? [];
   return tutors.map(mapApiTutorToFrontendTutor);
+}
+
+export async function fetchAdminTutorIntegrity(): Promise<AdminTutorIntegritySnapshot> {
+  const response = await fetch("/api/admin/tutors/integrity", {
+    method: "GET",
+    credentials: "include",
+  });
+  const payload = await parseResponseOrThrow<TutorIntegrityResponse>(response);
+  if (!payload.data) {
+    throw new Error("Tutor integrity response did not return data");
+  }
+  return payload.data;
 }
 
 export async function fetchAdminTutorById(tutorId: string): Promise<User> {
