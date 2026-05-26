@@ -1,0 +1,48 @@
+{
+  "pages": {
+    "about": {
+      "title": "About",
+      "description": "Next.js route scaffold for the About view."
+    },
+    "courses": {
+      "title": "Courses",
+      "description": "Next.js route scaffold for catalog listing."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "LinguistPro processes account, course, and learning activity data to deliver language learning services, security controls, and operational support.",
+      "dataUseTitle": "Data Use",
+      "dataUseBody": "Data is used for authentication, course enrollment, tutor/student operations, analytics, and incident response. Sensitive secrets and integration tokens are protected using approved security controls.",
+      "dataAccessTitle": "Data Access",
+      "dataAccessBody": "Access is limited by role-based authorization and operational need. Users may contact support for data-access and correction requests."
+    },
+    "refundPolicy": {
+      "title": "Refund Policy",
+      "intro": "Refund handling is processed through support review and billing provider constraints. Requests are evaluated against purchase timing, class/session usage, and fraud checks.",
+      "requestWindowTitle": "Request Window",
+      "requestWindowBody": "Users should submit refund requests as early as possible through the support channel listed on the Support page.",
+      "disputeHandlingTitle": "Dispute Handling",
+      "disputeHandlingBody": "Charge disputes are tracked as incidents and resolved with billing evidence, course access logs, and policy review."
+    },
+    "support": {
+      "title": "Support and Incident Contact",
+      "intro": "For account, learning, tutor operations, and billing issues, contact support with your account email, course context, and issue timeline.",
+      "channelsTitle": "Contact Channels",
+      "supportEmail": "Support Email: support@linguistpro.local",
+      "incidentEscalation": "Incident Escalation: incidents@linguistpro.local",
+      "responseSla": "Response SLA: see docs/SUPPORT_INCIDENT_RUNBOOK.md"
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "intro": "By using LinguistPro, you agree to use the platform lawfully, provide accurate account information, and respect tutor, student, and administrator community standards.",
+      "accountResponsibilityTitle": "Account Responsibility",
+      "accountResponsibilityBody": "Users are responsible for account credentials, activity under their account, and compliance with all published platform policies.",
+      "serviceChangesTitle": "Service Changes",
+      "serviceChangesBody": "We may update features and policies for security, legal, or product reasons. Material policy changes will be announced to registered users."
+    },
+    "unauthorized": {
+      "title": "Unauthorized",
+      "description": "You do not have permission to access this route."
+    }
+  }
+}

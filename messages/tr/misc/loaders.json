@@ -1,0 +1,10 @@
+{
+  "loaders": {
+    "appBoot": {
+      "brandPrimary": "Catalina",
+      "brandSecondary": "Academy",
+      "title": "Öğrenme alanınız yükleniyor...",
+      "subtitle": "Kurslar, eğitmenler ve panel verileri hazırlanıyor"
+    }
+  }
+}

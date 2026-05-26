@@ -1,0 +1,31 @@
+{
+  "views": {
+    "courseDetails": {
+      "breadcrumb": {
+        "courses": "Курси"
+      },
+      "learningObjectives": "Навчальні цілі",
+      "curriculumBreakdown": "Структура програми",
+      "enrollmentIncludes": "У вартість входить:",
+      "verifiedReviews": "перевірених відгуків",
+      "verifiedReviewsCount": "{count, plural, =0 {0 перевірених відгуків} one {# перевірений відгук} few {# перевірені відгуки} many {# перевірених відгуків} other {# перевірених відгуків}}",
+      "currentlyLearning": "зараз навчаються",
+      "currentlyLearningCount": "{count, plural, =0 {0 зараз навчаються} one {# зараз навчається} few {# зараз навчаються} many {# зараз навчаються} other {# зараз навчаються}}",
+      "level": "Рівень",
+      "levels": {
+        "beginner": "Початковий",
+        "elementary": "Елементарний",
+        "pre_intermediate": "Нижче середнього",
+        "intermediate": "Середній",
+        "upper_intermediate": "Вище середнього",
+        "advanced": "Просунутий",
+        "expert": "Експертний",
+        "unknown": "Невідомий"
+      },
+      "actions": {
+        "enrollToday": "Записатися сьогодні"
+      },
+      "previewImageAlt": "Зображення превʼю курсу"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "sidebar": {
+    "mainMenu": "Главное меню",
+    "administration": "Администрирование",
+    "adminCoursesPage": "Страница курсов",
+    "adminTutorsPage": "Страница преподавателей",
+    "adminManageUsers": "Управление пользователями",
+    "adminTaxonomies": "Таксономии",
+    "goPro": "Go Pro",
+    "goProDescription": "Откройте расширенные инструменты обучения и сертификаты.",
+    "upgradeNow": "Обновить"
+  }
+}

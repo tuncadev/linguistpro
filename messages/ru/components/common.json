@@ -1,0 +1,22 @@
+{
+  "common": {
+    "brandPrimary": "Catalina",
+    "brandSecondary": "Academy",
+    "courses": "Курсы",
+    "about": "О нас",
+    "dashboard": "Панель",
+    "signOut": "Выйти",
+    "logIn": "Войти",
+    "startFreeTrial": "Начать бесплатно",
+    "close": "Закрыть",
+    "register": "Регистрация",
+    "guest": "Гость",
+    "language": "Язык",
+    "translationEditMode": "Редактировать текст",
+    "on": "Вкл",
+    "off": "Выкл",
+    "userAvatarAlt": "Аватар пользователя",
+    "closeAuthModal": "Закрыть окно аутентификации",
+    "settings": "Настройки"
+  }
+}

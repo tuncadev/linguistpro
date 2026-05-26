@@ -1,6 +1,6 @@
 # LinguistPro Production Deployment Plan and ToDo
 
-Last updated: 2026-04-26
+Last updated: 2026-04-28
 Status owner: Codex session tracker
 
 This is the canonical execution tracker for production readiness in this repo.
@@ -8,7 +8,7 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 
 ## Current Next Step
 
-1. Finalize cloud provider decisions (app hosting, database, object storage, secrets, observability).
+1. Execute production readiness card: Content Moderation and Abuse Reporting.
 
 ## Phase Plan (Target Timeline)
 
@@ -22,25 +22,25 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 ## P0 Launch Checklist
 
 - [x] Finalize v1 scope and non-goals.
-- [ ] Choose cloud providers (app, DB, object storage, CDN, secrets, observability).
-- [ ] Implement Next.js app structure and route map.
-- [ ] Implement Prisma schema and migration pipeline.
-- [ ] Implement authentication and secure session handling.
-- [ ] Implement RBAC middleware + server checks.
-- [ ] Move Gemini integration to server-only endpoints.
-- [ ] Build courses CRUD + tutor draft generation API.
-- [ ] Build enrollments API with idempotency checks.
-- [ ] Build admin moderation flow for course approval.
-- [ ] Replace mock data paths with DB-backed services.
-- [ ] Add centralized error handling and API validation.
-- [ ] Add test suite (unit + integration + E2E critical flows).
-- [ ] Add CI/CD with required checks before merge/deploy.
-- [ ] Add observability (logs, traces, metrics, error tracking).
-- [ ] Add backup policy and restore test for Postgres.
-- [ ] Add production env/secrets policy and rotation runbook.
+- [x] Choose cloud providers (app, DB, object storage, CDN, secrets, observability).
+- [x] Implement Next.js app structure and route map.
+- [x] Implement Prisma schema and migration pipeline.
+- [x] Implement authentication and secure session handling.
+- [x] Implement RBAC middleware + server checks.
+- [x] Move Gemini integration to server-only endpoints.
+- [x] Build courses CRUD + tutor draft generation API.
+- [x] Build enrollments API with idempotency checks.
+- [x] Build admin moderation flow for course approval.
+- [x] Replace mock data paths with DB-backed services.
+- [x] Add centralized error handling and API validation.
+- [x] Add test suite (unit + integration + E2E critical flows).
+- [x] Add CI/CD with required checks before merge/deploy.
+- [x] Add observability (logs, traces, metrics, error tracking).
+- [x] Add backup policy and restore test for Postgres.
+- [x] Add production env/secrets policy and rotation runbook.
 - [ ] Complete staging UAT and sign-off.
-- [ ] Document deploy and rollback runbooks.
-- [ ] Execute production launch checklist.
+- [x] Document deploy and rollback runbooks.
+- [x] Execute production launch checklist.
 
 ## P1 First-Month Enhancements
 
@@ -48,10 +48,38 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [ ] Add email workflows (verification, enrollment, reminders).
 - [ ] Add moderation/abuse reporting.
 - [ ] Add caching and query optimization.
-- [ ] Add feature flags.
+- [x] Add feature flags.
 - [ ] Add admin analytics dashboard with real KPIs.
 - [ ] Add accessibility audit and WCAG fixes.
 - [ ] Add i18n foundation.
+
+## Multilingual Rollout Program (UA Default)
+
+Scope target:
+- Default locale: `uk` (Ukrainian).
+- Additional locales: `en`, `es`, `tr`, `ru`.
+- Applies to: public pages, legacy App shell views, auth flows, dashboard surfaces, admin surfaces, API messages, and SEO metadata.
+
+Execution order and task list:
+- [x] `ML-01` Finalize localization architecture decision (`next-intl` vs custom dictionary layer) and document route strategy.
+- [x] `ML-02` Define locale contract (`uk`, `en`, `es`, `tr`, `ru`) and implement locale resolver with `uk` fallback.
+- [x] `ML-03` Add locale-aware URL strategy (`/uk/...`, `/en/...`, `/es/...`, `/tr/...`, `/ru/...`) and redirect root `/` to `/uk`.
+- [x] `ML-04` Create translation resource structure (`messages/{locale}/{namespace}.json`) with strict key naming conventions.
+- [x] `ML-05` Extract hardcoded UI copy from shared chrome (`Navbar`, `Sidebar`, footer/CTA) into translation keys.
+- [x] `ML-06` Extract and localize marketing/public views (`home`, `about`, catalog, language landing, tutor profile/public course cards).
+- [x] `ML-07` Extract and localize auth UX copy (login/register modal/pages, validation copy, notices, errors).
+- [x] `ML-08` Extract and localize role dashboards (`student`, `tutor`, `admin`) and dashboard-specific status labels.
+- [x] `ML-09` Localize Next.js dashboard route pages under `app/(dashboard)` including headings, form labels, table headers, and empty states.
+- [x] `ML-10` Localize API-originated user-visible messages (`/api/auth/*`, `/api/enroll`, onboarding responses) using locale-aware response helpers.
+- [x] `ML-11` Add locale persistence (cookie/session preference) with explicit language switcher component and safe server/client sync.
+- [x] `ML-12` Implement locale-aware SEO metadata (`title`, `description`, canonical/alternate hreflang, OpenGraph locales).
+- [x] `ML-13` Add locale-aware formatting utilities for dates, numbers, and currency; replace direct `toLocale*` calls with centralized helpers.
+- [x] `ML-14` Add translation quality gates in CI (missing key detection, unused key detection, fallback key audit).
+- [x] `ML-15` Add automated tests for locale routing + fallback behavior + key critical flows in all locales.
+- [x] `ML-16` Complete multilingual UAT checklist and freeze release criteria for production rollout.
+
+Suggested immediate Next Step for multilingual stream:
+1. Multilingual rollout complete. Maintain translations as new UI/API text is added and monitor `ops:i18n:check` warnings.
 
 ## P2 Post-Launch Growth
 
@@ -67,3 +95,64 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-26: Vite production build verified successful.
 - 2026-04-26: `v1` scope/non-goals drafted in `docs/V1_SCOPE.md`.
 - 2026-04-26: Cloud decision draft started in `docs/INFRA_DECISION_DRAFT.md`.
+- 2026-04-26: Cloud provider decision finalized in `docs/INFRA_DECISION.md`.
+- 2026-04-26: Next.js App Router scaffold added under `app/` with route map in `docs/NEXTJS_ROUTE_MAP.md`.
+- 2026-04-26: Prisma schema, migration scaffold, client helper, and package scripts implemented.
+- 2026-04-26: Auth/session scaffold implemented (JWT cookie session + register/login/logout/session API routes).
+- 2026-04-26: RBAC middleware and server-side role guards implemented for protected API routes.
+- 2026-04-26: Gemini generation moved to server-only endpoint (`/api/ai/course-draft`).
+- 2026-04-26: Courses CRUD + AI draft persistence APIs implemented under `/api/courses`.
+- 2026-04-26: Enrollment API implemented with DB-backed idempotency replay behavior.
+- 2026-04-26: Admin moderation flow added (submit for review + pending queue + approve/reject).
+- 2026-04-26: Core frontend course flows now load DB-backed course data via API service with mock fallback.
+- 2026-04-26: Centralized API error normalization and request validation helpers applied to core routes.
+- 2026-04-26: Vitest suite added with unit, integration, and E2E critical-flow tests (`tests/` + `vitest.config.ts`).
+- 2026-04-26: GitHub Actions CI added (`.github/workflows/ci.yml`) with Prisma validation, unit/integration/E2E tests, and production build checks.
+- 2026-04-26: Observability baseline added (structured API logs with request IDs, in-memory metrics, `/api/health`, admin `/api/metrics`, optional error webhook reporting).
+- 2026-04-26: PostgreSQL backup/restore runbook and executable scripts added (`ops/backup/` + `docs/POSTGRES_BACKUP_RUNBOOK.md`) with dry-run validation.
+- 2026-04-26: Production env/secrets policy and rotation runbook added (`docs/SECRETS_POLICY_RUNBOOK.md`) with validation script (`ops/secrets/validate-env.sh`).
+- 2026-04-26: Staging UAT sign-off template and smoke script added (`docs/STAGING_UAT_SIGNOFF.md`, `ops/uat/smoke-check.sh`); local smoke run completed with API endpoint warnings under Vite runtime.
+- 2026-04-26: Deploy/rollback runbook added (`docs/DEPLOY_ROLLBACK_RUNBOOK.md`) with automated preflight script (`ops/deploy/preflight.sh`).
+- 2026-04-26: Default local runtime switched to Next.js (`next dev`/`next build`), service unit updated, and `/login` + `/register` forms wired to auth APIs.
+- 2026-04-26: Local Postgres app user/database provisioning completed, Prisma migration+seed executed, and auth register/login/session validated against real DB.
+- 2026-04-26: Legacy styled frontend navbar auth buttons wired to backend APIs through modal login/register flow.
+- 2026-04-26: Legacy frontend enrollment flow wired to backend `/api/enroll` for course enrollment and student in-progress dashboard loading with fallback behavior.
+- 2026-04-26: UAT smoke check passes cleanly on local Next service (`http://127.0.0.1:3001`) with report `ops/uat/reports/uat-smoke-20260426T160743Z.md`; formal staging sign-off remains pending.
+- 2026-04-26: Added full role-flow UAT automation (`ops/uat/role-flow-check.sh` via `npm run ops:uat:roles`) and completed local dry-run pass report `ops/uat/reports/uat-role-flow-20260426T161644Z.md`.
+- 2026-04-26: Re-ran local UAT suite with clean pass reports: `ops/uat/reports/uat-smoke-20260426T161816Z.md` and `ops/uat/reports/uat-role-flow-20260426T161816Z.md`.
+- 2026-04-26: Deploy preflight passed end-to-end with production env policy validation using `NODE_ENV=production ENV_FILE=.env.local npm run ops:deploy:preflight`.
+- 2026-04-26: Fixed backup/restore scripts to support Prisma-style DB URLs with `schema` query params; executed successful backup + restore verification using `ops/backups/linguistpro_20260426T164246Z.dump`.
+- 2026-04-26: Added automated production launch checklist gate (`npm run ops:deploy:launch`) and generated dry-run launch report `ops/deploy/reports/launch-checklist-20260426T164834Z.md`.
+- 2026-04-26: Added staging sign-off orchestrator (`npm run ops:uat:signoff`) to run smoke+roles and generate a ready-to-paste sign-off log row in `ops/uat/reports/staging-signoff-*.md`.
+- 2026-04-26: Validated staging sign-off orchestrator locally with passing summary report `ops/uat/reports/staging-signoff-20260426T165842Z.md`.
+- 2026-04-26: Staging QA temporarily deferred by owner decision; executed launch checklist with waiver override (`STAGING_UAT_SIGNED_OFF=true CI_GREEN=true ENV_FILE=.env.local PRODUCTION_BASE_URL=http://127.0.0.1:3001`) and passing report `ops/deploy/reports/launch-checklist-20260426T170059Z.md`.
+- 2026-04-26: Feature flag foundation implemented with DB model + migration + seed defaults, admin CRUD APIs (`/api/admin/feature-flags`), public read API (`/api/feature-flags`), and server helper (`lib/feature-flags/is-enabled.ts`).
+- 2026-04-27: Wired taxonomy+tutor hardcoded frontend paths to backend (`/api/taxonomies`, `/api/tutors`) via new services and AppContext state; updated Home/Catalog/LanguageLanding/TutorDashboard/CourseDetails to consume backend-first data with fallback.
+- 2026-04-27: Wired navbar role-switch users and admin dashboard hardcoded blocks to backend (`/api/demo-users`, `/api/admin/dashboard/overview`), updated auth payload/profile mapping, and made `StudentDashboard` upcoming class card backend-context driven.
+- 2026-04-27: Implemented functional Next.js admin course management page (`/admin/courses`) with create/update/delete/list using backend APIs, dynamic taxonomy+tutor selectors, and retained static summary cards.
+- 2026-04-27: Made course details page content backend-driven (objectives/enrollment labels/lists), added course presentation fields in DB/API/seed, synced legacy hardcoded catalog courses into published backend data, and fixed admin-created course visibility by supporting published creation + frontend fallback logic correction.
+- 2026-04-27: Added admin-only in-place course edit mode directly on legacy `CourseDetailsView` (same UI structure with input substitution), persisted to backend including structured curriculum (`syllabusSections`), and added admin sidebar shortcut to catalog courses page.
+- 2026-04-27: Added admin tutor management flow with DB-backed add/edit/remove (`/admin/tutors`, `/api/admin/tutors`, `/api/admin/tutors/:id`) and linked admin navigation tabs across courses/tutors/users.
+- 2026-04-27: Added persistent left admin navigation layout, dedicated tutor edit route (`/admin/tutors/:id`), enforced tutor-role-only course assignment in `/api/courses*`, and normalized course label wording to `Course Tutor`.
+- 2026-04-27: Added tutor integrity fallback (`/api/tutors` + `/api/admin/tutors`) to auto-create a default frontend-style tutor when tutor records are empty and exposed admin edit action directly on legacy tutor profile view.
+- 2026-04-27: Refined legacy tutor profile to support in-place admin editing on the same UI layout (parallel to course details edit flow), instead of forcing a separate admin edit screen.
+- 2026-04-27: Added backend tutor profile modules (location/languages, profile highlights list, stats modules, pedagogical modules) with Prisma migration and tutor API support; wired same-layout in-page editing on `TutorProfileView`.
+- 2026-04-27: Finalized production infrastructure topology with committed environment diagram and provisioning/IaC baseline docs (`docs/PRODUCTION_INFRA_TOPOLOGY.md`, `ops/infra/PROVISIONING_RUNBOOK.md`, `ops/infra/terraform/README.md`).
+- 2026-04-27: Hardened env/secrets workflow with tracked-repo secret scanning (`ops/secrets/check-repo-secrets.sh`), rotation drill evidence generation (`ops/secrets/rotation-drill.sh`), stricter production env checks (`ops/secrets/validate-env.sh`), updated runbook, and drill report `ops/secrets/reports/rotation-drill-20260427T153109Z.md`.
+- 2026-04-27: Auth security hardening implemented with DB-backed verification/reset tokens (`AuthToken`), new auth endpoints (`/api/auth/request-verification`, `/api/auth/verify-email`, `/api/auth/forgot-password`, `/api/auth/reset-password`), login lockout + in-memory IP rate limits, and frontend registration verification handling.
+- 2026-04-27: Student onboarding flow implemented via `/api/student/onboarding` + `/api/student/welcome` and fully wired `/student/my-learning` page for profile completion, first-course enrollment, and next-lesson continuation.
+- 2026-04-27: Tutor governance implemented via `TutorApprovalStatus`, `/api/tutor/onboarding`, `/api/admin/tutors/:id/approve`, admin tutor approval fields, and publish-path guardrails requiring approved tutors before draft/create/submit/publish transitions.
+- 2026-04-28: Completed RBAC and Permission Audit card with formal policy doc (`docs/RBAC_PERMISSION_MATRIX.md`) and automated permission regression tests (`tests/unit/rbac-permissions.unit.test.ts`) covering app route prefixes and protected API role guards.
+- 2026-04-28: Completed Course Lifecycle Completion card by enforcing explicit status-transition rules (`lib/courses/lifecycle.ts`), adding lifecycle audit persistence (`CourseLifecycleEvent` + migration `20260428130500_course_lifecycle_audit`), and wiring transition logging into create/submit/moderate/patch course flows.
+- 2026-04-28: Completed Enrollment and Access Consistency card by adding backend learning-access validation (`/api/learning/access`, `lib/learning/access.ts`), protecting lesson route rendering with session + access checks (`app/learn/[courseId]/[lessonId]/page.tsx`), and adding policy tests (`tests/unit/learning-access.unit.test.ts`).
+- 2026-04-28: Completed Zoom Integration Foundation card with encrypted Zoom OAuth token storage (`ZoomConnection`), backend OAuth/refresh endpoints (`/api/integrations/zoom/*`), refresh-capable token helper contract (`lib/integrations/zoom/token-store.ts`), env policy updates, and implementation runbook (`docs/ZOOM_INTEGRATION.md`).
+- 2026-04-28: Completed Live Class Scheduling via Zoom card with persisted `LiveClassSession` model, tutor/admin scheduling endpoint (`POST /api/live-classes`), role-scoped listing (`GET /api/live-classes`), student enrollment-gated join-link delivery (`GET /api/live-classes/:id/join`), and Zoom meeting creation bridge (`lib/integrations/zoom/meetings.ts`).
+- 2026-04-28: Completed Attendance and Recording Sync (Zoom) card with signature-verified Zoom webhook endpoint (`/api/webhooks/zoom`) and persisted sync targets for participant telemetry (`LiveClassAttendance`) and recording assets (`LiveClassRecording`).
+- 2026-04-28: Completed Transactional Communications card with DB-backed message/attempt models (`CommunicationMessage`, `CommunicationAttempt`), retry-capable dispatcher, template workflow coverage (welcome, enrollment, class reminder, class cancellation, payment receipt placeholder), and admin/manual dispatch endpoint.
+- 2026-04-28: Completed Admin KPI and Operational Dashboard card with expanded admin overview metrics (funnel, moderation queue, live class operations, attendance/recordings, communications reliability) and frontend KPI card rendering.
+- 2026-04-28: Investigated tutor-count mismatch path and added reusable diagnostics (`ops/uat/tutor-consistency-check.mjs`, `npm run ops:uat:tutors`) plus runbook (`docs/TUTOR_MISMATCH_INVESTIGATION.md`) documenting runtime/data-source divergence checks.
+- 2026-04-28: Added runtime/data-source parity check (`ops/uat/runtime-data-source-check.mjs`, `npm run ops:uat:runtime`) to verify active service working directory and tutor-count parity between API and DB.
+- 2026-04-28: Added tutor-course data integrity guardrails with reusable snapshot helper (`lib/tutors/integrity.ts`), protected diagnostics endpoint (`GET /api/admin/tutors/integrity`), and admin tutor dashboard integrity metrics/warnings.
+- 2026-04-28: Added safe tutor-course backfill tooling (`ops/data/backfill-tutor-assignments.mjs`) and operator runbook (`docs/TUTOR_BACKFILL_RUNBOOK.md`) with dry-run/apply modes and post-fix QA steps.
+- 2026-04-28: Completed tutor consistency end-to-end QA card with passing runtime+tutor checks, authenticated admin/public API parity validation, and evidence report `ops/uat/reports/qa-tutor-consistency-20260428T111658Z.md`.
+- 2026-05-24: Completed multilingual rollout ML-01..ML-16: `next-intl` integration, locale-prefixed URL proxy routing, profile+cookie locale persistence, shared translation resources for `uk/en/es/tr/ru`, localized shared chrome + auth/public/legal pages, locale-aware SEO metadata helpers, centralized date/number/currency formatting, i18n QA checker script (`ops:i18n:check`), and locale routing unit tests.

@@ -1,0 +1,296 @@
+{
+  "content": {
+    "courses": {
+      "cmoh1rw09000zs6ydg19wq4gg": {
+        "title": "French Gastronomy & Language",
+        "description": "Learn French through the lens of culinary arts and wine culture. Master cooking vocabulary while mastering the language.",
+        "tuitionLabel": "Tuition Fee",
+        "discountLabel": "65% Off Enrollment",
+        "courseDirectorLabel": "Course Tutor",
+        "learningObjectives": [
+          "Master essential conversational idioms",
+          "Professional and formal communication skills",
+          "Deep cultural immersion and history",
+          "Phonetic mastery and accent reduction",
+          "Practical vocabulary for daily life",
+          "Catalina Academy Official Certification"
+        ],
+        "enrollmentIncludes": [
+          "Lifetime curriculum access",
+          "Catalina Professional Certificate",
+          "Private Discord community"
+        ],
+        "syllabus": [
+          {
+            "title": "Foundations & Greetings",
+            "lessons": [
+              {
+                "title": "The Spanish Alphabet & Phonetics",
+                "content": "Core phonetics and pronunciation warm-up."
+              },
+              {
+                "title": "Essential Greetings & Introductions",
+                "content": "How to confidently introduce yourself in real settings."
+              },
+              {
+                "title": "Quiz: Basic Greetings",
+                "content": "Short comprehension and recall check."
+              },
+              {
+                "title": "New Lesson",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Daily Life Vocabulary",
+            "lessons": [
+              {
+                "title": "At the Restaurant: Ordering Food",
+                "content": "Practical phrases for dining and ordering."
+              },
+              {
+                "title": "Numbers, Time and Dates",
+                "content": "High-frequency grammar and daily communication patterns."
+              },
+              {
+                "title": "Reading: A Day in Madrid",
+                "content": "A contextual reading assignment with vocabulary highlights."
+              },
+              {
+                "title": "New Lesson",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Module 3",
+            "lessons": [
+              {
+                "title": "New Lesson",
+                "content": null
+              }
+            ]
+          }
+        ]
+      },
+      "cmohdtm0x000fs6hkplirs3y8": {
+        "title": "Governance Draft",
+        "description": "Draft description that is long enough.",
+        "tuitionLabel": "Tuition Fee",
+        "discountLabel": "65% Off Enrollment",
+        "courseDirectorLabel": "Course Tutor",
+        "learningObjectives": [
+          "Master essential conversational idioms",
+          "Professional and formal communication skills",
+          "Deep cultural immersion and history",
+          "Phonetic mastery and accent reduction",
+          "Practical vocabulary for daily life",
+          "Catalina Academy Official Certification"
+        ],
+        "enrollmentIncludes": [
+          "Lifetime curriculum access",
+          "Catalina Professional Certificate",
+          "Private Discord community"
+        ],
+        "syllabus": [
+          {
+            "title": "Module 1",
+            "lessons": [
+              {
+                "title": "Lesson 1",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Module 2",
+            "lessons": [
+              {
+                "title": "New Lesson",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Module 3",
+            "lessons": [
+              {
+                "title": "New Lesson",
+                "content": null
+              }
+            ]
+          }
+        ]
+      },
+      "cmoh1rw01000ps6ydlj5w6mum": {
+        "title": "Business English for Professionals",
+        "description": "Enhance your corporate communication, presentation skills, and professional writing. Perfect for non-native speakers in global environments.",
+        "tuitionLabel": "Tuition Fee",
+        "discountLabel": "65% Off Enrollment",
+        "courseDirectorLabel": "Course Tutor",
+        "learningObjectives": [
+          "Master essential conversational idioms",
+          "Professional and formal communication skills",
+          "Deep cultural immersion and history",
+          "Phonetic mastery and accent reduction",
+          "Practical vocabulary for daily life",
+          "Catalina Academy Official Certification"
+        ],
+        "enrollmentIncludes": [
+          "Lifetime curriculum access",
+          "Catalina Professional Certificate",
+          "Private Discord community"
+        ],
+        "syllabus": [
+          {
+            "title": "Foundations & Greetings",
+            "lessons": [
+              {
+                "title": "The Spanish Alphabet & Phonetics",
+                "content": "Core phonetics and pronunciation warm-up."
+              },
+              {
+                "title": "Essential Greetings & Introductions",
+                "content": "How to confidently introduce yourself in real settings."
+              },
+              {
+                "title": "Quiz: Basic Greetings",
+                "content": "Short comprehension and recall check."
+              }
+            ]
+          },
+          {
+            "title": "Daily Life Vocabulary",
+            "lessons": [
+              {
+                "title": "At the Restaurant: Ordering Food",
+                "content": "Practical phrases for dining and ordering."
+              },
+              {
+                "title": "Numbers, Time and Dates",
+                "content": "High-frequency grammar and daily communication patterns."
+              },
+              {
+                "title": "Reading: A Day in Madrid",
+                "content": "A contextual reading assignment with vocabulary highlights."
+              }
+            ]
+          }
+        ]
+      },
+      "cmoh1rvzq000fs6ydg9q1m308": {
+        "title": "Mastering Conversational Spanish",
+        "description": "A deep dive into everyday Spanish dialogues and essential grammar for travelers. Learn how to navigate real-world scenarios with confidence and cultural nuance.",
+        "tuitionLabel": "Tuition Fee",
+        "discountLabel": "65% Off Enrollment",
+        "courseDirectorLabel": "Course Tutor",
+        "learningObjectives": [
+          "Master essential conversational idioms",
+          "Professional and formal communication skills",
+          "Deep cultural immersion and history",
+          "Phonetic mastery and accent reduction",
+          "Practical vocabulary for daily life",
+          "Catalina Academy Official Certification"
+        ],
+        "enrollmentIncludes": [
+          "Lifetime curriculum access",
+          "Catalina Professional Certificate",
+          "Private Discord community"
+        ],
+        "syllabus": [
+          {
+            "title": "Foundations & Greetings",
+            "lessons": [
+              {
+                "title": "The Spanish Alphabet & Phonetics",
+                "content": "Core phonetics and pronunciation warm-up."
+              },
+              {
+                "title": "Essential Greetings & Introductions",
+                "content": "How to confidently introduce yourself in real settings."
+              },
+              {
+                "title": "Quiz: Basic Greetings",
+                "content": "Short comprehension and recall check."
+              }
+            ]
+          },
+          {
+            "title": "Daily Life Vocabulary",
+            "lessons": [
+              {
+                "title": "At the Restaurant: Ordering Food",
+                "content": "Practical phrases for dining and ordering."
+              },
+              {
+                "title": "Numbers, Time and Dates",
+                "content": "High-frequency grammar and daily communication patterns."
+              },
+              {
+                "title": "Reading: A Day in Madrid",
+                "content": "A contextual reading assignment with vocabulary highlights."
+              }
+            ]
+          }
+        ]
+      },
+      "cmofwwyhp000as62gf9dqicct": {
+        "title": "Practical English Conversation",
+        "description": "A project-style speaking course focused on daily conversation, pronunciation, and confidence.",
+        "tuitionLabel": "Tuition Fee",
+        "discountLabel": "65% Off Enrollment",
+        "courseDirectorLabel": "Course Tutor",
+        "learningObjectives": [
+          "Master essential conversational idioms",
+          "Professional and formal communication skills",
+          "Deep cultural immersion and history",
+          "Phonetic mastery and accent reduction",
+          "Practical vocabulary for daily life",
+          "Catalina Academy Official Certification"
+        ],
+        "enrollmentIncludes": [
+          "Lifetime curriculum access",
+          "Catalina Professional Certificate",
+          "Private Discord community"
+        ],
+        "syllabus": [
+          {
+            "title": "Foundations & Greetings",
+            "lessons": [
+              {
+                "title": "The Spanish Alphabet & Phonetics",
+                "content": "Core phonetics and pronunciation warm-up."
+              },
+              {
+                "title": "Essential Greetings & Introductions",
+                "content": "How to confidently introduce yourself in real settings."
+              },
+              {
+                "title": "Quiz: Basic Greetings",
+                "content": "Short comprehension and recall check."
+              }
+            ]
+          },
+          {
+            "title": "Daily Life Vocabulary",
+            "lessons": [
+              {
+                "title": "At the Restaurant: Ordering Food",
+                "content": "Practical phrases for dining and ordering."
+              },
+              {
+                "title": "Numbers, Time and Dates",
+                "content": "High-frequency grammar and daily communication patterns."
+              },
+              {
+                "title": "Reading: A Day in Madrid",
+                "content": "A contextual reading assignment with vocabulary highlights."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

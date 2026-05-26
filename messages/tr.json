@@ -1,0 +1,397 @@
+{
+  "common": {
+    "brandPrimary": "Catalina",
+    "brandSecondary": "Academy",
+    "courses": "Kurslar",
+    "about": "Hakkımızda",
+    "dashboard": "Panel",
+    "signOut": "Çıkış yap",
+    "logIn": "Giriş yap",
+    "startFreeTrial": "Ücretsiz başla",
+    "close": "Kapat",
+    "register": "Kayıt ol",
+    "guest": "Misafir",
+    "language": "Dil",
+    "translationEditMode": "Metni düzenle",
+    "on": "Açık",
+    "off": "Kapalı",
+    "userAvatarAlt": "Kullanıcı avatarı",
+    "settings": "Ayarlar"
+  },
+  "auth": {
+    "welcomeBack": "Tekrar hoş geldiniz",
+    "createAccount": "Hesabınızı oluşturun",
+    "passwordMismatch": "Parola doğrulaması eşleşmiyor.",
+    "registrationSuccess": "Kayıt başarılı. Giriş yapmadan önce e-postanızı doğrulayın.",
+    "authenticationFailed": "Kimlik doğrulama hatası.",
+    "fullName": "Ad soyad",
+    "emailAddress": "E-posta",
+    "password": "Parola",
+    "confirmPassword": "Parolayı doğrulayın",
+    "signingIn": "Giriş yapılıyor...",
+    "creatingAccount": "Hesap oluşturuluyor...",
+    "createAccountCta": "Hesap oluştur",
+    "verificationTokenHint": "Doğrulama anahtarı"
+  },
+  "authPage": {
+    "login": {
+      "title": "Giriş",
+      "subtitle": "Öğrenci, eğitmen veya yönetici sayfalarına erişmek için hesabınızla giriş yapın.",
+      "email": "E-posta",
+      "password": "Parola",
+      "signingIn": "Giriş yapılıyor...",
+      "signIn": "Giriş yap",
+      "noAccount": "Henüz hesabınız yok mu?",
+      "createOne": "Bir hesap oluştur",
+      "requestFailed": "İstek başarısız oldu. Lütfen tekrar deneyin.",
+      "loginFailed": "Giriş başarısız",
+      "loginSuccess": "Giriş başarılı"
+    },
+    "register": {
+      "title": "Hesap oluştur",
+      "subtitle": "Platform için yeni bir öğrenci hesabı oluşturun.",
+      "name": "Ad",
+      "email": "E-posta",
+      "password": "Parola",
+      "confirmPassword": "Parolayı doğrulayın",
+      "creatingAccount": "Hesap oluşturuluyor...",
+      "createAccount": "Hesap oluştur",
+      "alreadyRegistered": "Zaten kayıtlı mısınız?",
+      "signIn": "Giriş yap",
+      "passwordMismatch": "Parola doğrulaması eşleşmiyor.",
+      "registrationFailed": "Kayıt başarısız",
+      "registrationSuccess": "Kayıt başarılı. Giriş öncesi e-posta doğrulaması yapın.",
+      "registeredSuccessfully": "Kayıt tamamlandı",
+      "requestFailed": "İstek başarısız oldu. Lütfen tekrar deneyin.",
+      "verificationTokenPrefix": "Doğrulama anahtarı (dev/test)"
+    }
+  },
+  "sidebar": {
+    "mainMenu": "Ana menü",
+    "administration": "Yönetim",
+    "adminCoursesPage": "Kurs sayfası",
+    "adminTutorsPage": "Eğitmenler sayfası",
+    "adminManageUsers": "Kullanıcıları yönet",
+    "adminTaxonomies": "Taksonomiler",
+    "goPro": "Go Pro",
+    "goProDescription": "Gelişmiş öğrenme araçlarının ve sertifikaların kilidini açın.",
+    "upgradeNow": "Şimdi yükselt"
+  },
+  "public": {
+    "hero": {
+      "badge": "Resmi Catalina Academy dil okulu",
+      "titleLine1": "Kendi",
+      "titleLine2": "Küresel potansiyelini açığa çıkar.",
+      "description": "Dil öğrenimini yeniden tanımla. Uzman eğitmenlerle konuşma akıcılığından profesyonel sertifikaya ilerle.",
+      "browseCourses": "Kurslara göz at",
+      "meetFaculty": "Programları gör",
+      "joinLabel": "Katıl",
+      "joinSuffix": "mezuna dünya çapında",
+      "accredited": "Akredite",
+      "accreditedSub": "Küresel dil standartları"
+    },
+    "languageCard": {
+      "description": "Tüm seviyeler için uzman eğitmenlerle programlar.",
+      "departmentDetails": "Program detayları"
+    },
+    "home": {
+      "languageFacultiesTitle": "Dil kursu",
+      "languageFacultiesSubtitle": "Dil programlarımızı keşfedin ve gerçek akıcılığa ulaşın.",
+      "culturalTitleLine1": "Sadece kelimeler değil:",
+      "culturalTitleLine2": "Kültürel akıcılık.",
+      "culturalDescription": "Catalina Academy'de sadece gramer öğretmiyoruz. Sizi küresel iletişimin kültürel nüanslarına hazırlıyoruz.",
+      "steps": {
+        "step1": {
+          "title": "Özel programlar",
+          "desc": "Seyahat, iş veya akademik sertifika için uzmanlaşmış kurslar bulun."
+        },
+        "step2": {
+          "title": "Sürükleyici öğrenme",
+          "desc": "Sanal kampüsümüzde gerçek hayat senaryolarında ana dili konuşanlarla pratik yapın."
+        },
+        "step3": {
+          "title": "Uzman eğitmenler",
+          "desc": "Her Catalina eğitmeni sertifikalı ve uzun yıllar deneyimlidir."
+        },
+        "step4": {
+          "title": "Küresel sertifikasyon",
+          "desc": "Uluslararası fırsatlar açan tanınmış diplomalar kazanın."
+        }
+      },
+      "readyTitle": "Bir sonraki döneme katılmaya hazır mısınız?",
+      "enrollToday": "Bugün kursa kaydol",
+      "certificationIncluded": "Resmi Catalina Academy sertifikası dahil"
+    },
+    "catalog": {
+      "title": "Kursları keşfet",
+      "subtitle": "Dünyanın dört bir yanından en iyi eğitmenlerle yeni diller öğrenin.",
+      "allLanguages": "Tüm diller",
+      "reviews": "Yorum",
+      "viewDetails": "Detayları görüntüle",
+      "allLevels": "Tüm seviyeler",
+      "languages": {
+        "uk": "Ukraynaca",
+        "en": "İngilizce",
+        "es": "İspanyolca",
+        "tr": "Türkçe",
+        "ru": "Язык",
+        "fr": "Fransızca",
+        "de": "Almanca",
+        "jp": "Japonca",
+        "ja": "Japonca"
+      }
+    },
+    "about": {
+      "missionLabel": "Misyonumuz",
+      "titleLine1": "Dil bir köprüdür",
+      "titleLine2": "insan bağlantısına.",
+      "intro": "2024'te kurulan LinguistPro, dil öğreniminin gerçek hayattan kopuk hissettirmesi sorunundan doğdu. İnsan etkileşimini merkeze alan bir platform kurduk.",
+      "values": {
+        "inclusion": {
+          "title": "Önce kapsayıcılık",
+          "desc": "Herkesin bulunduğu yerden bağımsız olarak kaliteli eğitime erişmesi gerektiğine inanıyoruz."
+        },
+        "goal": {
+          "title": "Hedef odaklı",
+          "desc": "Sadece kelime öğretmiyoruz; güvenle ve amaçla iletişim kurma becerisi kazandırıyoruz."
+        },
+        "quality": {
+          "title": "Kalite güvencesi",
+          "desc": "Platformdaki her eğitmen mükemmellik için sıkı bir değerlendirmeden geçer."
+        }
+      },
+      "team": {
+        "title": "Lider eğitmenlerimizle tanışın",
+        "subtitle": "Gelişiminize adanmış dilbilimci, çok dilliler ve teknoloji uzmanlarından oluşan küresel topluluk.",
+        "joinFaculty": "Eğitmen olarak katıl",
+        "members": {
+          "member1": {
+            "name": "Dr. Sarah Miller",
+            "role": "Head of English Pedagogy",
+            "bio": "PhD in Applied Linguistics with 15 years experience in ESL."
+          },
+          "member2": {
+            "name": "Mateo Garcia",
+            "role": "Spanish Curriculum Director",
+            "bio": "Award-winning educator focused on conversational fluency."
+          },
+          "member3": {
+            "name": "Yuki Sato",
+            "role": "Asian Languages Lead",
+            "bio": "Expert in JLPT preparation and cultural immersion techniques."
+          },
+          "member4": {
+            "name": "Amelie Dubois",
+            "role": "European Operations",
+            "bio": "Polyglot fluent in 6 languages, specializing in French phonetics."
+          }
+        }
+      }
+    },
+    "languageLanding": {
+      "breadcrumbHome": "Ana sayfa",
+      "department": "Program",
+      "masterPrefix": "Ustalaş",
+      "masterSuffix": "Akıcı şekilde.",
+      "descriptionPrefix": "Catalina Academy",
+      "descriptionSuffix": "dilinde kültürel etkileşim ve akademik disiplinle en yapılandırılmış yolu sunar.",
+      "viewCurriculum": "Tam müfredatı gör",
+      "topRatedDepartment": "En iyi program",
+      "academicPathTitle": "Akademik yol",
+      "academicPathSubtitle": "Avrupa Ortak Dil Referans Çerçevesine (CEFR) göre yapılandırılmıştır.",
+      "availableCourses": "Mevcut kurslar",
+      "browsePrograms": "Tüm programlara göz at",
+      "diploma": "Diploma",
+      "liveMentoring": "Canlı mentorluk",
+      "startTrial": "Denemeyi başlat",
+      "curriculumRefreshingPrefix": "",
+      "curriculumRefreshingSuffix": "için müfredatımız güncelleniyor. Kayıtlar yakında yeniden açılacak."
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "Hakkımızda",
+      "description": "About görünümü için Next.js rota iskeleti."
+    },
+    "courses": {
+      "title": "Kurslar",
+      "description": "Kurs kataloğu için Next.js rota iskeleti."
+    },
+    "privacy": {
+      "title": "Gizlilik politikası",
+      "intro": "LinguistPro, dil öğrenme hizmetlerini, güvenlik kontrollerini ve operasyonel desteği sunmak için hesap, kurs ve öğrenme etkinliği verilerini işler.",
+      "dataUseTitle": "Veri kullanımı",
+      "dataUseBody": "Veriler kimlik doğrulama, kurs kaydı, eğitmen/öğrenci operasyonları, analitik ve olay müdahalesi için kullanılır. Hassas gizli bilgiler ve entegrasyon anahtarları onaylı güvenlik kontrolleriyle korunur.",
+      "dataAccessTitle": "Veri erişimi",
+      "dataAccessBody": "Erişim, rol tabanlı yetkilendirme ve operasyonel ihtiyaç ile sınırlıdır. Kullanıcılar veri erişimi ve düzeltme talepleri için destekle iletişime geçebilir."
+    },
+    "refundPolicy": {
+      "title": "İade politikası",
+      "intro": "İade süreçleri destek incelemesi ve ödeme sağlayıcısı kısıtlarıyla yürütülür. Talepler satın alma zamanı, ders/oturum kullanımı ve dolandırıcılık kontrollerine göre değerlendirilir.",
+      "requestWindowTitle": "Talep süresi",
+      "requestWindowBody": "Kullanıcılar iade taleplerini destek sayfasında belirtilen kanal üzerinden mümkün olan en kısa sürede iletmelidir.",
+      "disputeHandlingTitle": "Uyuşmazlık yönetimi",
+      "disputeHandlingBody": "Ödeme itirazları olay olarak izlenir ve faturalama kanıtları, kurs erişim kayıtları ve politika incelemesiyle çözülür."
+    },
+    "support": {
+      "title": "Destek ve olay iletişimi",
+      "intro": "Hesap, öğrenme, eğitmen operasyonları ve faturalama sorunları için hesap e-postanız, kurs bağlamı ve sorun zaman çizelgesiyle destekle iletişime geçin.",
+      "channelsTitle": "İletişim kanalları",
+      "supportEmail": "Destek e-postası: support@linguistpro.local",
+      "incidentEscalation": "Olay eskalasyonu: incidents@linguistpro.local",
+      "responseSla": "Yanıt SLA: docs/SUPPORT_INCIDENT_RUNBOOK.md"
+    },
+    "terms": {
+      "title": "Hizmet şartları",
+      "intro": "LinguistPro'yu kullanarak platformu yasal şekilde kullanmayı, doğru hesap bilgileri vermeyi ve eğitmen/öğrenci/yönetici topluluk standartlarına uymayı kabul edersiniz.",
+      "accountResponsibilityTitle": "Hesap sorumluluğu",
+      "accountResponsibilityBody": "Kullanıcılar hesap kimlik bilgileri, hesap altındaki etkinlik ve yayımlanan tüm platform politikalarına uyumdan sorumludur.",
+      "serviceChangesTitle": "Hizmet değişiklikleri",
+      "serviceChangesBody": "Güvenlik, hukuki veya ürün nedenleriyle özellikleri ve politikaları güncelleyebiliriz. Önemli politika değişiklikleri kayıtlı kullanıcılara duyurulur."
+    },
+    "unauthorized": {
+      "title": "Yetkisiz",
+      "description": "Bu rotaya erişim izniniz yok."
+    }
+  },
+  "locale": {
+    "uk": "Ukraynaca",
+    "en": "İngilizce",
+    "es": "İspanyolca",
+    "tr": "Türkçe",
+    "ru": "Rusça"
+  },
+  "api": {
+    "unauthorized": "Yetkisiz",
+    "forbidden": "Yasak",
+    "validationFailed": "Doğrulama hatası",
+    "internalError": "Sunucu iç hatası"
+  },
+  "content": {
+    "courses": {
+      "cmoh1rw09000zs6ydg19wq4gg": {
+        "title": "Fransız Gastronomisi ve Dil",
+        "description": "Fransızcayı mutfak sanatları ve şarap kültürü perspektifinden öğrenin. Dile hakim olurken yemek terminolojisine de hakim olun.",
+        "tuitionLabel": "Eğitim Ücreti",
+        "discountLabel": "Kayıtta %65 İndirim",
+        "courseDirectorLabel": "Kurs Eğitmeni",
+        "learningObjectives": [
+          "Temel konuşma deyimlerinde ustalaşmak",
+          "Profesyonel ve resmi iletişim becerileri",
+          "Derin kültürel immersiyon ve tarih",
+          "Fonetik hakimiyet ve aksan azaltma",
+          "Günlük yaşam için pratik kelime dağarcığı",
+          "Catalina Academy Resmi Sertifikası"
+        ],
+        "enrollmentIncludes": [
+          "Müfredata ömür boyu erişim",
+          "Catalina Profesyonel Sertifikası",
+          "Özel Discord topluluğu"
+        ],
+        "syllabus": [
+          {
+            "title": "Temeller ve selamlaşmalar",
+            "lessons": [
+              {
+                "title": "İspanyol alfabesi ve fonetik",
+                "content": "Temel fonetik ve telaffuz ısınması."
+              },
+              {
+                "title": "Temel selamlaşmalar ve tanışmalar",
+                "content": "Gerçek ortamlarda kendinizi güvenle tanıtma."
+              },
+              {
+                "title": "Quiz: temel selamlaşmalar",
+                "content": "Kısa anlama ve hatırlama kontrolü."
+              },
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Günlük yaşam kelime dağarcığı",
+            "lessons": [
+              {
+                "title": "Restoranda: yemek siparişi",
+                "content": "Yemek ve sipariş için pratik ifadeler."
+              },
+              {
+                "title": "Sayılar, saat ve tarihler",
+                "content": "Yüksek frekanslı dilbilgisi ve günlük iletişim kalıpları."
+              },
+              {
+                "title": "Okuma: Madrid’de bir gün",
+                "content": "Kelime odaklı bağlamsal okuma görevi."
+              },
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Modül 3",
+            "lessons": [
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "adminLayout": {
+      "tabs": {
+        "settings": "Ayarlar"
+      }
+    },
+    "studentMyLearning": {
+      "actions": {
+        "personalInfo": "Kişisel bilgiler"
+      }
+    },
+    "tutorMyCourses": {
+      "actions": {
+        "personalInfo": "Kişisel bilgiler"
+      }
+    },
+    "settings": {
+      "title": "Kişisel bilgiler",
+      "subtitle": "Takma adınızı, avatarınızı ve temel profil bilgilerinizi güncelleyin.",
+      "loading": "Kişisel bilgi ayarları yükleniyor...",
+      "actions": {
+        "backToDashboard": "Panele geri dön",
+        "goToLogin": "Girişe git",
+        "save": "Değişiklikleri kaydet",
+        "saving": "Kaydediliyor..."
+      },
+      "fields": {
+        "avatarLink": "Avatar bağlantısı",
+        "avatarUpload": "Avatar görseli yükle",
+        "nickname": "Takma ad",
+        "email": "E-posta",
+        "bio": "Biyografi"
+      },
+      "avatar": {
+        "alt": "Profil avatar önizlemesi"
+      },
+      "status": {
+        "saved": "Kişisel bilgiler güncellendi.",
+        "uploadReady": "Avatar yüklendi. Uygulamak için değişiklikleri kaydedin."
+      },
+      "errors": {
+        "loadFailed": "Kişisel ayarlar yüklenemedi.",
+        "saveFailed": "Kişisel bilgiler kaydedilemedi.",
+        "unauthorized": "Ayarları yönetmek için giriş yapmalısınız.",
+        "invalidFileType": "Lütfen bir görsel dosyası seçin.",
+        "fileTooLarge": "Avatar görseli 2 MB veya daha küçük olmalı.",
+        "uploadFailed": "Yüklenen görsel okunamadı."
+      }
+    }
+  }
+}

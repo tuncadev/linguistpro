@@ -1,9 +1,11 @@
 # Infrastructure Decision Draft
 
-Last updated: 2026-04-26
-Status: In progress (next execution step)
+Superseded by `docs/INFRA_DECISION.md` on 2026-04-26.
 
-This draft continues the next item from `docs/DEPLOYMENT_PLAN_TODO.md`.
+Last updated: 2026-04-26
+Status: Closed (replaced by final decision)
+
+This draft was used to complete the next item from `docs/DEPLOYMENT_PLAN_TODO.md`.
 
 ## Recommended Baseline Stack
 
@@ -21,7 +23,7 @@ This draft continues the next item from `docs/DEPLOYMENT_PLAN_TODO.md`.
 2. Low operations overhead for a small-to-medium v1 team.
 3. Clear upgrade path when scale/traffic grows.
 
-## Pending Decisions (Need owner confirmation)
+## Pending Decisions (Resolved in final doc)
 
 1. Preferred cloud vendor policy:
    - fastest launch (mixed managed services)
@@ -31,8 +33,8 @@ This draft continues the next item from `docs/DEPLOYMENT_PLAN_TODO.md`.
 4. Budget ceiling for monthly infra.
 5. Backup retention policy and RTO/RPO targets.
 
-## Decision Gate
+## Decision Gate (Completed)
 
-After confirming pending decisions, update:
-1. `docs/DEPLOYMENT_PLAN_TODO.md` -> mark cloud-provider selection complete.
-2. `docs/INFRA_DECISION_DRAFT.md` -> promote to final `docs/INFRA_DECISION.md`.
+Completed actions:
+1. `docs/DEPLOYMENT_PLAN_TODO.md` updated with completed cloud-provider selection.
+2. Final decision promoted to `docs/INFRA_DECISION.md`.

@@ -1,0 +1,48 @@
+{
+  "pages": {
+    "about": {
+      "title": "Sobre nosotros",
+      "description": "Plantilla de ruta Next.js para la vista About."
+    },
+    "courses": {
+      "title": "Cursos",
+      "description": "Plantilla de ruta Next.js para el catálogo de cursos."
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "intro": "LinguistPro procesa datos de cuentas, cursos y actividad de aprendizaje para ofrecer servicios educativos, controles de seguridad y soporte operativo.",
+      "dataUseTitle": "Uso de datos",
+      "dataUseBody": "Los datos se usan para autenticación, inscripción a cursos, operaciones entre tutores y estudiantes, analítica y respuesta a incidentes. Los secretos sensibles y tokens de integración se protegen con controles aprobados.",
+      "dataAccessTitle": "Acceso a datos",
+      "dataAccessBody": "El acceso está limitado por autorización basada en roles y necesidad operativa. Los usuarios pueden contactar soporte para solicitudes de acceso o corrección de datos."
+    },
+    "refundPolicy": {
+      "title": "Política de reembolso",
+      "intro": "Los reembolsos se gestionan mediante revisión de soporte y restricciones del proveedor de pagos. Las solicitudes se evalúan según fecha de compra, uso de clases/sesiones y controles antifraude.",
+      "requestWindowTitle": "Ventana de solicitud",
+      "requestWindowBody": "Los usuarios deben enviar solicitudes de reembolso lo antes posible a través del canal de soporte indicado en la página de soporte.",
+      "disputeHandlingTitle": "Gestión de disputas",
+      "disputeHandlingBody": "Las disputas de cargos se registran como incidentes y se resuelven con evidencia de facturación, registros de acceso al curso y revisión de políticas."
+    },
+    "support": {
+      "title": "Soporte y contacto de incidentes",
+      "intro": "Para problemas de cuenta, aprendizaje, operación de tutores y facturación, contacta a soporte con tu correo de cuenta, contexto del curso y cronología del problema.",
+      "channelsTitle": "Canales de contacto",
+      "supportEmail": "Correo de soporte: support@linguistpro.local",
+      "incidentEscalation": "Escalación de incidentes: incidents@linguistpro.local",
+      "responseSla": "SLA de respuesta: ver docs/SUPPORT_INCIDENT_RUNBOOK.md"
+    },
+    "terms": {
+      "title": "Términos del servicio",
+      "intro": "Al usar LinguistPro, aceptas usar la plataforma legalmente, proporcionar información de cuenta precisa y respetar los estándares de la comunidad de tutores, estudiantes y administradores.",
+      "accountResponsibilityTitle": "Responsabilidad de la cuenta",
+      "accountResponsibilityBody": "Los usuarios son responsables de sus credenciales, la actividad en su cuenta y el cumplimiento de todas las políticas publicadas de la plataforma.",
+      "serviceChangesTitle": "Cambios del servicio",
+      "serviceChangesBody": "Podemos actualizar funciones y políticas por motivos de seguridad, legales o de producto. Los cambios relevantes se anunciarán a los usuarios registrados."
+    },
+    "unauthorized": {
+      "title": "Sin autorización",
+      "description": "No tienes permiso para acceder a esta ruta."
+    }
+  }
+}

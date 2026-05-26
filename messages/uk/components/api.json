@@ -1,0 +1,8 @@
+{
+  "api": {
+    "unauthorized": "Неавторизовано",
+    "forbidden": "Заборонено",
+    "validationFailed": "Помилка валідації",
+    "internalError": "Внутрішня помилка сервера"
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "common": {
+    "brandPrimary": "Catalina",
+    "brandSecondary": "Academy",
+    "courses": "Courses",
+    "about": "About Us",
+    "dashboard": "Dashboard",
+    "signOut": "Sign out",
+    "logIn": "Log In",
+    "startFreeTrial": "Start Free Trial",
+    "close": "Close",
+    "register": "Register",
+    "guest": "Guest",
+    "language": "Language",
+    "translationEditMode": "Edit Text",
+    "on": "On",
+    "off": "Off",
+    "userAvatarAlt": "User avatar"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "createAccount": "Create your account",
+    "passwordMismatch": "Password confirmation does not match.",
+    "registrationSuccess": "Registration successful. Verify email before login.",
+    "authenticationFailed": "Authentication failed.",
+    "fullName": "Full name",
+    "emailAddress": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account...",
+    "createAccountCta": "Create Account",
+    "verificationTokenHint": "Verification token"
+  },
+  "authPage": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in with your account to access student, tutor, or admin routes.",
+      "email": "Email",
+      "password": "Password",
+      "signingIn": "Signing in...",
+      "signIn": "Sign in",
+      "noAccount": "No account yet?",
+      "createOne": "Create one",
+      "requestFailed": "Request failed. Please try again.",
+      "loginFailed": "Login failed",
+      "loginSuccess": "Login successful"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Register a new student account for the platform.",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "creatingAccount": "Creating account...",
+      "createAccount": "Create account",
+      "alreadyRegistered": "Already registered?",
+      "signIn": "Sign in",
+      "passwordMismatch": "Password confirmation does not match.",
+      "registrationFailed": "Registration failed",
+      "registrationSuccess": "Registration successful. Verify email before login.",
+      "registeredSuccessfully": "Registered successfully",
+      "requestFailed": "Request failed. Please try again.",
+      "verificationTokenPrefix": "Verification token (dev/test)"
+    }
+  },
+  "sidebar": {
+    "mainMenu": "Main Menu",
+    "administration": "Administration",
+    "adminCoursesPage": "Courses Page",
+    "adminTutorsPage": "Tutors Page",
+    "adminManageUsers": "Manage Users",
+    "adminTaxonomies": "Taxonomies",
+    "goPro": "Go Pro",
+    "goProDescription": "Unlock advanced learning tools and certificates.",
+    "upgradeNow": "Upgrade Now"
+  },
+  "public": {
+    "hero": {
+      "badge": "Official Catalina Academy Language School",
+      "titleLine1": "Unlock Your",
+      "titleLine2": "Global Potential.",
+      "description": "Experience language learning redefined. From conversational fluency to professional certification, master the world with our expert tutors.",
+      "browseCourses": "Browse Our Courses",
+      "meetFaculty": "Meet Our Faculty",
+      "joinLabel": "Join",
+      "joinSuffix": "graduates worldwide",
+      "accredited": "Accredited",
+      "accreditedSub": "Global Language Standards"
+    },
+    "languageCard": {
+      "description": "Expert-led programs for all skill levels.",
+      "departmentDetails": "Department Details"
+    },
+    "home": {
+      "languageFacultiesTitle": "Our Language Faculties",
+      "languageFacultiesSubtitle": "Explore our comprehensive departments and find your native-level fluency.",
+      "culturalTitleLine1": "Beyond Just Words:",
+      "culturalTitleLine2": "Cultural Fluency.",
+      "culturalDescription": "At Catalina Academy, we don't just teach grammar. we prepare you for the nuances of cultural communication in a globalized world.",
+      "steps": {
+        "step1": {
+          "title": "Tailored Programs",
+          "desc": "Find specialized courses for travel, business, or academic certification."
+        },
+        "step2": {
+          "title": "Immersive Learning",
+          "desc": "Practice with native speakers in real-world scenarios through our virtual campus."
+        },
+        "step3": {
+          "title": "Expert Faculty",
+          "desc": "Every Catalina tutor is a certified professional with years of teaching experience."
+        },
+        "step4": {
+          "title": "Global Certification",
+          "desc": "Earn recognized diplomas that open doors to international opportunities."
+        }
+      },
+      "readyTitle": "Ready to join our next intake?",
+      "enrollToday": "Enroll in a Course Today",
+      "certificationIncluded": "Official Catalina Academy Certification Included"
+    },
+    "catalog": {
+      "title": "Explore Courses",
+      "subtitle": "Master new languages with top tutors from around the world.",
+      "allLanguages": "All Languages",
+      "reviews": "Reviews",
+      "viewDetails": "View Details"
+    },
+    "about": {
+      "missionLabel": "Our Mission",
+      "titleLine1": "Language is the bridge",
+      "titleLine2": "to human connection.",
+      "intro": "Founded in 2024, LinguistPro was born out of a simple frustration: language learning felt lonely and disconnected from real-world application. We set out to build a platform that prioritizes human interaction while leveraging the power of AI to accelerate comprehension.",
+      "values": {
+        "inclusion": {
+          "title": "Inclusion First",
+          "desc": "We believe everyone should have access to quality education regardless of their location."
+        },
+        "goal": {
+          "title": "Goal Oriented",
+          "desc": "We don't just teach words; we teach the ability to communicate with confidence and purpose."
+        },
+        "quality": {
+          "title": "Quality Assured",
+          "desc": "Every tutor on our platform undergoes a rigorous vetting process to ensure excellence."
+        }
+      },
+      "team": {
+        "title": "Meet Our Lead Educators",
+        "subtitle": "A global collective of linguists, polyglots, and technologists dedicated to your growth.",
+        "joinFaculty": "Join Our Faculty",
+        "members": {
+          "member1": {
+            "name": "Dr. Sarah Miller",
+            "role": "Head of English Pedagogy",
+            "bio": "PhD in Applied Linguistics with 15 years experience in ESL."
+          },
+          "member2": {
+            "name": "Mateo Garcia",
+            "role": "Spanish Curriculum Director",
+            "bio": "Award-winning educator focused on conversational fluency."
+          },
+          "member3": {
+            "name": "Yuki Sato",
+            "role": "Asian Languages Lead",
+            "bio": "Expert in JLPT preparation and cultural immersion techniques."
+          },
+          "member4": {
+            "name": "Amelie Dubois",
+            "role": "European Operations",
+            "bio": "Polyglot fluent in 6 languages, specializing in French phonetics."
+          }
+        }
+      }
+    },
+    "languageLanding": {
+      "breadcrumbHome": "Home",
+      "department": "Department",
+      "masterPrefix": "Master",
+      "masterSuffix": "Fluently.",
+      "descriptionPrefix": "Catalina Academy provides the most structured path to",
+      "descriptionSuffix": "proficiency through cultural immersion and academic rigor.",
+      "viewCurriculum": "View Full Curriculum",
+      "topRatedDepartment": "Top Rated Department",
+      "academicPathTitle": "The Academic Path",
+      "academicPathSubtitle": "Structured according to the Common European Framework of Reference (CEFR).",
+      "availableCourses": "Available Courses",
+      "browsePrograms": "Browse All Programs",
+      "diploma": "Diploma",
+      "liveMentoring": "Live Mentoring",
+      "startTrial": "Start Trial",
+      "curriculumRefreshingPrefix": "Our curriculum for",
+      "curriculumRefreshingSuffix": "is currently being refreshed. Admissions reopen soon."
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "About",
+      "description": "Next.js route scaffold for the About view."
+    },
+    "courses": {
+      "title": "Courses",
+      "description": "Next.js route scaffold for catalog listing."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "LinguistPro processes account, course, and learning activity data to deliver language learning services, security controls, and operational support.",
+      "dataUseTitle": "Data Use",
+      "dataUseBody": "Data is used for authentication, course enrollment, tutor/student operations, analytics, and incident response. Sensitive secrets and integration tokens are protected using approved security controls.",
+      "dataAccessTitle": "Data Access",
+      "dataAccessBody": "Access is limited by role-based authorization and operational need. Users may contact support for data-access and correction requests."
+    },
+    "refundPolicy": {
+      "title": "Refund Policy",
+      "intro": "Refund handling is processed through support review and billing provider constraints. Requests are evaluated against purchase timing, class/session usage, and fraud checks.",
+      "requestWindowTitle": "Request Window",
+      "requestWindowBody": "Users should submit refund requests as early as possible through the support channel listed on the Support page.",
+      "disputeHandlingTitle": "Dispute Handling",
+      "disputeHandlingBody": "Charge disputes are tracked as incidents and resolved with billing evidence, course access logs, and policy review."
+    },
+    "support": {
+      "title": "Support and Incident Contact",
+      "intro": "For account, learning, tutor operations, and billing issues, contact support with your account email, course context, and issue timeline.",
+      "channelsTitle": "Contact Channels",
+      "supportEmail": "Support Email: support@linguistpro.local",
+      "incidentEscalation": "Incident Escalation: incidents@linguistpro.local",
+      "responseSla": "Response SLA: see docs/SUPPORT_INCIDENT_RUNBOOK.md"
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "intro": "By using LinguistPro, you agree to use the platform lawfully, provide accurate account information, and respect tutor, student, and administrator community standards.",
+      "accountResponsibilityTitle": "Account Responsibility",
+      "accountResponsibilityBody": "Users are responsible for account credentials, activity under their account, and compliance with all published platform policies.",
+      "serviceChangesTitle": "Service Changes",
+      "serviceChangesBody": "We may update features and policies for security, legal, or product reasons. Material policy changes will be announced to registered users."
+    },
+    "unauthorized": {
+      "title": "Unauthorized",
+      "description": "You do not have permission to access this route."
+    }
+  },
+  "locale": {
+    "uk": "Ukrainian",
+    "en": "English",
+    "es": "Spanish",
+    "tr": "Turkish",
+    "ru": "Russian"
+  },
+  "api": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "validationFailed": "Validation failed",
+    "internalError": "Internal server error"
+  }
+}

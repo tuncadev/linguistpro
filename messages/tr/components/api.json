@@ -1,0 +1,8 @@
+{
+  "api": {
+    "unauthorized": "Yetkisiz",
+    "forbidden": "Yasak",
+    "validationFailed": "Doğrulama hatası",
+    "internalError": "Sunucu iç hatası"
+  }
+}

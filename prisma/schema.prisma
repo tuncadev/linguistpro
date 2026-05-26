@@ -1,0 +1,431 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+  ADMIN
+}
+
+enum AuthTokenType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+}
+
+enum TutorApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CourseStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LessonType {
+  VIDEO
+  QUIZ
+  READING
+}
+
+enum LiveClassStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+}
+
+enum CommunicationTemplate {
+  WELCOME
+  ENROLLMENT_CONFIRMATION
+  PAYMENT_RECEIPT
+  CLASS_REMINDER
+  CLASS_CANCELLATION
+}
+
+enum CommunicationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum AbuseTargetType {
+  COURSE
+  TUTOR
+  USER
+  MESSAGE
+  OTHER
+}
+
+enum AbuseReportStatus {
+  OPEN
+  UNDER_REVIEW
+  ACTIONED
+  REJECTED
+}
+
+model User {
+  id              String  @id @default(cuid())
+  name            String?
+  email           String  @unique
+  passwordHash    String?
+  role            Role    @default(STUDENT)
+  emailVerifiedAt DateTime?
+  failedLoginAttempts Int @default(0)
+  lockedUntil DateTime?
+  onboardingCompletedAt DateTime?
+  welcomeDismissedAt DateTime?
+  tutorApprovalStatus TutorApprovalStatus @default(PENDING)
+  tutorApprovedAt DateTime?
+  tutorApprovalNotes String?
+  preferredLocale String?
+  avatarUrl       String?
+  bio             String?
+  rating          Float?
+  studentCount    Int?
+  coursesAuthored Int?
+  location        String?
+  languagesSpoken String?
+  profileHighlights Json?
+  profileStats      Json?
+  pedagogicalModules Json?
+
+  authoredCourses Course[]     @relation("CourseTutor")
+  enrollments     Enrollment[]
+  authTokens      AuthToken[]
+  zoomConnection  ZoomConnection?
+  liveClassSessions LiveClassSession[]
+  communications CommunicationMessage[]
+  abuseReports    AbuseReport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AbuseReport {
+  id String @id @default(cuid())
+
+  reporterId String
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  targetType AbuseTargetType
+  targetId String
+  reason String
+  details String? @db.Text
+
+  status AbuseReportStatus @default(OPEN)
+  moderationNotes String? @db.Text
+  reviewedById String?
+  reviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+  @@index([reporterId, createdAt])
+}
+
+model AuthToken {
+  id        String        @id @default(cuid())
+  type      AuthTokenType
+  tokenHash String        @unique
+  expiresAt DateTime
+  consumedAt DateTime?
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+
+  @@index([userId, type])
+}
+
+model Language {
+  id   String @id @default(cuid())
+  name String @unique
+  code String @unique
+
+  courses Course[]
+}
+
+model Level {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+
+  courses Course[]
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String       @db.Text
+  price       Decimal      @db.Decimal(10, 2)
+  imageUrl    String?
+  status      CourseStatus @default(DRAFT)
+  publishedAt DateTime?
+  submittedAt DateTime?
+  reviewedAt  DateTime?
+  archivedAt  DateTime?
+  statusReason String?
+  statusChangedById String?
+  statusChangedAt DateTime?
+  learningObjectives Json?
+  enrollmentIncludes Json?
+  tuitionLabel       String? @default("Tuition Fee")
+  discountLabel      String? @default("65% Off Enrollment")
+  courseDirectorLabel String? @default("Course Director")
+
+  tutor   User   @relation("CourseTutor", fields: [tutorId], references: [id])
+  tutorId String
+
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String
+
+  level   Level  @relation(fields: [levelId], references: [id])
+  levelId String
+
+  studentCount Int   @default(0)
+  rating       Float @default(0)
+  reviews      Int   @default(0)
+
+  syllabusSections SyllabusSection[]
+  enrollments      Enrollment[]
+  lifecycleEvents  CourseLifecycleEvent[]
+  liveClassSessions LiveClassSession[]
+  communications CommunicationMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CourseLifecycleEvent {
+  id        String       @id @default(cuid())
+  courseId  String
+  fromStatus CourseStatus?
+  toStatus  CourseStatus
+  reason    String?
+  actorId   String
+  actorRole Role
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId, createdAt])
+}
+
+model SyllabusSection {
+  id       String @id @default(cuid())
+  title    String
+  position Int
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  id              String     @id @default(cuid())
+  title           String
+  durationSeconds Int?
+  type            LessonType
+  content         String?    @db.Text
+  position        Int
+
+  section   SyllabusSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId String
+}
+
+model Enrollment {
+  id String @id @default(cuid())
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  trial     Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@unique([courseId, studentId])
+}
+
+model LiveClassSession {
+  id String @id @default(cuid())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  tutorId String
+  tutor   User @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+
+  title String
+  agenda String?
+  startsAt DateTime
+  durationMinutes Int
+  timezone String
+  status LiveClassStatus @default(SCHEDULED)
+
+  zoomMeetingId String
+  zoomJoinUrl String
+  zoomStartUrl String?
+  zoomPassword String?
+  zoomHostEmail String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cancelledAt DateTime?
+  cancelledById String?
+
+  attendanceLogs LiveClassAttendance[]
+  recordings LiveClassRecording[]
+  communications CommunicationMessage[]
+
+  @@index([courseId, startsAt])
+  @@index([tutorId, startsAt])
+  @@index([zoomMeetingId])
+}
+
+model LiveClassAttendance {
+  id String @id @default(cuid())
+
+  liveClassSessionId String
+  liveClassSession LiveClassSession @relation(fields: [liveClassSessionId], references: [id], onDelete: Cascade)
+
+  participantId String
+  participantName String?
+  participantEmail String?
+  firstJoinAt DateTime?
+  lastLeaveAt DateTime?
+  totalDurationMinutes Int?
+  joinCount Int @default(0)
+  sourceEventIds Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([liveClassSessionId, participantId])
+  @@index([liveClassSessionId, firstJoinAt])
+}
+
+model LiveClassRecording {
+  id String @id @default(cuid())
+
+  liveClassSessionId String
+  liveClassSession LiveClassSession @relation(fields: [liveClassSessionId], references: [id], onDelete: Cascade)
+
+  externalFileId String @unique
+  recordingType String?
+  fileType String?
+  fileSizeBytes BigInt?
+  playUrl String?
+  downloadUrl String?
+  recordingStart DateTime?
+  recordingEnd DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([liveClassSessionId, recordingStart])
+}
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  description String?  @db.Text
+  enabled     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CommunicationMessage {
+  id String @id @default(cuid())
+
+  template CommunicationTemplate
+  triggerKey String?
+  status CommunicationStatus @default(PENDING)
+
+  recipientEmail String
+  recipientName String?
+  subject String
+  bodyText String @db.Text
+  bodyHtml String? @db.Text
+
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  courseId String?
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  liveClassSessionId String?
+  liveClassSession LiveClassSession? @relation(fields: [liveClassSessionId], references: [id], onDelete: SetNull)
+
+  attemptCount Int @default(0)
+  sentAt DateTime?
+  failedAt DateTime?
+  lastError String?
+  lastAttemptAt DateTime?
+  meta Json?
+
+  attempts CommunicationAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([template, status])
+  @@index([recipientEmail, createdAt])
+}
+
+model CommunicationAttempt {
+  id String @id @default(cuid())
+
+  messageId String
+  message CommunicationMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  attemptNumber Int
+  status CommunicationStatus
+  provider String?
+  providerMessageId String?
+  responseCode Int?
+  errorMessage String?
+  responseBody String?
+  attemptedAt DateTime @default(now())
+
+  @@index([messageId, attemptNumber])
+}
+
+model ZoomConnection {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  zoomUserId    String
+  zoomAccountId String?
+  zoomEmail     String?
+
+  accessTokenEnc  String @db.Text
+  refreshTokenEnc String @db.Text
+  tokenType       String?
+  scope           String?
+  expiresAt       DateTime
+
+  connectedAt     DateTime @default(now())
+  lastRefreshedAt DateTime?
+  revokedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([zoomUserId])
+  @@index([expiresAt])
+}

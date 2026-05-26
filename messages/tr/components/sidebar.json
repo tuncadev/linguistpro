@@ -1,0 +1,13 @@
+{
+  "sidebar": {
+    "mainMenu": "Ana menü",
+    "administration": "Yönetim",
+    "adminCoursesPage": "Kurs sayfası",
+    "adminTutorsPage": "Eğitmenler sayfası",
+    "adminManageUsers": "Kullanıcıları yönet",
+    "adminTaxonomies": "Taksonomiler",
+    "goPro": "Go Pro",
+    "goProDescription": "Gelişmiş öğrenme araçlarının ve sertifikaların kilidini açın.",
+    "upgradeNow": "Şimdi yükselt"
+  }
+}

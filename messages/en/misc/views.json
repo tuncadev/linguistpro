@@ -1,0 +1,31 @@
+{
+  "views": {
+    "courseDetails": {
+      "breadcrumb": {
+        "courses": "Courses"
+      },
+      "learningObjectives": "Learning Objectives",
+      "curriculumBreakdown": "Curriculum Breakdown",
+      "enrollmentIncludes": "Enrollment Includes:",
+      "verifiedReviews": "verified reviews",
+      "verifiedReviewsCount": "{count, plural, =0 {0 verified reviews} one {# verified review} other {# verified reviews}}",
+      "currentlyLearning": "currently learning",
+      "currentlyLearningCount": "{count, plural, =0 {0 currently learning} one {# currently learning} other {# currently learning}}",
+      "level": "Level",
+      "levels": {
+        "beginner": "Beginner",
+        "elementary": "Elementary",
+        "pre_intermediate": "Pre-Intermediate",
+        "intermediate": "Intermediate",
+        "upper_intermediate": "Upper-Intermediate",
+        "advanced": "Advanced",
+        "expert": "Expert",
+        "unknown": "Unknown"
+      },
+      "actions": {
+        "enrollToday": "Enroll Today"
+      },
+      "previewImageAlt": "Course preview image"
+    }
+  }
+}

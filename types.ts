@@ -5,16 +5,43 @@ export enum UserRole {
   ADMIN = 'ADMIN'
 }
 
+export type TutorApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface TutorStatModule {
+  id: string;
+  label: string;
+  value: string;
+}
+
+export interface TutorPedagogicalModule {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
   role: UserRole;
+  preferredLocale?: "uk" | "en" | "es" | "tr" | "ru";
   avatar?: string;
+  avatarUrl?: string;
   bio?: string;
   rating?: number;
   studentCount?: number;
   coursesAuthored?: number;
+  hasPassword?: boolean;
+  emailVerifiedAt?: string | null;
+  onboardingCompletedAt?: string | null;
+  tutorApprovalStatus?: TutorApprovalStatus;
+  tutorApprovedAt?: string | null;
+  tutorApprovalNotes?: string;
+  location?: string;
+  languagesSpoken?: string;
+  profileHighlights?: string[];
+  profileStats?: TutorStatModule[];
+  pedagogicalModules?: TutorPedagogicalModule[];
 }
 
 export interface Language {
@@ -49,12 +76,18 @@ export interface Course {
   description: string;
   price: number;
   imageUrl: string;
+  status?: 'DRAFT' | 'PENDING_REVIEW' | 'PUBLISHED' | 'ARCHIVED';
   tutorId: string;
   languageId: string;
   levelId: string;
   studentCount: number;
   rating: number;
   reviews: number;
+  learningObjectives?: string[];
+  enrollmentIncludes?: string[];
+  tuitionLabel?: string;
+  discountLabel?: string;
+  courseDirectorLabel?: string;
   syllabus: SyllabusSection[];
 }
 

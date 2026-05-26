@@ -1,0 +1,136 @@
+{
+  "public": {
+    "hero": {
+      "badge": "Resmi Catalina Academy dil okulu",
+      "titleLine1": "Kendi",
+      "titleLine2": "Küresel potansiyelini açığa çıkar.",
+      "description": "Dil öğrenimini yeniden tanımla. Uzman eğitmenlerle konuşma akıcılığından profesyonel sertifikaya ilerle.",
+      "browseCourses": "Kurslara göz at",
+      "meetFaculty": "Programları gör",
+      "joinLabel": "Katıl",
+      "joinSuffix": "mezuna dünya çapında",
+      "accredited": "Akredite",
+      "accreditedSub": "Küresel dil standartları",
+      "studentAvatarAltPrefix": "Öğrenci",
+      "classroomImageAlt": "Catalina Academy etkileşimli sınıf ortamı"
+    },
+    "languageCard": {
+      "description": "Tüm seviyeler için uzman eğitmenlerle programlar.",
+      "departmentDetails": "Program detayları"
+    },
+    "home": {
+      "languageFacultiesTitle": "Dil kursu",
+      "languageFacultiesSubtitle": "Dil programlarımızı keşfedin ve gerçek akıcılığa ulaşın.",
+      "culturalTitleLine1": "Sadece kelimeler değil:",
+      "culturalTitleLine2": "Kültürel akıcılık.",
+      "culturalDescription": "Catalina Academy'de sadece gramer öğretmiyoruz. Sizi küresel iletişimin kültürel nüanslarına hazırlıyoruz.",
+      "steps": {
+        "step1": {
+          "title": "Özel programlar",
+          "desc": "Seyahat, iş veya akademik sertifika için uzmanlaşmış kurslar bulun."
+        },
+        "step2": {
+          "title": "Sürükleyici öğrenme",
+          "desc": "Sanal kampüsümüzde gerçek hayat senaryolarında ana dili konuşanlarla pratik yapın."
+        },
+        "step3": {
+          "title": "Uzman eğitmenler",
+          "desc": "Her Catalina eğitmeni sertifikalı ve uzun yıllar deneyimlidir."
+        },
+        "step4": {
+          "title": "Küresel sertifikasyon",
+          "desc": "Uluslararası fırsatlar açan tanınmış diplomalar kazanın."
+        }
+      },
+      "readyTitle": "Bir sonraki döneme katılmaya hazır mısınız?",
+      "enrollToday": "Bugün kursa kaydol",
+      "certificationIncluded": "Resmi Catalina Academy sertifikası dahil",
+      "studyImageAlt": "Catalina Academy’de odaklı çalışma"
+    },
+    "catalog": {
+      "title": "Kursları keşfet",
+      "subtitle": "Dünyanın dört bir yanından en iyi eğitmenlerle yeni diller öğrenin.",
+      "allLanguages": "Tüm diller",
+      "reviews": "Yorum",
+      "viewDetails": "Detayları görüntüle",
+      "allLevels": "Tüm seviyeler",
+      "languages": {
+        "uk": "Ukraynaca",
+        "en": "İngilizce",
+        "es": "İspanyolca",
+        "tr": "Türkçe",
+        "ru": "Язык",
+        "fr": "Fransızca",
+        "de": "Almanca",
+        "jp": "Japonca",
+        "ja": "Japonca"
+      }
+    },
+    "about": {
+      "missionLabel": "Misyonumuz",
+      "titleLine1": "Dil bir köprüdür",
+      "titleLine2": "insan bağlantısına.",
+      "intro": "2024'te kurulan LinguistPro, dil öğreniminin gerçek hayattan kopuk hissettirmesi sorunundan doğdu. İnsan etkileşimini merkeze alan bir platform kurduk.",
+      "values": {
+        "inclusion": {
+          "title": "Önce kapsayıcılık",
+          "desc": "Herkesin bulunduğu yerden bağımsız olarak kaliteli eğitime erişmesi gerektiğine inanıyoruz."
+        },
+        "goal": {
+          "title": "Hedef odaklı",
+          "desc": "Sadece kelime öğretmiyoruz; güvenle ve amaçla iletişim kurma becerisi kazandırıyoruz."
+        },
+        "quality": {
+          "title": "Kalite güvencesi",
+          "desc": "Platformdaki her eğitmen mükemmellik için sıkı bir değerlendirmeden geçer."
+        }
+      },
+      "team": {
+        "title": "Lider eğitmenlerimizle tanışın",
+        "subtitle": "Gelişiminize adanmış dilbilimci, çok dilliler ve teknoloji uzmanlarından oluşan küresel topluluk.",
+        "joinFaculty": "Eğitmen olarak katıl",
+        "members": {
+          "member1": {
+            "name": "Dr. Sarah Miller",
+            "role": "Head of English Pedagogy",
+            "bio": "PhD in Applied Linguistics with 15 years experience in ESL."
+          },
+          "member2": {
+            "name": "Mateo Garcia",
+            "role": "Spanish Curriculum Director",
+            "bio": "Award-winning educator focused on conversational fluency."
+          },
+          "member3": {
+            "name": "Yuki Sato",
+            "role": "Asian Languages Lead",
+            "bio": "Expert in JLPT preparation and cultural immersion techniques."
+          },
+          "member4": {
+            "name": "Amelie Dubois",
+            "role": "European Operations",
+            "bio": "Polyglot fluent in 6 languages, specializing in French phonetics."
+          }
+        }
+      }
+    },
+    "languageLanding": {
+      "breadcrumbHome": "Ana sayfa",
+      "department": "Program",
+      "masterPrefix": "Ustalaş",
+      "masterSuffix": "Akıcı şekilde.",
+      "descriptionPrefix": "Catalina Academy",
+      "descriptionSuffix": "dilinde kültürel etkileşim ve akademik disiplinle en yapılandırılmış yolu sunar.",
+      "viewCurriculum": "Tam müfredatı gör",
+      "topRatedDepartment": "En iyi program",
+      "academicPathTitle": "Akademik yol",
+      "academicPathSubtitle": "Avrupa Ortak Dil Referans Çerçevesine (CEFR) göre yapılandırılmıştır.",
+      "availableCourses": "Mevcut kurslar",
+      "browsePrograms": "Tüm programlara göz at",
+      "diploma": "Diploma",
+      "liveMentoring": "Canlı mentorluk",
+      "startTrial": "Denemeyi başlat",
+      "curriculumRefreshingPrefix": "",
+      "curriculumRefreshingSuffix": "için müfredatımız güncelleniyor. Kayıtlar yakında yeniden açılacak."
+    }
+  }
+}

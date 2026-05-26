@@ -1,21 +1,155 @@
-
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../App';
+import { useLocale, useTranslations } from 'next-intl';
+import {
+  AdminDashboardOverview,
+  fetchAdminDashboardOverview,
+} from '../services/adminDashboardApiService';
+import { formatCurrency } from '@/lib/i18n/format';
+
+function formatRelativeTime(isoTimestamp: string): string {
+  const diffMs = Date.now() - new Date(isoTimestamp).getTime();
+  const minuteMs = 60_000;
+  const hourMs = 60 * minuteMs;
+  const dayMs = 24 * hourMs;
+
+  if (diffMs < hourMs) {
+    const minutes = Math.max(1, Math.floor(diffMs / minuteMs));
+    return `${minutes} min${minutes === 1 ? '' : 's'} ago`;
+  }
+
+  if (diffMs < dayMs) {
+    const hours = Math.max(1, Math.floor(diffMs / hourMs));
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  }
+
+  const days = Math.max(1, Math.floor(diffMs / dayMs));
+  return `${days} day${days === 1 ? '' : 's'} ago`;
+}
 
 const AdminDashboard: React.FC = () => {
+  const locale = useLocale();
+  const t = useTranslations('dashboard.admin');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const { courses } = useContext(AppContext);
+  const [overview, setOverview] = useState<AdminDashboardOverview | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadOverview = async () => {
+      const payload = await fetchAdminDashboardOverview();
+      if (!isMounted) {
+        return;
+      }
+      setOverview(payload);
+    };
+
+    void loadOverview();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const formattedRevenue = useMemo(() => {
+    const revenue = overview?.stats.totalRevenue;
+    if (typeof revenue !== 'number') {
+      return tx('defaults.revenue', '$84,200');
+    }
+    return formatCurrency(revenue, locale, 'USD', 0);
+  }, [locale, overview]);
 
   const stats = [
-    { label: 'Total Users', value: '1,284', change: '+12%', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-    { label: 'Courses', value: courses.length.toString(), change: '+2', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-    { label: 'Revenue', value: '$84,200', change: '+18.5%', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    {
+      label: tx('stats.totalUsers', 'Total Users'),
+      value: (overview?.stats.totalUsers ?? 1284).toString(),
+      change: overview ? `${overview.stats.totalEnrollments} enrollments` : '+12%',
+      icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+    },
+    {
+      label: tx('stats.courses', 'Courses'),
+      value: (overview?.stats.totalCourses ?? courses.length).toString(),
+      change: overview ? `${overview.recentSubmissions.length} recent` : '+2',
+      icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+    },
+    {
+      label: tx('stats.revenue', 'Revenue'),
+      value: formattedRevenue,
+      change: overview ? 'Live' : '+18.5%',
+      icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    },
   ];
+
+  const kpiCards = [
+    {
+      label: tx('kpi.mrr', 'MRR Proxy (30d)'),
+      value:
+        typeof overview?.kpis.mrrProxy30d === 'number'
+          ? formatCurrency(overview.kpis.mrrProxy30d, locale, 'USD', 0)
+          : '$0',
+      hint: tx('kpi.mrrHint', 'Enrollment revenue in last 30 days'),
+    },
+    {
+      label: tx('kpi.onboardingCompletion', 'Onboarding Completion'),
+      value:
+        typeof overview?.kpis.onboardingCompletionRate === 'number'
+          ? `${overview.kpis.onboardingCompletionRate.toFixed(1)}%`
+          : '0.0%',
+      hint: tx('kpi.onboardingHint', 'Students with completed onboarding'),
+    },
+    {
+      label: tx('kpi.tutorApprovalRate', 'Tutor Approval Rate'),
+      value:
+        typeof overview?.kpis.tutorApprovalRate === 'number'
+          ? `${overview.kpis.tutorApprovalRate.toFixed(1)}%`
+          : '0.0%',
+      hint: `${overview?.kpis.pendingTutorApprovals ?? 0} ${tx('kpi.pendingApprovals', 'pending approvals')}`,
+    },
+    {
+      label: tx('kpi.liveClassesUpcoming', 'Live Classes (Upcoming)'),
+      value: `${overview?.kpis.upcomingLiveClasses ?? 0}`,
+      hint: `${overview?.kpis.completedLiveClasses ?? 0} ${tx('kpi.completed', 'completed')} / ${overview?.kpis.cancelledLiveClasses ?? 0} ${tx('kpi.cancelled', 'cancelled')}`,
+    },
+    {
+      label: tx('kpi.attendanceParticipants', 'Attendance Participants'),
+      value: `${overview?.kpis.attendanceParticipants ?? 0}`,
+      hint: `Avg joins ${Number(overview?.kpis.averageAttendanceJoins ?? 0).toFixed(1)}`,
+    },
+    {
+      label: tx('kpi.recordings', 'Recordings'),
+      value: `${overview?.kpis.recordingAssets ?? 0}`,
+      hint: tx('kpi.recordingsHint', 'Synced recording assets'),
+    },
+    {
+      label: tx('kpi.commsSuccess7d', 'Comms Success (7d)'),
+      value:
+        typeof overview?.kpis.communicationSuccessRate7d === 'number'
+          ? `${overview.kpis.communicationSuccessRate7d.toFixed(1)}%`
+          : '100.0%',
+      hint: `${overview?.kpis.communicationSent7d ?? 0} ${tx('kpi.sent', 'sent')} / ${overview?.kpis.communicationFailed7d ?? 0} ${tx('kpi.failed', 'failed')}`,
+    },
+    {
+      label: tx('kpi.pendingSubmissions', 'Pending Submissions'),
+      value: `${overview?.kpis.pendingCourseSubmissions ?? 0}`,
+      hint: tx('kpi.pendingSubmissionsHint', 'Courses waiting for review'),
+    },
+  ];
+
+  const recentSubmissions = overview?.recentSubmissions ?? [];
+  const activity =
+    overview?.activity ??
+    [
+      { id: 'fallback-1', message: tx('fallback.log1', 'New student enrollment in "Mastering Spanish"'), createdAt: new Date().toISOString() },
+      { id: 'fallback-2', message: tx('fallback.log2', 'Tutor "Prof. Elena" updated curriculum'), createdAt: new Date(Date.now() - 15 * 60_000).toISOString() },
+      { id: 'fallback-3', message: tx('fallback.log3', 'System backup completed successfully'), createdAt: new Date(Date.now() - 60 * 60_000).toISOString() },
+    ];
 
   return (
     <div className="max-w-6xl mx-auto">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">Admin Console</h1>
-        <p className="text-slate-500">Global overview and system health.</p>
+        <h1 className="text-3xl font-extrabold text-slate-900">{tx('title', 'Admin Console')}</h1>
+        <p className="text-slate-500">{tx('subtitle', 'Global overview and system health.')}</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -35,14 +169,31 @@ const AdminDashboard: React.FC = () => {
         ))}
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        {kpiCards.map((kpi) => (
+          <div key={kpi.label} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{kpi.label}</p>
+            <p className="mt-2 text-2xl font-black text-slate-900">{kpi.value}</p>
+            <p className="mt-1 text-xs text-slate-500">{kpi.hint}</p>
+          </div>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-lg font-bold">Recent Course Submissions</h2>
-            <button className="text-indigo-600 text-sm font-bold hover:underline">View All</button>
+            <h2 className="text-lg font-bold">{tx('recentSubmissions', 'Recent Course Submissions')}</h2>
+            <button className="text-indigo-600 text-sm font-bold hover:underline">{tx('viewAll', 'View All')}</button>
           </div>
           <div className="divide-y divide-slate-50">
-            {courses.slice(0, 3).map(c => (
+            {(recentSubmissions.length > 0 ? recentSubmissions : courses.slice(0, 3).map((course) => ({
+              id: course.id,
+              title: course.title,
+              tutorId: course.tutorId,
+              tutorName: course.tutorId,
+              status: 'PUBLISHED',
+              createdAt: new Date().toISOString(),
+            }))).map(c => (
               <div key={c.id} className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded bg-slate-100 flex items-center justify-center text-slate-400">
@@ -50,14 +201,16 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div>
                     <p className="font-bold text-slate-900 text-sm">{c.title}</p>
-                    <p className="text-xs text-slate-500">Submission by Tutor ID: {c.tutorId}</p>
+                    <p className="text-xs text-slate-500">
+                      {tx('submissionBy', 'Submission by')} {c.tutorName} ({c.status})
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Approve">
+                  <button className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title={tx('approve', 'Approve')}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
                   </button>
-                  <button className="p-1.5 text-rose-600 hover:bg-rose-50 rounded transition-colors" title="Reject">
+                  <button className="p-1.5 text-rose-600 hover:bg-rose-50 rounded transition-colors" title={tx('reject', 'Reject')}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
@@ -68,19 +221,15 @@ const AdminDashboard: React.FC = () => {
 
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100">
-            <h2 className="text-lg font-bold">System Logs</h2>
+            <h2 className="text-lg font-bold">{tx('systemLogs', 'System Logs')}</h2>
           </div>
           <div className="p-6 space-y-4">
-            {[
-              { time: '2 mins ago', msg: 'New student enrollment in "Mastering Spanish"', type: 'enrollment' },
-              { time: '15 mins ago', msg: 'Tutor "Prof. Elena" updated curriculum', type: 'update' },
-              { time: '1 hour ago', msg: 'System backup completed successfully', type: 'system' },
-            ].map((log, i) => (
-              <div key={i} className="flex gap-4">
+            {activity.map((log) => (
+              <div key={log.id} className="flex gap-4">
                 <div className="w-1 bg-indigo-500 rounded-full"></div>
                 <div>
-                  <p className="text-sm font-medium text-slate-800">{log.msg}</p>
-                  <p className="text-[10px] text-slate-400 uppercase font-bold">{log.time}</p>
+                  <p className="text-sm font-medium text-slate-800">{log.message}</p>
+                  <p className="text-[10px] text-slate-400 uppercase font-bold">{formatRelativeTime(log.createdAt)}</p>
                 </div>
               </div>
             ))}

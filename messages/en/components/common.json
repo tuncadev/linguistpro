@@ -1,0 +1,22 @@
+{
+  "common": {
+    "brandPrimary": "Catalina",
+    "brandSecondary": "Academy",
+    "courses": "Courses",
+    "about": "About Us",
+    "dashboard": "Dashboard",
+    "signOut": "Sign out",
+    "logIn": "Log In",
+    "startFreeTrial": "Start Free Trial",
+    "close": "Close",
+    "register": "Register",
+    "guest": "Guest",
+    "language": "Language",
+    "translationEditMode": "Edit Text",
+    "on": "On",
+    "off": "Off",
+    "userAvatarAlt": "User avatar",
+    "closeAuthModal": "Close authentication modal",
+    "settings": "Settings"
+  }
+}

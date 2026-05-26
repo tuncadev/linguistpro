@@ -1,0 +1,2 @@
+ALTER TABLE "Enrollment"
+ADD COLUMN "trial" BOOLEAN NOT NULL DEFAULT false;

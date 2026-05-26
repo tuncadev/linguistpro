@@ -1,0 +1,136 @@
+{
+  "public": {
+    "hero": {
+      "badge": "Escuela oficial de idiomas Catalina Academy",
+      "titleLine1": "Desbloquea tu",
+      "titleLine2": "Potencial global.",
+      "description": "Redefine tu aprendizaje de idiomas. Desde fluidez conversacional hasta certificación profesional con tutores expertos.",
+      "browseCourses": "Ver cursos",
+      "meetFaculty": "Ver programas",
+      "joinLabel": "Únete a",
+      "joinSuffix": "egresados en todo el mundo",
+      "accredited": "Acreditado",
+      "accreditedSub": "Estándares globales de idiomas",
+      "studentAvatarAltPrefix": "Estudiante",
+      "classroomImageAlt": "Entorno de aula interactiva de Catalina Academy"
+    },
+    "languageCard": {
+      "description": "Programas dirigidos por expertos para todos los niveles.",
+      "departmentDetails": "Detalles del programa"
+    },
+    "home": {
+      "languageFacultiesTitle": "Cursos de idiomas extranjeros",
+      "languageFacultiesSubtitle": "Explora nuestros programas de idiomas y alcanza una fluidez real.",
+      "culturalTitleLine1": "Más que palabras:",
+      "culturalTitleLine2": "Fluidez cultural.",
+      "culturalDescription": "En Catalina Academy no enseñamos solo gramática. Te preparamos para la comunicación cultural en un mundo globalizado.",
+      "steps": {
+        "step1": {
+          "title": "Programas a medida",
+          "desc": "Encuentra cursos especializados para viajes, negocios o certificación académica."
+        },
+        "step2": {
+          "title": "Aprendizaje inmersivo",
+          "desc": "Practica con hablantes nativos en escenarios reales mediante nuestro campus virtual."
+        },
+        "step3": {
+          "title": "Tutores expertos",
+          "desc": "Cada tutor de Catalina es un profesional certificado con años de experiencia."
+        },
+        "step4": {
+          "title": "Certificación global",
+          "desc": "Obtén diplomas reconocidos que abren puertas internacionales."
+        }
+      },
+      "readyTitle": "¿Listo para la próxima convocatoria?",
+      "enrollToday": "Inscríbete hoy",
+      "certificationIncluded": "Certificación oficial de Catalina Academy incluida",
+      "studyImageAlt": "Estudio dedicado en Catalina Academy"
+    },
+    "catalog": {
+      "title": "Explorar cursos",
+      "subtitle": "Domina nuevos idiomas con los mejores tutores del mundo.",
+      "allLanguages": "Todos los idiomas",
+      "reviews": "Reseñas",
+      "viewDetails": "Ver detalles",
+      "allLevels": "Todos los niveles",
+      "languages": {
+        "uk": "Ucraniano",
+        "en": "Inglés",
+        "es": "Español",
+        "tr": "Turco",
+        "ru": "Язык",
+        "fr": "Francés",
+        "de": "Alemán",
+        "jp": "Japonés",
+        "ja": "Japonés"
+      }
+    },
+    "about": {
+      "missionLabel": "Nuestra misión",
+      "titleLine1": "El idioma es el puente",
+      "titleLine2": "hacia la conexión humana.",
+      "intro": "Fundado en 2024, LinguistPro nació de una frustración simple: aprender idiomas se sentía solitario y desconectado del uso real. Construimos una plataforma que prioriza la interacción humana con apoyo de IA.",
+      "values": {
+        "inclusion": {
+          "title": "Inclusión primero",
+          "desc": "Creemos que todos deben tener acceso a educación de calidad sin importar su ubicación."
+        },
+        "goal": {
+          "title": "Orientado a objetivos",
+          "desc": "No enseñamos solo palabras; enseñamos a comunicar con confianza y propósito."
+        },
+        "quality": {
+          "title": "Calidad garantizada",
+          "desc": "Cada tutor de la plataforma pasa por un proceso riguroso para asegurar excelencia."
+        }
+      },
+      "team": {
+        "title": "Conoce a nuestros educadores líderes",
+        "subtitle": "Un colectivo global de lingüistas, políglotas y tecnólogos dedicado a tu crecimiento.",
+        "joinFaculty": "Únete como tutor",
+        "members": {
+          "member1": {
+            "name": "Dr. Sarah Miller",
+            "role": "Head of English Pedagogy",
+            "bio": "PhD in Applied Linguistics with 15 years experience in ESL."
+          },
+          "member2": {
+            "name": "Mateo Garcia",
+            "role": "Spanish Curriculum Director",
+            "bio": "Award-winning educator focused on conversational fluency."
+          },
+          "member3": {
+            "name": "Yuki Sato",
+            "role": "Asian Languages Lead",
+            "bio": "Expert in JLPT preparation and cultural immersion techniques."
+          },
+          "member4": {
+            "name": "Amelie Dubois",
+            "role": "European Operations",
+            "bio": "Polyglot fluent in 6 languages, specializing in French phonetics."
+          }
+        }
+      }
+    },
+    "languageLanding": {
+      "breadcrumbHome": "Inicio",
+      "department": "Programa",
+      "masterPrefix": "Domina",
+      "masterSuffix": "con fluidez.",
+      "descriptionPrefix": "Catalina Academy ofrece la ruta más estructurada para dominar",
+      "descriptionSuffix": "mediante inmersión cultural y rigor académico.",
+      "viewCurriculum": "Ver plan completo",
+      "topRatedDepartment": "Programa mejor valorado",
+      "academicPathTitle": "Ruta académica",
+      "academicPathSubtitle": "Estructurado según el Marco Común Europeo de Referencia (MCER).",
+      "availableCourses": "Cursos disponibles",
+      "browsePrograms": "Ver todos los programas",
+      "diploma": "Diploma",
+      "liveMentoring": "Mentoría en vivo",
+      "startTrial": "Comenzar prueba",
+      "curriculumRefreshingPrefix": "Nuestro plan para",
+      "curriculumRefreshingSuffix": "se está actualizando. Las admisiones reabren pronto."
+    }
+  }
+}

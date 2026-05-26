@@ -1,0 +1,296 @@
+{
+  "content": {
+    "courses": {
+      "cmoh1rw09000zs6ydg19wq4gg": {
+        "title": "Fransız Gastronomisi ve Dil",
+        "description": "Fransızcayı mutfak sanatları ve şarap kültürü üzerinden öğrenin. Dile hakim olurken mutfak kelime dağarcığını da geliştirin.",
+        "tuitionLabel": "Eğitim Ücreti",
+        "discountLabel": "Kayıtta %65 İndirim",
+        "courseDirectorLabel": "Kurs Eğitmeni",
+        "learningObjectives": [
+          "Temel konuşma deyimlerinde ustalaşmak",
+          "Profesyonel ve resmi iletişim becerileri",
+          "Derin kültürel immersiyon ve tarih",
+          "Fonetik hakimiyet ve aksan azaltma",
+          "Günlük yaşam için pratik kelime dağarcığı",
+          "Catalina Academy Resmi Sertifikası"
+        ],
+        "enrollmentIncludes": [
+          "Müfredata ömür boyu erişim",
+          "Catalina Profesyonel Sertifikası",
+          "Özel Discord topluluğu"
+        ],
+        "syllabus": [
+          {
+            "title": "Temeller ve selamlaşmalar",
+            "lessons": [
+              {
+                "title": "İspanyol alfabesi ve fonetik",
+                "content": "Temel fonetik ve telaffuz ısınması."
+              },
+              {
+                "title": "Temel selamlaşmalar ve tanışmalar",
+                "content": "Gerçek ortamlarda kendinizi güvenle tanıtma."
+              },
+              {
+                "title": "Quiz: temel selamlaşmalar",
+                "content": "Kısa anlama ve hatırlama kontrolü."
+              },
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Günlük yaşam kelime dağarcığı",
+            "lessons": [
+              {
+                "title": "Restoranda: yemek siparişi",
+                "content": "Yemek ve sipariş için pratik ifadeler."
+              },
+              {
+                "title": "Sayılar, saat ve tarihler",
+                "content": "Yüksek frekanslı dilbilgisi ve günlük iletişim kalıpları."
+              },
+              {
+                "title": "Okuma: Madrid’de bir gün",
+                "content": "Kelime odaklı bağlamsal okuma görevi."
+              },
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Modül 3",
+            "lessons": [
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          }
+        ]
+      },
+      "cmohdtm0x000fs6hkplirs3y8": {
+        "title": "Yönetişim Taslağı",
+        "description": "Yönetişim incelemesi için taslak açıklama.",
+        "tuitionLabel": "Eğitim ücreti",
+        "discountLabel": "Kayıtta %65 indirim",
+        "courseDirectorLabel": "Kurs eğitmeni",
+        "learningObjectives": [
+          "Temel konuşma deyimlerine hakim olun",
+          "Profesyonel ve resmi iletişim becerileri",
+          "Kültür ve tarihe derinlemesine dalış",
+          "Fonetik ustalık ve aksan azaltma",
+          "Günlük yaşam için pratik kelime bilgisi",
+          "Catalina Academy resmi sertifikası"
+        ],
+        "enrollmentIncludes": [
+          "Müfredata ömür boyu erişim",
+          "Catalina profesyonel sertifikası",
+          "Özel Discord topluluğu"
+        ],
+        "syllabus": [
+          {
+            "title": "Modül 1",
+            "lessons": [
+              {
+                "title": "Ders 1",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Modül 2",
+            "lessons": [
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Modül 3",
+            "lessons": [
+              {
+                "title": "Yeni ders",
+                "content": null
+              }
+            ]
+          }
+        ]
+      },
+      "cmoh1rw01000ps6ydlj5w6mum": {
+        "title": "Profesyoneller için İş İngilizcesi",
+        "description": "Kurumsal iletişiminizi, sunum becerilerinizi ve profesyonel yazımınızı geliştirin. Küresel ortamlardaki ana dili İngilizce olmayanlar için idealdir.",
+        "tuitionLabel": "Eğitim ücreti",
+        "discountLabel": "Kayıtta %65 indirim",
+        "courseDirectorLabel": "Kurs eğitmeni",
+        "learningObjectives": [
+          "Temel konuşma deyimlerine hakim olun",
+          "Profesyonel ve resmi iletişim becerileri",
+          "Kültür ve tarihe derinlemesine dalış",
+          "Fonetik ustalık ve aksan azaltma",
+          "Günlük yaşam için pratik kelime bilgisi",
+          "Catalina Academy resmi sertifikası"
+        ],
+        "enrollmentIncludes": [
+          "Müfredata ömür boyu erişim",
+          "Catalina profesyonel sertifikası",
+          "Özel Discord topluluğu"
+        ],
+        "syllabus": [
+          {
+            "title": "Temeller ve selamlaşmalar",
+            "lessons": [
+              {
+                "title": "İspanyol alfabesi ve fonetik",
+                "content": "Temel fonetik ve telaffuz alıştırması."
+              },
+              {
+                "title": "Temel selamlaşma ve tanışma",
+                "content": "Gerçek ortamlarda kendinizi güvenle tanıtma yolları."
+              },
+              {
+                "title": "Quiz: temel selamlaşmalar",
+                "content": "Kısa anlama ve hatırlama kontrolü."
+              }
+            ]
+          },
+          {
+            "title": "Günlük yaşam kelime bilgisi",
+            "lessons": [
+              {
+                "title": "Restoranda: yemek siparişi",
+                "content": "Yemek ve sipariş için pratik ifadeler."
+              },
+              {
+                "title": "Sayılar, saat ve tarihler",
+                "content": "Sık kullanılan dil bilgisi ve günlük iletişim kalıpları."
+              },
+              {
+                "title": "Okuma: Madrid’de bir gün",
+                "content": "Kelime odaklı bağlamsal okuma çalışması."
+              }
+            ]
+          }
+        ]
+      },
+      "cmoh1rvzq000fs6ydg9q1m308": {
+        "title": "Konuşma İspanyolcasında Ustalık",
+        "description": "Günlük İspanyolca diyaloglar ve gezginler için temel dil bilgisine derinlemesine bir giriş. Gerçek yaşam senaryolarında güvenle hareket etmeyi öğrenin.",
+        "tuitionLabel": "Eğitim ücreti",
+        "discountLabel": "Kayıtta %65 indirim",
+        "courseDirectorLabel": "Kurs eğitmeni",
+        "learningObjectives": [
+          "Temel konuşma deyimlerine hakim olun",
+          "Profesyonel ve resmi iletişim becerileri",
+          "Kültür ve tarihe derinlemesine dalış",
+          "Fonetik ustalık ve aksan azaltma",
+          "Günlük yaşam için pratik kelime bilgisi",
+          "Catalina Academy resmi sertifikası"
+        ],
+        "enrollmentIncludes": [
+          "Müfredata ömür boyu erişim",
+          "Catalina profesyonel sertifikası",
+          "Özel Discord topluluğu"
+        ],
+        "syllabus": [
+          {
+            "title": "Temeller ve selamlaşmalar",
+            "lessons": [
+              {
+                "title": "İspanyol alfabesi ve fonetik",
+                "content": "Temel fonetik ve telaffuz alıştırması."
+              },
+              {
+                "title": "Temel selamlaşma ve tanışma",
+                "content": "Gerçek ortamlarda kendinizi güvenle tanıtma yolları."
+              },
+              {
+                "title": "Quiz: temel selamlaşmalar",
+                "content": "Kısa anlama ve hatırlama kontrolü."
+              }
+            ]
+          },
+          {
+            "title": "Günlük yaşam kelime bilgisi",
+            "lessons": [
+              {
+                "title": "Restoranda: yemek siparişi",
+                "content": "Yemek ve sipariş için pratik ifadeler."
+              },
+              {
+                "title": "Sayılar, saat ve tarihler",
+                "content": "Sık kullanılan dil bilgisi ve günlük iletişim kalıpları."
+              },
+              {
+                "title": "Okuma: Madrid’de bir gün",
+                "content": "Kelime odaklı bağlamsal okuma çalışması."
+              }
+            ]
+          }
+        ]
+      },
+      "cmofwwyhp000as62gf9dqicct": {
+        "title": "Pratik İngilizce Konuşma",
+        "description": "Günlük konuşma, telaffuz ve özgüvene odaklanan uygulamalı bir İngilizce konuşma kursu.",
+        "tuitionLabel": "Eğitim ücreti",
+        "discountLabel": "Kayıtta %65 indirim",
+        "courseDirectorLabel": "Kurs eğitmeni",
+        "learningObjectives": [
+          "Temel konuşma deyimlerine hakim olun",
+          "Profesyonel ve resmi iletişim becerileri",
+          "Kültür ve tarihe derinlemesine dalış",
+          "Fonetik ustalık ve aksan azaltma",
+          "Günlük yaşam için pratik kelime bilgisi",
+          "Catalina Academy resmi sertifikası"
+        ],
+        "enrollmentIncludes": [
+          "Müfredata ömür boyu erişim",
+          "Catalina profesyonel sertifikası",
+          "Özel Discord topluluğu"
+        ],
+        "syllabus": [
+          {
+            "title": "Temeller ve selamlaşmalar",
+            "lessons": [
+              {
+                "title": "İspanyol alfabesi ve fonetik",
+                "content": "Temel fonetik ve telaffuz alıştırması."
+              },
+              {
+                "title": "Temel selamlaşma ve tanışma",
+                "content": "Gerçek ortamlarda kendinizi güvenle tanıtma yolları."
+              },
+              {
+                "title": "Quiz: temel selamlaşmalar",
+                "content": "Kısa anlama ve hatırlama kontrolü."
+              }
+            ]
+          },
+          {
+            "title": "Günlük yaşam kelime bilgisi",
+            "lessons": [
+              {
+                "title": "Restoranda: yemek siparişi",
+                "content": "Yemek ve sipariş için pratik ifadeler."
+              },
+              {
+                "title": "Sayılar, saat ve tarihler",
+                "content": "Sık kullanılan dil bilgisi ve günlük iletişim kalıpları."
+              },
+              {
+                "title": "Okuma: Madrid’de bir gün",
+                "content": "Kelime odaklı bağlamsal okuma çalışması."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

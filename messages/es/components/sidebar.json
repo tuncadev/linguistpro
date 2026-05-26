@@ -1,0 +1,13 @@
+{
+  "sidebar": {
+    "mainMenu": "Menú principal",
+    "administration": "Administración",
+    "adminCoursesPage": "Página de cursos",
+    "adminTutorsPage": "Página de tutores",
+    "adminManageUsers": "Gestionar usuarios",
+    "adminTaxonomies": "Taxonomías",
+    "goPro": "Go Pro",
+    "goProDescription": "Desbloquea herramientas avanzadas de aprendizaje y certificados.",
+    "upgradeNow": "Mejorar ahora"
+  }
+}
