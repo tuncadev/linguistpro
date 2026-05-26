@@ -2,10 +2,18 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../App';
 import { ChevronLeft, CheckCircle, FileText, Settings, Play, Download, MessageSquare } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const LessonView: React.FC = () => {
+  const t = useTranslations('views.lesson');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const { selectedCourse, activeLesson, setActiveLesson, setView } = useContext(AppContext);
   const [activeTab, setActiveTab] = useState<'resources' | 'notes' | 'discussion'>('resources');
+  const tabLabels: Record<'resources' | 'notes' | 'discussion', string> = {
+    resources: tx('tabs.resources', 'Resources'),
+    notes: tx('tabs.notes', 'Notes'),
+    discussion: tx('tabs.discussion', 'Discussion'),
+  };
 
   if (!selectedCourse || !activeLesson) return null;
 
@@ -21,7 +29,9 @@ const LessonView: React.FC = () => {
           </button>
           <div className="h-6 w-px bg-white/10"></div>
           <div className="flex flex-col -space-y-0.5">
-             <span className="text-[10px] font-black text-[#f47361] uppercase tracking-[0.2em]">Catalina Academy</span>
+             <span className="text-[10px] font-black text-[#f47361] uppercase tracking-[0.2em]">
+              {tx('brand', 'Catalina Academy')}
+             </span>
              <h1 className="text-xs font-bold text-white truncate max-w-xs">{selectedCourse.title}</h1>
           </div>
         </div>
@@ -30,10 +40,10 @@ const LessonView: React.FC = () => {
             <div className="h-1.5 w-32 bg-white/10 rounded-full overflow-hidden">
               <div className="bg-[#f47361] h-full w-[12%]"></div>
             </div>
-            <span className="text-[10px] font-black text-white/50 uppercase tracking-widest">12% Completed</span>
+            <span className="text-[10px] font-black text-white/50 uppercase tracking-widest">{tx('completed', '12% Completed')}</span>
           </div>
           <button className="bg-[#f47361] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#e06352] transition-colors shadow-lg shadow-black/20">
-            Exam Ready
+            {tx('examReady', 'Exam Ready')}
           </button>
         </div>
       </header>
@@ -41,7 +51,7 @@ const LessonView: React.FC = () => {
       <div className="flex-1 flex overflow-hidden">
         <aside className="w-80 border-r border-white/5 bg-[#2d3e50] flex flex-col shadow-2xl">
           <div className="p-5 border-b border-white/5">
-            <h2 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Syllabus Progress</h2>
+            <h2 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">{tx('syllabusProgress', 'Syllabus Progress')}</h2>
           </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             {selectedCourse.syllabus.map((section) => (
@@ -64,7 +74,9 @@ const LessonView: React.FC = () => {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className={`text-xs font-bold truncate ${activeLesson.id === lesson.id ? 'text-white' : ''}`}>{lesson.title}</p>
-                      <span className="text-[9px] font-black text-white/30 uppercase tracking-widest mt-1 block">{lesson.duration} Video</span>
+                      <span className="text-[9px] font-black text-white/30 uppercase tracking-widest mt-1 block">
+                        {lesson.duration} {tx('video', 'Video')}
+                      </span>
                     </div>
                   </button>
                 ))}
@@ -81,7 +93,7 @@ const LessonView: React.FC = () => {
                   <Play className="w-12 h-12 fill-current" />
                 </button>
                 <div className="mt-6 space-y-1">
-                  <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">Module Active</p>
+                  <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em]">{tx('moduleActive', 'Module Active')}</p>
                   <p className="text-white font-black text-lg">{activeLesson.title}</p>
                 </div>
              </div>
@@ -102,13 +114,13 @@ const LessonView: React.FC = () => {
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center justify-between mb-10 border-b border-slate-200 pb-5">
                 <div className="flex gap-10">
-                  {['resources', 'notes', 'discussion'].map(tab => (
+                  {(['resources', 'notes', 'discussion'] as const).map(tab => (
                     <button 
                       key={tab}
-                      onClick={() => setActiveTab(tab as any)}
+                      onClick={() => setActiveTab(tab)}
                       className={`pb-5 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 transition-all ${activeTab === tab ? 'border-[#f47361] text-[#2d3e50]' : 'border-transparent text-slate-400'}`}
                     >
-                      {tab}
+                      {tabLabels[tab]}
                     </button>
                   ))}
                 </div>
@@ -118,8 +130,8 @@ const LessonView: React.FC = () => {
                 {activeTab === 'resources' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
-                      { name: 'Catalina Essential Vocab.pdf', size: '2.4 MB' },
-                      { name: 'Conversation Cheat-Sheet.pdf', size: '1.1 MB' },
+                      { name: tx('resources.fileOne', 'Catalina Essential Vocab.pdf'), size: '2.4 MB' },
+                      { name: tx('resources.fileTwo', 'Conversation Cheat-Sheet.pdf'), size: '1.1 MB' },
                     ].map((file, i) => (
                       <div key={i} className="bg-white border border-slate-200 p-5 rounded-2xl flex items-center justify-between hover:border-[#f47361] transition-all cursor-pointer group shadow-sm">
                         <div className="flex items-center gap-4">
@@ -140,22 +152,35 @@ const LessonView: React.FC = () => {
                   <div className="space-y-4">
                     <textarea 
                       className="w-full bg-white border border-slate-200 rounded-3xl p-8 text-slate-700 text-sm outline-none focus:ring-4 focus:ring-[#f47361]/10 focus:border-[#f47361] transition-all min-h-[250px] shadow-inner"
-                      placeholder="Catalina Academy Smart-Notes: Type key takeaways here..."
+                      placeholder={tx('notesPlaceholder', 'Catalina Academy Smart-Notes: Type key takeaways here...')}
                     />
                     <div className="flex justify-end">
-                      <button className="bg-[#2d3e50] text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#f47361] transition-all">Store Note</button>
+                      <button className="bg-sky-600 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#f47361] transition-all">
+                        {tx('storeNote', 'Store Note')}
+                      </button>
                     </div>
                   </div>
                 )}
                 {activeTab === 'discussion' && (
                   <div className="space-y-6">
                     <div className="bg-white p-6 rounded-3xl border border-slate-200 flex items-start gap-5 shadow-sm">
-                      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=50" className="w-12 h-12 rounded-full object-cover shadow-md" />
+                      <img
+                        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=50"
+                        className="w-12 h-12 rounded-full object-cover shadow-md"
+                        alt={tx('discussionAvatarAlt', 'Discussion avatar')}
+                      />
                       <div className="flex-1">
-                        <p className="text-xs font-black text-[#2d3e50] uppercase tracking-widest mb-1">Mark Thompson <span className="text-slate-400 ml-3 lowercase font-medium tracking-normal">2 days ago</span></p>
-                        <p className="text-sm text-slate-600 leading-relaxed">The grammar breakdown in the second module was incredibly helpful. Does anyone have additional tips for this dialect?</p>
+                        <p className="text-xs font-black text-[#2d3e50] uppercase tracking-widest mb-1">
+                          {tx('sampleAuthor', 'Mark Thompson')} <span className="text-slate-400 ml-3 lowercase font-medium tracking-normal">{tx('sampleAgo', '2 days ago')}</span>
+                        </p>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          {tx(
+                            'sampleComment',
+                            'The grammar breakdown in the second module was incredibly helpful. Does anyone have additional tips for this dialect?'
+                          )}
+                        </p>
                         <button className="mt-4 text-[10px] text-[#f47361] font-black uppercase tracking-widest flex items-center gap-2 hover:translate-x-1 transition-transform">
-                          <MessageSquare className="w-3.5 h-3.5" /> Post Reply
+                          <MessageSquare className="w-3.5 h-3.5" /> {tx('postReply', 'Post Reply')}
                         </button>
                       </div>
                     </div>

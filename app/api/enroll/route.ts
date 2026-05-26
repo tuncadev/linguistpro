@@ -19,6 +19,7 @@ const listQuerySchema = z.object({
 const createEnrollmentSchema = z.object({
   courseId: z.string().trim().min(1),
   studentId: z.string().trim().min(1).optional(),
+  trial: z.boolean().optional(),
 });
 
 function serializeEnrollment(
@@ -46,6 +47,8 @@ function serializeEnrollment(
     id: enrollment.id,
     courseId: enrollment.courseId,
     studentId: enrollment.studentId,
+    trial: enrollment.trial,
+    enrollmentType: enrollment.trial ? "TRIAL" : "PAID",
     createdAt: enrollment.createdAt.toISOString(),
     course: enrollment.course,
     student: enrollment.student,
@@ -116,7 +119,12 @@ export const POST = withApiHandler(async (req: NextRequest) => {
   const payload = await parseJsonBody(req, createEnrollmentSchema);
   const studentId =
     auth.session.role === "ADMIN" ? payload.studentId ?? auth.session.id : auth.session.id;
+  const trial = payload.trial === true;
   const idempotencyKey = req.headers.get("idempotency-key") ?? null;
+
+  if (trial && auth.session.role !== "ADMIN") {
+    forbidden("Only admin can create trial enrollments");
+  }
 
   const [student, course] = await Promise.all([
     prisma.user.findUnique({
@@ -151,6 +159,7 @@ export const POST = withApiHandler(async (req: NextRequest) => {
         data: {
           courseId: payload.courseId,
           studentId,
+          trial,
         },
         include: {
           course: {
@@ -160,11 +169,6 @@ export const POST = withApiHandler(async (req: NextRequest) => {
             select: { id: true, name: true, email: true, role: true },
           },
         },
-      });
-
-      await tx.course.update({
-        where: { id: payload.courseId },
-        data: { studentCount: { increment: 1 } },
       });
 
       return enrollment;

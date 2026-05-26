@@ -1,0 +1,8 @@
+{
+  "api": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "validationFailed": "Validation failed",
+    "internalError": "Internal server error"
+  }
+}

@@ -1,4 +1,4 @@
-import { CourseStatus, Prisma, Role } from "@prisma/client";
+import { CourseStatus, LessonType, Prisma, Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSessionFromRequest } from "@/lib/auth/request-session";
@@ -20,6 +20,9 @@ import { parseJsonBody, parseQuery } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 import { requireApprovedTutor } from "@/lib/tutors/governance";
+import { resolveLocaleFromRequest } from "@/lib/i18n/api-messages";
+import { localizeCourseFromMessages } from "@/lib/courses/localization";
+import { loadLocaleMessagesRaw } from "@/lib/i18n/translation-registry";
 
 const listQuerySchema = z.object({
   q: z.string().trim().max(160).optional(),
@@ -33,16 +36,49 @@ const listQuerySchema = z.object({
   skip: z.coerce.number().int().min(0).optional(),
 });
 
+const dataImageUrlPattern = /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=\s]+$/;
+
+const imageUrlSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .refine(
+    (value) =>
+      value.startsWith("http://") ||
+      value.startsWith("https://") ||
+      dataImageUrlPattern.test(value),
+    "Invalid image URL format"
+  );
+
 const createCourseSchema = z.object({
   title: z.string().trim().min(3).max(160),
   description: z.string().trim().min(10).max(5000),
   price: z.number().min(0).max(100000),
-  imageUrl: z.string().trim().url().optional(),
+  imageUrl: imageUrlSchema.optional(),
   tutorId: z.string().trim().min(1).optional(),
   status: z.nativeEnum(CourseStatus).optional(),
   languageId: z.string().trim().min(1),
   levelId: z.string().trim().min(1),
   syllabus: z.array(z.string().trim().min(1).max(180)).max(50).optional(),
+  syllabusSections: z
+    .array(
+      z.object({
+        title: z.string().trim().min(1).max(180),
+        lessons: z
+          .array(
+            z.object({
+              title: z.string().trim().min(1).max(180),
+              duration: z.string().trim().regex(/^\d{1,3}:[0-5]\d$/).optional(),
+              type: z.enum(["video", "quiz", "reading"]).optional(),
+              content: z.string().trim().max(10_000).optional(),
+            })
+          )
+          .max(500)
+          .optional(),
+      })
+    )
+    .max(100)
+    .optional(),
   learningObjectives: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
   enrollmentIncludes: z.array(z.string().trim().min(1).max(220)).max(20).optional(),
   tuitionLabel: z.string().trim().min(1).max(80).optional(),
@@ -51,9 +87,25 @@ const createCourseSchema = z.object({
   statusReason: z.string().trim().max(500).optional(),
 });
 
+function parseDurationToSeconds(duration?: string): number | null {
+  if (!duration) {
+    return null;
+  }
+
+  const [minutesRaw, secondsRaw] = duration.split(":");
+  const minutes = Number(minutesRaw);
+  const seconds = Number(secondsRaw);
+  if (!Number.isFinite(minutes) || !Number.isFinite(seconds)) {
+    return null;
+  }
+  return minutes * 60 + seconds;
+}
+
 export const GET = withApiHandler(async (req: NextRequest) => {
   const parsed = parseQuery(req, listQuerySchema);
   const session = await getSessionFromRequest(req);
+  const locale = resolveLocaleFromRequest(req);
+  const localeMessages = await loadLocaleMessagesRaw(locale);
   const where: Prisma.CourseWhereInput = {};
   const query = parsed;
 
@@ -100,7 +152,7 @@ export const GET = withApiHandler(async (req: NextRequest) => {
   });
 
   return NextResponse.json({
-    data: courses.map(serializeCourse),
+    data: courses.map((course) => localizeCourseFromMessages(serializeCourse(course), localeMessages)),
     meta: {
       count: courses.length,
       take: query.take ?? 20,
@@ -194,7 +246,30 @@ export const POST = withApiHandler(async (req: NextRequest) => {
         tuitionLabel: payload.tuitionLabel ?? DEFAULT_COURSE_TUITION_LABEL,
         discountLabel: payload.discountLabel ?? DEFAULT_COURSE_DISCOUNT_LABEL,
         courseDirectorLabel: payload.courseDirectorLabel ?? DEFAULT_COURSE_DIRECTOR_LABEL,
-        syllabusSections: payload.syllabus?.length
+        syllabusSections: payload.syllabusSections?.length
+          ? {
+              create: payload.syllabusSections.map((section, sectionIndex) => ({
+                title: section.title,
+                position: sectionIndex + 1,
+                lessons: section.lessons?.length
+                  ? {
+                      create: section.lessons.map((lesson, lessonIndex) => ({
+                        title: lesson.title,
+                        type:
+                          lesson.type === "quiz"
+                            ? LessonType.QUIZ
+                            : lesson.type === "reading"
+                            ? LessonType.READING
+                            : LessonType.VIDEO,
+                        durationSeconds: parseDurationToSeconds(lesson.duration),
+                        content: lesson.content ?? null,
+                        position: lessonIndex + 1,
+                      })),
+                    }
+                  : undefined,
+              })),
+            }
+          : payload.syllabus?.length
           ? {
               create: payload.syllabus.map((title, index) => ({
                 title,

@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { formatDate } from "@/lib/i18n/format";
 
 type TutorOnboarding = {
   id: string;
@@ -24,6 +26,18 @@ type TutorCourse = {
 };
 
 export default function TutorMyCoursesPage() {
+  const t = useTranslations("dashboard.tutorMyCourses");
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
+  const formatTutorApprovalStatus = (status: TutorOnboarding["tutorApprovalStatus"] | null | undefined) => {
+    const normalized = (status ?? "PENDING").toUpperCase();
+    return tx(`approvalValues.${normalized}`, normalized);
+  };
+  const formatCourseStatus = (status: TutorCourse["status"]) => {
+    const normalized = status.toUpperCase();
+    return tx(`courseStatus.${normalized}`, normalized);
+  };
+  const locale = useLocale();
+  const formatLocalizedDate = (value: string) => formatDate(value, locale);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +64,7 @@ export default function TutorMyCoursesPage() {
         const coursesJson = await coursesRes.json();
 
         if (!onboardingRes.ok || !coursesRes.ok) {
-          throw new Error(onboardingJson.error || coursesJson.error || "Failed to load tutor dashboard.");
+          throw new Error(onboardingJson.error || coursesJson.error || tx("errors.loadFailed", "Failed to load tutor dashboard."));
         }
 
         if (!isMounted) return;
@@ -61,7 +75,7 @@ export default function TutorMyCoursesPage() {
         setLocation(onboardingData.location ?? "");
         setLanguagesSpoken(onboardingData.languagesSpoken ?? "");
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : "Failed to load tutor dashboard.");
+        setError(loadError instanceof Error ? loadError.message : tx("errors.loadFailed", "Failed to load tutor dashboard."));
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -94,12 +108,12 @@ export default function TutorMyCoursesPage() {
       });
       const payload = await response.json();
       if (!response.ok) {
-        throw new Error(payload.error || "Failed to update tutor profile.");
+        throw new Error(payload.error || tx("errors.updateFailed", "Failed to update tutor profile."));
       }
       setOnboarding(payload.data as TutorOnboarding);
-      setStatus("Tutor profile updated.");
+      setStatus(tx("status.updated", "Tutor profile updated."));
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Failed to update tutor profile.");
+      setError(submitError instanceof Error ? submitError.message : tx("errors.updateFailed", "Failed to update tutor profile."));
     } finally {
       setSaving(false);
     }
@@ -118,12 +132,12 @@ export default function TutorMyCoursesPage() {
       });
       const payload = await response.json();
       if (!response.ok) {
-        throw new Error(payload.error || "Failed to submit tutor profile for approval.");
+        throw new Error(payload.error || tx("errors.submitFailed", "Failed to submit tutor profile for approval."));
       }
       setOnboarding(payload.data as TutorOnboarding);
-      setStatus("Tutor profile submitted for admin approval.");
+      setStatus(tx("status.submitted", "Tutor profile submitted for admin approval."));
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Failed to submit tutor profile for approval.");
+      setError(submitError instanceof Error ? submitError.message : tx("errors.submitFailed", "Failed to submit tutor profile for approval."));
     } finally {
       setSaving(false);
     }
@@ -132,7 +146,7 @@ export default function TutorMyCoursesPage() {
   if (loading) {
     return (
       <main className="p-4 lg:p-6">
-        <p className="text-sm text-slate-500">Loading tutor governance workflow...</p>
+        <p className="text-sm text-slate-500">{tx("loading", "Loading tutor governance workflow...")}</p>
       </main>
     );
   }
@@ -141,31 +155,41 @@ export default function TutorMyCoursesPage() {
     <main className="p-4 lg:p-6">
       <div className="mx-auto max-w-6xl space-y-6">
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h1 className="text-3xl font-black text-slate-900">Tutor Onboarding and Course Governance</h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Approval status:{" "}
-            <span className="font-black text-slate-900">{onboarding?.tutorApprovalStatus ?? "PENDING"}</span>
-          </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h1 className="text-3xl font-black text-slate-900">{tx("title", "Tutor Onboarding and Course Governance")}</h1>
+              <p className="mt-2 text-sm text-slate-600">
+                {tx("approvalStatus", "Approval status")}:{" "}
+                <span className="font-black text-slate-900">{formatTutorApprovalStatus(onboarding?.tutorApprovalStatus)}</span>
+              </p>
+            </div>
+            <Link
+              href="/settings"
+              className="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100"
+            >
+              {tx("actions.personalInfo", "Personal Information")}
+            </Link>
+          </div>
           {onboarding?.tutorApprovalNotes ? (
-            <p className="mt-2 text-sm font-semibold text-amber-700">Admin note: {onboarding.tutorApprovalNotes}</p>
+            <p className="mt-2 text-sm font-semibold text-amber-700">{tx("adminNote", "Admin note")}: {onboarding.tutorApprovalNotes}</p>
           ) : null}
           {onboarding?.tutorApprovedAt ? (
             <p className="mt-1 text-xs text-emerald-700">
-              Approved on {new Date(onboarding.tutorApprovedAt).toLocaleDateString()}
+              {tx("approvedOn", "Approved on")} {formatLocalizedDate(onboarding.tutorApprovedAt)}
             </p>
           ) : null}
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr]">
           <form onSubmit={onSaveProfile} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-black text-slate-900">Tutor Profile Governance</h2>
+            <h2 className="text-xl font-black text-slate-900">{tx("form.title", "Tutor Profile Governance")}</h2>
             <p className="mt-2 text-sm text-slate-600">
-              Update governance-required profile fields before submitting for approval.
+              {tx("form.subtitle", "Update governance-required profile fields before submitting for approval.")}
             </p>
 
             <div className="mt-5 grid gap-4">
               <label className="grid gap-2 text-sm font-semibold text-slate-700">
-                Bio
+                {tx("form.bio", "Bio")}
                 <textarea
                   value={bio}
                   onChange={(event) => setBio(event.target.value)}
@@ -175,7 +199,7 @@ export default function TutorMyCoursesPage() {
                 />
               </label>
               <label className="grid gap-2 text-sm font-semibold text-slate-700">
-                Location
+                {tx("form.location", "Location")}
                 <input
                   value={location}
                   onChange={(event) => setLocation(event.target.value)}
@@ -184,7 +208,7 @@ export default function TutorMyCoursesPage() {
                 />
               </label>
               <label className="grid gap-2 text-sm font-semibold text-slate-700">
-                Languages spoken
+                {tx("form.languagesSpoken", "Languages spoken")}
                 <input
                   value={languagesSpoken}
                   onChange={(event) => setLanguagesSpoken(event.target.value)}
@@ -201,46 +225,46 @@ export default function TutorMyCoursesPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-xl bg-[#2d3e50] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1a2530] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-xl bg-sky-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {saving ? "Saving..." : "Save Profile"}
+                {saving ? tx("form.saving", "Saving...") : tx("form.saveProfile", "Save Profile")}
               </button>
               <button
                 type="button"
                 disabled={saving || onboarding?.tutorApprovalStatus === "APPROVED"}
                 onClick={onSubmitForApproval}
-                className="rounded-xl border border-[#2d3e50] px-6 py-3 text-sm font-bold text-[#2d3e50] transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-xl border border-sky-300 px-6 py-3 text-sm font-bold text-sky-700 transition hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Submit for Approval
+                {tx("form.submitForApproval", "Submit for Approval")}
               </button>
               <Link
                 href="/admin/tutors"
                 className="rounded-xl border border-slate-300 px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-100"
               >
-                Open Admin Tutors
+                {tx("form.openAdminTutors", "Open Admin Tutors")}
               </Link>
             </div>
           </form>
 
           <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-black text-slate-900">My Course Pipeline</h2>
-            <p className="mt-2 text-sm text-slate-600">Total authored courses: {courses.length}</p>
+            <h2 className="text-xl font-black text-slate-900">{tx("pipeline.title", "My Course Pipeline")}</h2>
+            <p className="mt-2 text-sm text-slate-600">{tx("pipeline.totalAuthored", "Total authored courses")}: {courses.length}</p>
             <ul className="mt-4 space-y-2">
               {courses.length === 0 ? (
-                <li className="text-sm text-slate-500">No authored courses yet.</li>
+                <li className="text-sm text-slate-500">{tx("pipeline.empty", "No authored courses yet.")}</li>
               ) : (
                 courses.map((course) => (
                   <li key={course.id} className="rounded-xl border border-slate-200 px-3 py-2">
                     <p className="text-sm font-bold text-slate-900">{course.title}</p>
                     <p className="text-xs text-slate-500">
-                      Status: {course.status} · Rating {course.rating.toFixed(1)} · Reviews {course.reviews}
+                      {tx("pipeline.status", "Status")}: {formatCourseStatus(course.status)} · {tx("pipeline.rating", "Rating")} {course.rating.toFixed(1)} · {tx("pipeline.reviews", "Reviews")} {course.reviews}
                     </p>
                   </li>
                 ))
               )}
             </ul>
             <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
-              Approved tutors can submit draft courses for review and publishing path.
+              {tx("pipeline.hint", "Approved tutors can submit draft courses for review and publishing path.")}
             </p>
           </aside>
         </section>

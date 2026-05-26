@@ -40,6 +40,8 @@ export const GET = withApiHandler(async (req: NextRequest) => {
       allowed: true,
       reason: access.reason,
       courseStatus: access.courseStatus ?? null,
+      enrollmentAccessType: access.enrollmentAccessType ?? null,
+      trialLessonLimit: access.trialLessonLimit ?? null,
     },
   });
 });

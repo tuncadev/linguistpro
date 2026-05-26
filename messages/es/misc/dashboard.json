@@ -1,0 +1,52 @@
+{
+  "dashboard": {
+    "adminLayout": {
+      "tabs": {
+        "settings": "Configuración"
+      }
+    },
+    "studentMyLearning": {
+      "actions": {
+        "personalInfo": "Información personal"
+      }
+    },
+    "tutorMyCourses": {
+      "actions": {
+        "personalInfo": "Información personal"
+      }
+    },
+    "settings": {
+      "title": "Información personal",
+      "subtitle": "Actualiza tu apodo, avatar y datos básicos del perfil.",
+      "loading": "Cargando configuración de información personal...",
+      "actions": {
+        "backToDashboard": "Volver al panel",
+        "goToLogin": "Ir a iniciar sesión",
+        "save": "Guardar cambios",
+        "saving": "Guardando..."
+      },
+      "fields": {
+        "avatarLink": "Enlace del avatar",
+        "avatarUpload": "Subir imagen de avatar",
+        "nickname": "Apodo",
+        "email": "Correo electrónico",
+        "bio": "Biografía"
+      },
+      "avatar": {
+        "alt": "Vista previa del avatar del perfil"
+      },
+      "status": {
+        "saved": "Información personal actualizada.",
+        "uploadReady": "Avatar subido. Guarda los cambios para aplicar."
+      },
+      "errors": {
+        "loadFailed": "No se pudo cargar la configuración personal.",
+        "saveFailed": "No se pudo guardar la información personal.",
+        "unauthorized": "Debes iniciar sesión para administrar la configuración.",
+        "invalidFileType": "Selecciona un archivo de imagen.",
+        "fileTooLarge": "La imagen del avatar debe ser de 2 MB o menos.",
+        "uploadFailed": "No se pudo leer la imagen subida."
+      }
+    }
+  }
+}

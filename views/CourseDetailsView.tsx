@@ -4,6 +4,7 @@ import { Star, Clock, Users, ChevronDown, ChevronRight, CheckCircle, Award, Play
 import { UserRole } from '../types';
 import { enrollInCourse } from '../services/enrollmentApiService';
 import { updateAdminCourse } from '../services/adminCourseCrudApiService';
+import { useTranslations } from 'next-intl';
 
 type EditableLesson = {
   id: string;
@@ -34,6 +35,14 @@ type CourseEditDraft = {
 
 function createRowId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+}
+
+function normalizeLevelKey(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
 }
 
 function ensureTextRows(items: string[]): string[] {
@@ -72,6 +81,8 @@ function buildDraftFromCourse(course: NonNullable<React.ContextType<typeof AppCo
 }
 
 const CourseDetailsView: React.FC = () => {
+  const t = useTranslations('views.courseDetails');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const {
     selectedCourse,
     tutors,
@@ -130,10 +141,24 @@ const CourseDetailsView: React.FC = () => {
 
   if (!selectedCourse || !draft) return null;
 
-  const isAdmin = user?.role === UserRole.ADMIN;
+  const isAdmin = false;
   const tutor = tutors.find((candidate) => candidate.id === selectedCourse.tutorId);
   const language = languages.find((candidate) => candidate.id === selectedCourse.languageId);
   const level = levels.find((candidate) => candidate.id === selectedCourse.levelId);
+  const translateLevelName = (name?: string | null): string => {
+    if (!name) {
+      return tx('levels.unknown', 'Unknown');
+    }
+    const key = normalizeLevelKey(name);
+    return t.has(`levels.${key}`) ? t(`levels.${key}`) : name;
+  };
+
+  const reviewsLabel = t.has('verifiedReviewsCount')
+    ? t('verifiedReviewsCount', { count: selectedCourse.reviews })
+    : `${selectedCourse.reviews} ${tx('verifiedReviews', 'verified reviews')}`;
+  const currentlyLearningLabel = t.has('currentlyLearningCount')
+    ? t('currentlyLearningCount', { count: selectedCourse.studentCount })
+    : `${selectedCourse.studentCount} ${tx('currentlyLearning', 'currently learning')}`;
 
   const toggleSection = (id: string) => {
     setOpenSection(openSection === id ? null : id);
@@ -141,7 +166,7 @@ const CourseDetailsView: React.FC = () => {
 
   const startCourse = () => {
     if (!firstLesson) {
-      alert('This course has no lessons yet.');
+      alert(tx('alerts.noLessons', 'This course has no lessons yet.'));
       return;
     }
 
@@ -151,12 +176,12 @@ const CourseDetailsView: React.FC = () => {
 
   const handleEnroll = async () => {
     if (!user) {
-      alert('Admissions require a Student account.');
+      alert(tx('alerts.studentRequired', 'Admissions require a Student account.'));
       return;
     }
 
     if (user.role !== UserRole.STUDENT) {
-      alert('Please sign in with a Student account to enroll.');
+      alert(tx('alerts.studentOnly', 'Please sign in with a Student account to enroll.'));
       return;
     }
 
@@ -170,7 +195,7 @@ const CourseDetailsView: React.FC = () => {
     }
 
     console.warn('enrollInCourse failed, using local fallback', result.errorMessage);
-    alert(result.errorMessage || 'Enrollment service unavailable. Starting in preview mode.');
+    alert(result.errorMessage || tx('alerts.enrollmentUnavailable', 'Enrollment service unavailable. Starting in preview mode.'));
     startCourse();
   };
 
@@ -231,42 +256,56 @@ const CourseDetailsView: React.FC = () => {
     const price = Number(draft.price);
 
     if (!title || !description || !Number.isFinite(price) || price < 0) {
-      setEditError('Please provide valid title, description, and price.');
+      setEditError(tx('errors.invalidCoreFields', 'Please provide valid title, description, and price.'));
       return;
     }
 
     setIsSaving(true);
     setEditError(null);
 
-    const updated = await updateAdminCourse(selectedCourse.id, {
-      title,
-      description,
+    const normalizedLearningObjectives = draft.learningObjectives.map((item) => item.trim()).filter(Boolean);
+    const normalizedEnrollmentIncludes = draft.enrollmentIncludes.map((item) => item.trim()).filter(Boolean);
+    const normalizedSyllabusSections = draft.syllabus
+      .map((section) => ({
+        title: section.title.trim(),
+        lessons: section.lessons.map((lesson) => ({
+          title: lesson.title.trim(),
+          duration: lesson.duration.trim() || undefined,
+          type: lesson.type,
+          content: lesson.content?.trim() || undefined,
+        })),
+      }))
+      .filter((section) => Boolean(section.title));
+
+    const mutationPayload: Parameters<typeof updateAdminCourse>[1] = {
       price,
       tutorId: draft.tutorId,
       levelId: draft.levelId,
+      title,
+      description,
       tuitionLabel: draft.tuitionLabel.trim() || undefined,
       discountLabel: draft.discountLabel.trim() || undefined,
-      learningObjectives: draft.learningObjectives.map((item) => item.trim()).filter(Boolean),
-      enrollmentIncludes: draft.enrollmentIncludes.map((item) => item.trim()).filter(Boolean),
-      syllabusSections: draft.syllabus
-        .map((section) => ({
-          title: section.title.trim(),
-          lessons: section.lessons.map((lesson) => ({
-            title: lesson.title.trim(),
-            duration: lesson.duration.trim() || undefined,
-            type: lesson.type,
-            content: lesson.content?.trim() || undefined,
-          })),
-        }))
-        .filter((section) => Boolean(section.title)),
-    });
+      learningObjectives: normalizedLearningObjectives,
+      enrollmentIncludes: normalizedEnrollmentIncludes,
+      syllabusSections: normalizedSyllabusSections,
+    };
 
-    setIsSaving(false);
-
-    if (!updated) {
-      setEditError('Save failed. Check admin session and field values.');
+    let updated: Awaited<ReturnType<typeof updateAdminCourse>> = null;
+    try {
+      updated = await updateAdminCourse(selectedCourse.id, mutationPayload);
+    } catch (error) {
+      setIsSaving(false);
+      setEditError(error instanceof Error ? error.message : tx('errors.saveFailed', 'Save failed. Check admin session and field values.'));
       return;
     }
+
+    if (!updated) {
+      setIsSaving(false);
+      setEditError(tx('errors.saveFailed', 'Save failed. Check admin session and field values.'));
+      return;
+    }
+
+    setIsSaving(false);
 
     setSelectedCourse(updated);
     setCourses((current) => current.map((course) => (course.id === updated.id ? updated : course)));
@@ -281,7 +320,7 @@ const CourseDetailsView: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-12">
             <div className="lg:w-2/3 space-y-6">
               <nav className="flex items-center gap-2 text-[#f47361] text-sm font-bold mb-4 uppercase tracking-widest">
-                <button onClick={() => setView('catalog')} className="hover:text-white">Courses</button>
+                <button onClick={() => setView('catalog')} className="hover:text-white">{tx('breadcrumb.courses', 'Courses')}</button>
                 <ChevronRight className="w-4 h-4" />
                 <span>{language?.name}</span>
               </nav>
@@ -297,7 +336,7 @@ const CourseDetailsView: React.FC = () => {
                       }}
                       className="rounded-xl bg-white px-4 py-2 text-xs font-black uppercase tracking-wider text-[#2d3e50] hover:bg-slate-100"
                     >
-                      Edit Course
+                      {tx('actions.editCourse', 'Edit Course')}
                     </button>
                   ) : (
                     <>
@@ -308,7 +347,7 @@ const CourseDetailsView: React.FC = () => {
                         disabled={isSaving}
                         className="rounded-xl bg-[#f47361] px-4 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-[#e06352] disabled:opacity-70"
                       >
-                        {isSaving ? 'Saving...' : 'Save Changes'}
+                        {isSaving ? tx('actions.saving', 'Saving...') : tx('actions.saveChanges', 'Save Changes')}
                       </button>
                       <button
                         onClick={() => {
@@ -318,7 +357,7 @@ const CourseDetailsView: React.FC = () => {
                         }}
                         className="rounded-xl border border-slate-400 px-4 py-2 text-xs font-black uppercase tracking-wider text-slate-200 hover:bg-slate-700"
                       >
-                        Cancel
+                        {tx('actions.cancel', 'Cancel')}
                       </button>
                     </>
                   )}
@@ -352,11 +391,11 @@ const CourseDetailsView: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#ffb821] fill-[#ffb821]" />
                   <span className="font-bold">{selectedCourse.rating}</span>
-                  <span className="text-slate-400">({selectedCourse.reviews} verified reviews)</span>
+                  <span className="text-slate-400">({reviewsLabel})</span>
                 </div>
                 <div className="flex items-center gap-2 text-slate-300">
                   <Users className="w-5 h-5 text-[#f47361]" />
-                  <span>{selectedCourse.studentCount} currently learning</span>
+                  <span>{currentlyLearningLabel}</span>
                 </div>
                 {isEditing ? (
                   <select
@@ -368,13 +407,13 @@ const CourseDetailsView: React.FC = () => {
                   >
                     {levels.map((candidate) => (
                       <option key={candidate.id} value={candidate.id}>
-                        {candidate.name} Level
+                        {translateLevelName(candidate.name)} {tx('level', 'Level')}
                       </option>
                     ))}
                   </select>
                 ) : (
                   <span className="bg-[#f47361] px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
-                    {level?.name} Level
+                    {translateLevelName(level?.name)} {tx('level', 'Level')}
                   </span>
                 )}
               </div>
@@ -392,7 +431,7 @@ const CourseDetailsView: React.FC = () => {
                   alt={tutor?.name || 'Tutor'}
                 />
                 <div>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Course Tutor</p>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{tx('courseTutor', 'Course Tutor')}</p>
                   {isEditing ? (
                     availableTutors.length > 0 ? (
                       <select
@@ -410,7 +449,7 @@ const CourseDetailsView: React.FC = () => {
                       </select>
                     ) : (
                       <span className="mt-1 inline-block text-sm font-bold text-amber-300">
-                        No tutors found. Add one in /admin/tutors.
+                        {tx('noTutorsFound', 'No tutors found. Add one in /admin/tutors.')}
                       </span>
                     )
                   ) : (
@@ -439,7 +478,7 @@ const CourseDetailsView: React.FC = () => {
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="lg:w-2/3 space-y-12">
             <section className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
-              <h2 className="text-2xl font-black text-[#2d3e50] mb-8">Learning Objectives</h2>
+              <h2 className="text-2xl font-black text-[#2d3e50] mb-8">{tx('learningObjectives', 'Learning Objectives')}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                 {draft.learningObjectives.map((item, i) => (
                   <div key={`objective-${i}`} className="flex items-start gap-4">
@@ -467,13 +506,13 @@ const CourseDetailsView: React.FC = () => {
                   }
                   className="mt-6 text-xs font-black uppercase tracking-widest text-[#f47361]"
                 >
-                  + Add Objective
+                  {tx('actions.addObjective', '+ Add Objective')}
                 </button>
               ) : null}
             </section>
 
             <section>
-              <h2 className="text-2xl font-black text-[#2d3e50] mb-6">Curriculum Breakdown</h2>
+              <h2 className="text-2xl font-black text-[#2d3e50] mb-6">{tx('curriculumBreakdown', 'Curriculum Breakdown')}</h2>
               <div className="space-y-4">
                 {draft.syllabus.map((section, sectionIndex) => (
                   <div
@@ -501,7 +540,7 @@ const CourseDetailsView: React.FC = () => {
                         )}
                       </div>
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                        {section.lessons.length} Modules
+                        {section.lessons.length} {tx('modules', 'Modules')}
                       </span>
                     </button>
                     {openSection === section.id && (
@@ -538,9 +577,9 @@ const CourseDetailsView: React.FC = () => {
                                   }
                                   className="rounded border border-slate-200 px-2 py-1 text-[10px] font-black uppercase tracking-tighter text-slate-500"
                                 >
-                                  <option value="video">VIDEO</option>
-                                  <option value="quiz">QUIZ</option>
-                                  <option value="reading">READ</option>
+                                  <option value="video">{tx('lessonType.video', 'VIDEO')}</option>
+                                  <option value="quiz">{tx('lessonType.quiz', 'QUIZ')}</option>
+                                  <option value="reading">{tx('lessonType.reading', 'READ')}</option>
                                 </select>
                               </div>
                             ) : (
@@ -574,7 +613,7 @@ const CourseDetailsView: React.FC = () => {
                             }
                             className="w-full py-3 text-xs font-black uppercase tracking-widest text-[#f47361]"
                           >
-                            + Add Lesson
+                            {tx('actions.addLesson', '+ Add Lesson')}
                           </button>
                         ) : null}
                       </div>
@@ -610,7 +649,7 @@ const CourseDetailsView: React.FC = () => {
                   }
                   className="mt-4 text-xs font-black uppercase tracking-widest text-[#f47361]"
                 >
-                  + Add Module
+                  {tx('actions.addModule', '+ Add Module')}
                 </button>
               ) : null}
             </section>
@@ -619,7 +658,7 @@ const CourseDetailsView: React.FC = () => {
           <div className="lg:w-1/3">
             <div className="bg-white rounded-[3rem] border border-slate-200 shadow-2xl overflow-hidden sticky top-24">
               <div className="relative aspect-video">
-                <img src={selectedCourse.imageUrl} className="w-full h-full object-cover" alt="Preview" />
+                <img src={selectedCourse.imageUrl} className="w-full h-full object-cover" alt={tx('previewImageAlt', 'Course preview image')} />
                 <div className="absolute inset-0 bg-[#2d3e50]/40 flex items-center justify-center group-hover:bg-[#2d3e50]/20 transition-all">
                   <button className="bg-[#f47361] p-5 rounded-full text-white shadow-2xl scale-100 hover:scale-110 transition-transform">
                     <Play className="w-8 h-8 fill-current" />
@@ -639,7 +678,7 @@ const CourseDetailsView: React.FC = () => {
                       />
                     ) : (
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                        {selectedCourse.tuitionLabel || 'Tuition Fee'}
+                        {selectedCourse.tuitionLabel || tx('tuitionFee', 'Tuition Fee')}
                       </p>
                     )}
 
@@ -664,8 +703,8 @@ const CourseDetailsView: React.FC = () => {
                       className="w-36 text-right text-sm font-black uppercase text-[#f47361] outline-none border-b border-slate-200"
                     />
                   ) : (
-                    <span className="text-[#f47361] font-black text-sm uppercase">
-                      {selectedCourse.discountLabel || '65% Off Enrollment'}
+                      <span className="text-[#f47361] font-black text-sm uppercase">
+                      {selectedCourse.discountLabel || tx('discountEnrollment', '65% Off Enrollment')}
                     </span>
                   )}
                 </div>
@@ -677,11 +716,15 @@ const CourseDetailsView: React.FC = () => {
                   disabled={isEnrolling || isEditing}
                   className="w-full bg-[#f47361] text-white py-5 rounded-2xl font-black text-xl hover:bg-[#e06352] transition-all shadow-xl shadow-[#f47361]/20 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {isEnrolling ? 'Enrolling...' : isEditing ? 'Finish Editing to Enroll' : 'Enroll Today'}
+                  {isEnrolling
+                    ? tx('actions.enrolling', 'Enrolling...')
+                    : isEditing
+                    ? tx('actions.finishEditingToEnroll', 'Finish Editing to Enroll')
+                    : tx('actions.enrollToday', 'Enroll Today')}
                 </button>
 
                 <div className="space-y-5 pt-8 border-t border-slate-100">
-                  <p className="text-xs font-black text-[#2d3e50] uppercase tracking-widest">Enrollment Includes:</p>
+                  <p className="text-xs font-black text-[#2d3e50] uppercase tracking-widest">{tx('enrollmentIncludes', 'Enrollment Includes:')}</p>
                   {draft.enrollmentIncludes.map((label, i) => {
                     const Icon = i === 0 ? Clock : i === 1 ? Award : Users;
                     return (
@@ -710,7 +753,7 @@ const CourseDetailsView: React.FC = () => {
                       }
                       className="text-xs font-black uppercase tracking-widest text-[#f47361]"
                     >
-                      + Add Item
+                      {tx('actions.addItem', '+ Add Item')}
                     </button>
                   ) : null}
                 </div>

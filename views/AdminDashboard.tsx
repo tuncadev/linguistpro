@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../App';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   AdminDashboardOverview,
   fetchAdminDashboardOverview,
 } from '../services/adminDashboardApiService';
+import { formatCurrency } from '@/lib/i18n/format';
 
 function formatRelativeTime(isoTimestamp: string): string {
   const diffMs = Date.now() - new Date(isoTimestamp).getTime();
@@ -26,6 +28,9 @@ function formatRelativeTime(isoTimestamp: string): string {
 }
 
 const AdminDashboard: React.FC = () => {
+  const locale = useLocale();
+  const t = useTranslations('dashboard.admin');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const { courses } = useContext(AppContext);
   const [overview, setOverview] = useState<AdminDashboardOverview | null>(null);
 
@@ -50,30 +55,26 @@ const AdminDashboard: React.FC = () => {
   const formattedRevenue = useMemo(() => {
     const revenue = overview?.stats.totalRevenue;
     if (typeof revenue !== 'number') {
-      return '$84,200';
+      return tx('defaults.revenue', '$84,200');
     }
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(revenue);
-  }, [overview]);
+    return formatCurrency(revenue, locale, 'USD', 0);
+  }, [locale, overview]);
 
   const stats = [
     {
-      label: 'Total Users',
+      label: tx('stats.totalUsers', 'Total Users'),
       value: (overview?.stats.totalUsers ?? 1284).toString(),
       change: overview ? `${overview.stats.totalEnrollments} enrollments` : '+12%',
       icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
     },
     {
-      label: 'Courses',
+      label: tx('stats.courses', 'Courses'),
       value: (overview?.stats.totalCourses ?? courses.length).toString(),
       change: overview ? `${overview.recentSubmissions.length} recent` : '+2',
       icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     },
     {
-      label: 'Revenue',
+      label: tx('stats.revenue', 'Revenue'),
       value: formattedRevenue,
       change: overview ? 'Live' : '+18.5%',
       icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
@@ -82,58 +83,56 @@ const AdminDashboard: React.FC = () => {
 
   const kpiCards = [
     {
-      label: 'MRR Proxy (30d)',
+      label: tx('kpi.mrr', 'MRR Proxy (30d)'),
       value:
         typeof overview?.kpis.mrrProxy30d === 'number'
-          ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(
-              overview.kpis.mrrProxy30d
-            )
+          ? formatCurrency(overview.kpis.mrrProxy30d, locale, 'USD', 0)
           : '$0',
-      hint: 'Enrollment revenue in last 30 days',
+      hint: tx('kpi.mrrHint', 'Enrollment revenue in last 30 days'),
     },
     {
-      label: 'Onboarding Completion',
+      label: tx('kpi.onboardingCompletion', 'Onboarding Completion'),
       value:
         typeof overview?.kpis.onboardingCompletionRate === 'number'
           ? `${overview.kpis.onboardingCompletionRate.toFixed(1)}%`
           : '0.0%',
-      hint: 'Students with completed onboarding',
+      hint: tx('kpi.onboardingHint', 'Students with completed onboarding'),
     },
     {
-      label: 'Tutor Approval Rate',
+      label: tx('kpi.tutorApprovalRate', 'Tutor Approval Rate'),
       value:
         typeof overview?.kpis.tutorApprovalRate === 'number'
           ? `${overview.kpis.tutorApprovalRate.toFixed(1)}%`
           : '0.0%',
-      hint: `${overview?.kpis.pendingTutorApprovals ?? 0} pending approvals`,
+      hint: `${overview?.kpis.pendingTutorApprovals ?? 0} ${tx('kpi.pendingApprovals', 'pending approvals')}`,
     },
     {
-      label: 'Live Classes (Upcoming)',
+      label: tx('kpi.liveClassesUpcoming', 'Live Classes (Upcoming)'),
       value: `${overview?.kpis.upcomingLiveClasses ?? 0}`,
-      hint: `${overview?.kpis.completedLiveClasses ?? 0} completed / ${overview?.kpis.cancelledLiveClasses ?? 0} cancelled`,
+      hint: `${overview?.kpis.completedLiveClasses ?? 0} ${tx('kpi.completed', 'completed')} / ${overview?.kpis.cancelledLiveClasses ?? 0} ${tx('kpi.cancelled', 'cancelled')}`,
     },
     {
-      label: 'Attendance Participants',
+      label: tx('kpi.attendanceParticipants', 'Attendance Participants'),
       value: `${overview?.kpis.attendanceParticipants ?? 0}`,
       hint: `Avg joins ${Number(overview?.kpis.averageAttendanceJoins ?? 0).toFixed(1)}`,
     },
     {
-      label: 'Recordings',
+      label: tx('kpi.recordings', 'Recordings'),
       value: `${overview?.kpis.recordingAssets ?? 0}`,
-      hint: 'Synced recording assets',
+      hint: tx('kpi.recordingsHint', 'Synced recording assets'),
     },
     {
-      label: 'Comms Success (7d)',
+      label: tx('kpi.commsSuccess7d', 'Comms Success (7d)'),
       value:
         typeof overview?.kpis.communicationSuccessRate7d === 'number'
           ? `${overview.kpis.communicationSuccessRate7d.toFixed(1)}%`
           : '100.0%',
-      hint: `${overview?.kpis.communicationSent7d ?? 0} sent / ${overview?.kpis.communicationFailed7d ?? 0} failed`,
+      hint: `${overview?.kpis.communicationSent7d ?? 0} ${tx('kpi.sent', 'sent')} / ${overview?.kpis.communicationFailed7d ?? 0} ${tx('kpi.failed', 'failed')}`,
     },
     {
-      label: 'Pending Submissions',
+      label: tx('kpi.pendingSubmissions', 'Pending Submissions'),
       value: `${overview?.kpis.pendingCourseSubmissions ?? 0}`,
-      hint: 'Courses waiting for review',
+      hint: tx('kpi.pendingSubmissionsHint', 'Courses waiting for review'),
     },
   ];
 
@@ -141,16 +140,16 @@ const AdminDashboard: React.FC = () => {
   const activity =
     overview?.activity ??
     [
-      { id: 'fallback-1', message: 'New student enrollment in "Mastering Spanish"', createdAt: new Date().toISOString() },
-      { id: 'fallback-2', message: 'Tutor "Prof. Elena" updated curriculum', createdAt: new Date(Date.now() - 15 * 60_000).toISOString() },
-      { id: 'fallback-3', message: 'System backup completed successfully', createdAt: new Date(Date.now() - 60 * 60_000).toISOString() },
+      { id: 'fallback-1', message: tx('fallback.log1', 'New student enrollment in "Mastering Spanish"'), createdAt: new Date().toISOString() },
+      { id: 'fallback-2', message: tx('fallback.log2', 'Tutor "Prof. Elena" updated curriculum'), createdAt: new Date(Date.now() - 15 * 60_000).toISOString() },
+      { id: 'fallback-3', message: tx('fallback.log3', 'System backup completed successfully'), createdAt: new Date(Date.now() - 60 * 60_000).toISOString() },
     ];
 
   return (
     <div className="max-w-6xl mx-auto">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">Admin Console</h1>
-        <p className="text-slate-500">Global overview and system health.</p>
+        <h1 className="text-3xl font-extrabold text-slate-900">{tx('title', 'Admin Console')}</h1>
+        <p className="text-slate-500">{tx('subtitle', 'Global overview and system health.')}</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -183,8 +182,8 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="text-lg font-bold">Recent Course Submissions</h2>
-            <button className="text-indigo-600 text-sm font-bold hover:underline">View All</button>
+            <h2 className="text-lg font-bold">{tx('recentSubmissions', 'Recent Course Submissions')}</h2>
+            <button className="text-indigo-600 text-sm font-bold hover:underline">{tx('viewAll', 'View All')}</button>
           </div>
           <div className="divide-y divide-slate-50">
             {(recentSubmissions.length > 0 ? recentSubmissions : courses.slice(0, 3).map((course) => ({
@@ -202,14 +201,16 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div>
                     <p className="font-bold text-slate-900 text-sm">{c.title}</p>
-                    <p className="text-xs text-slate-500">Submission by {c.tutorName} ({c.status})</p>
+                    <p className="text-xs text-slate-500">
+                      {tx('submissionBy', 'Submission by')} {c.tutorName} ({c.status})
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title="Approve">
+                  <button className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded transition-colors" title={tx('approve', 'Approve')}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
                   </button>
-                  <button className="p-1.5 text-rose-600 hover:bg-rose-50 rounded transition-colors" title="Reject">
+                  <button className="p-1.5 text-rose-600 hover:bg-rose-50 rounded transition-colors" title={tx('reject', 'Reject')}>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
                 </div>
@@ -220,7 +221,7 @@ const AdminDashboard: React.FC = () => {
 
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-slate-100">
-            <h2 className="text-lg font-bold">System Logs</h2>
+            <h2 className="text-lg font-bold">{tx('systemLogs', 'System Logs')}</h2>
           </div>
           <div className="p-6 space-y-4">
             {activity.map((log) => (

@@ -9,6 +9,8 @@ import {
   SESSION_COOKIE_NAME,
 } from "@/lib/auth/session";
 import { checkRateLimit } from "@/lib/security/rate-limit";
+import { normalizeLocale } from "@/i18n/routing";
+import { apiMessage } from "@/lib/i18n/api-messages";
 
 const loginSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -27,7 +29,7 @@ export async function POST(req: NextRequest) {
     if (!rate.allowed) {
       return NextResponse.json(
         {
-          error: "Too many login attempts. Please retry later.",
+          error: apiMessage(req, "auth.tooManyLoginAttempts"),
           retryAfterSeconds: rate.retryAfterSeconds,
         },
         { status: 429 }
@@ -39,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid login payload", details: parsed.error.flatten() },
+        { error: apiMessage(req, "auth.invalidLoginPayload"), details: parsed.error.flatten() },
         { status: 400 }
       );
     }
@@ -59,6 +61,7 @@ export async function POST(req: NextRequest) {
         tutorApprovalStatus: true,
         tutorApprovedAt: true,
         tutorApprovalNotes: true,
+        preferredLocale: true,
         failedLoginAttempts: true,
         lockedUntil: true,
         createdAt: true,
@@ -76,14 +79,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user?.passwordHash) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+      return NextResponse.json({ error: apiMessage(req, "auth.invalidCredentials") }, { status: 401 });
     }
 
     const now = new Date();
     if (user.lockedUntil && user.lockedUntil > now) {
       const retryAfterSeconds = Math.max(1, Math.ceil((user.lockedUntil.getTime() - now.getTime()) / 1000));
       return NextResponse.json(
-        { error: "Account is temporarily locked due to failed login attempts", retryAfterSeconds },
+        { error: apiMessage(req, "auth.accountTemporarilyLocked"), retryAfterSeconds },
         { status: 423 }
       );
     }
@@ -99,13 +102,13 @@ export async function POST(req: NextRequest) {
           lockedUntil: shouldLock ? new Date(Date.now() + 15 * 60 * 1000) : null,
         },
       });
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+      return NextResponse.json({ error: apiMessage(req, "auth.invalidCredentials") }, { status: 401 });
     }
 
     if (!user.emailVerifiedAt) {
       return NextResponse.json(
         {
-          error: "Email verification required before sign in",
+          error: apiMessage(req, "auth.emailVerificationRequired"),
           verificationRequired: true,
         },
         { status: 403 }
@@ -124,10 +127,11 @@ export async function POST(req: NextRequest) {
       id: user.id,
       email: user.email,
       role: user.role,
+      preferredLocale: user.preferredLocale ? normalizeLocale(user.preferredLocale) : undefined,
     });
 
     const res = NextResponse.json({
-      message: "Login successful",
+      message: apiMessage(req, "auth.loginSuccessful"),
       user: {
         id: user.id,
         name: user.name,
@@ -138,6 +142,7 @@ export async function POST(req: NextRequest) {
         tutorApprovalStatus: user.tutorApprovalStatus,
         tutorApprovedAt: user.tutorApprovedAt,
         tutorApprovalNotes: user.tutorApprovalNotes,
+        preferredLocale: user.preferredLocale,
         avatarUrl: user.avatarUrl,
         bio: user.bio,
         rating: user.rating,
@@ -155,6 +160,6 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error) {
     console.error("login error", error);
-    return NextResponse.json({ error: "Login failed" }, { status: 500 });
+    return NextResponse.json({ error: apiMessage(req, "auth.loginFailed") }, { status: 500 });
   }
 }

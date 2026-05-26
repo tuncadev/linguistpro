@@ -1,0 +1,31 @@
+{
+  "views": {
+    "courseDetails": {
+      "breadcrumb": {
+        "courses": "Курсы"
+      },
+      "learningObjectives": "Цели обучения",
+      "curriculumBreakdown": "Структура программы",
+      "enrollmentIncludes": "В стоимость входит:",
+      "verifiedReviews": "проверенных отзывов",
+      "verifiedReviewsCount": "{count, plural, =0 {0 проверенных отзывов} one {# проверенный отзыв} few {# проверенных отзыва} many {# проверенных отзывов} other {# проверенных отзывов}}",
+      "currentlyLearning": "сейчас обучаются",
+      "currentlyLearningCount": "{count, plural, =0 {0 сейчас обучаются} one {# сейчас обучается} few {# сейчас обучаются} many {# сейчас обучаются} other {# сейчас обучаются}}",
+      "level": "Уровень",
+      "levels": {
+        "beginner": "Начальный",
+        "elementary": "Элементарный",
+        "pre_intermediate": "Ниже среднего",
+        "intermediate": "Средний",
+        "upper_intermediate": "Выше среднего",
+        "advanced": "Продвинутый",
+        "expert": "Экспертный",
+        "unknown": "Неизвестный"
+      },
+      "actions": {
+        "enrollToday": "Записаться сегодня"
+      },
+      "previewImageAlt": "Изображение превью курса"
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { User } from "@/types";
 import {
   AdminTutorIntegritySnapshot,
@@ -12,6 +13,7 @@ import {
   updateAdminTutor,
 } from "@/services/adminTutorCrudApiService";
 import { fetchAdminCourses } from "@/services/adminCourseCrudApiService";
+import { Course } from "@/types";
 
 type TutorFormState = {
   name: string;
@@ -19,8 +21,6 @@ type TutorFormState = {
   password: string;
   avatarUrl: string;
   bio: string;
-  studentCount: string;
-  coursesAuthored: string;
   tutorApprovalStatus: "PENDING" | "APPROVED" | "REJECTED";
   tutorApprovalNotes: string;
 };
@@ -31,25 +31,9 @@ const EMPTY_FORM: TutorFormState = {
   password: "",
   avatarUrl: "",
   bio: "",
-  studentCount: "",
-  coursesAuthored: "",
   tutorApprovalStatus: "PENDING",
   tutorApprovalNotes: "",
 };
-
-function toOptionalNonNegativeInt(raw: string): number | null | undefined {
-  const normalized = raw.trim();
-  if (!normalized) {
-    return undefined;
-  }
-
-  const parsed = Number(normalized);
-  if (!Number.isInteger(parsed) || parsed < 0) {
-    return null;
-  }
-
-  return parsed;
-}
 
 function fallbackAvatar(value: string | undefined): string {
   if (value?.trim()) {
@@ -59,9 +43,17 @@ function fallbackAvatar(value: string | undefined): string {
 }
 
 export default function AdminTutorsPage() {
+  const locale = useLocale();
+  const t = useTranslations("dashboard.adminTutors");
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
+  const formatTutorApprovalStatus = (status: TutorFormState["tutorApprovalStatus"] | null | undefined) => {
+    const normalized = (status ?? "PENDING").toUpperCase();
+    return tx(`approvalValues.${normalized}`, normalized);
+  };
+  const numberFormatter = useMemo(() => new Intl.NumberFormat(locale), [locale]);
   const [tutors, setTutors] = useState<User[]>([]);
   const [integrity, setIntegrity] = useState<AdminTutorIntegritySnapshot | null>(null);
-  const [assignedCourseCountByTutor, setAssignedCourseCountByTutor] = useState<Record<string, number>>({});
+  const [assignedCoursesByTutor, setAssignedCoursesByTutor] = useState<Record<string, Course[]>>({});
   const [form, setForm] = useState<TutorFormState>(EMPTY_FORM);
   const [editingTutorId, setEditingTutorId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -100,14 +92,17 @@ export default function AdminTutorsPage() {
       }
 
       if (coursesResult.status === "fulfilled") {
-        const counts = (coursesResult.value ?? []).reduce<Record<string, number>>((acc, course) => {
-          acc[course.tutorId] = (acc[course.tutorId] ?? 0) + 1;
+        const assignments = (coursesResult.value ?? []).reduce<Record<string, Course[]>>((acc, course) => {
+          acc[course.tutorId] = [...(acc[course.tutorId] ?? []), course];
           return acc;
         }, {});
-        setAssignedCourseCountByTutor(counts);
+        setAssignedCoursesByTutor(assignments);
       } else {
-        setAssignedCourseCountByTutor({});
-        auxiliaryError = "Tutor list loaded, but course assignment counts could not be loaded.";
+        setAssignedCoursesByTutor({});
+        auxiliaryError = tx(
+          "errors.courseAssignmentCountLoad",
+          "Tutor list loaded, but course assignment counts could not be loaded."
+        );
       }
 
       if (integrityResult.status === "fulfilled") {
@@ -115,7 +110,10 @@ export default function AdminTutorsPage() {
       } else {
         setIntegrity(null);
         if (!auxiliaryError) {
-          auxiliaryError = "Tutor list loaded, but integrity summary could not be loaded.";
+          auxiliaryError = tx(
+            "errors.integritySummaryLoad",
+            "Tutor list loaded, but integrity summary could not be loaded."
+          );
         }
       }
 
@@ -141,7 +139,15 @@ export default function AdminTutorsPage() {
       ratedTutors.length > 0
         ? ratedTutors.reduce((sum, tutor) => sum + (tutor.rating ?? 0), 0) / ratedTutors.length
         : 0;
-    const totalStudents = tutors.reduce((sum, tutor) => sum + (tutor.studentCount ?? 0), 0);
+    const totalStudents = tutors.reduce((sum, tutor) => {
+      const assignedCourses = assignedCoursesByTutor[tutor.id] ?? [];
+      return (
+        sum +
+        assignedCourses.reduce((courseSum, course) => {
+          return courseSum + (Number.isFinite(course.studentCount) ? course.studentCount : 0);
+        }, 0)
+      );
+    }, 0);
 
     return {
       totalTutors,
@@ -151,7 +157,7 @@ export default function AdminTutorsPage() {
       distinctTutorIdsInCourses: integrity?.distinctTutorIdsInCourses ?? 0,
       unassignedTutorCount: integrity?.unassignedTutorCount ?? 0,
     };
-  }, [integrity, tutors]);
+  }, [assignedCoursesByTutor, integrity, tutors]);
 
   const resetForm = () => {
     setEditingTutorId(null);
@@ -168,14 +174,6 @@ export default function AdminTutorsPage() {
       password: "",
       avatarUrl: tutor.avatar?.trim() || "",
       bio: tutor.bio?.trim() || "",
-      studentCount:
-        typeof tutor.studentCount === "number" && Number.isFinite(tutor.studentCount)
-          ? String(tutor.studentCount)
-          : "",
-      coursesAuthored:
-        typeof tutor.coursesAuthored === "number" && Number.isFinite(tutor.coursesAuthored)
-          ? String(tutor.coursesAuthored)
-          : "",
       tutorApprovalStatus: tutor.tutorApprovalStatus ?? "PENDING",
       tutorApprovalNotes: tutor.tutorApprovalNotes ?? "",
     });
@@ -187,18 +185,10 @@ export default function AdminTutorsPage() {
     setError(null);
     setNotice(null);
 
-    const studentCount = toOptionalNonNegativeInt(form.studentCount);
-    const coursesAuthored = toOptionalNonNegativeInt(form.coursesAuthored);
-    if (studentCount === null || coursesAuthored === null) {
-      setSaving(false);
-      setError("Student count and authored courses must be non-negative integers.");
-      return;
-    }
-
     const password = form.password.trim();
     if (!editingTutorId && password.length < 8) {
       setSaving(false);
-      setError("Password must be at least 8 characters for new tutors.");
+      setError(tx("errors.invalidPassword", "Password must be at least 8 characters for new tutors."));
       return;
     }
 
@@ -208,8 +198,6 @@ export default function AdminTutorsPage() {
       password: password || undefined,
       avatarUrl: form.avatarUrl.trim() || null,
       bio: form.bio.trim() || null,
-      studentCount,
-      coursesAuthored,
       tutorApprovalStatus: form.tutorApprovalStatus,
       tutorApprovalNotes: form.tutorApprovalNotes.trim() || null,
     };
@@ -221,10 +209,10 @@ export default function AdminTutorsPage() {
 
       if (editingTutorId) {
         setTutors((current) => current.map((tutor) => (tutor.id === result.id ? result : tutor)));
-        setNotice("Tutor updated.");
+        setNotice(tx("notices.updated", "Tutor updated."));
       } else {
         setTutors((current) => [result, ...current]);
-        setNotice("Tutor created.");
+        setNotice(tx("notices.created", "Tutor created."));
       }
 
       try {
@@ -236,7 +224,7 @@ export default function AdminTutorsPage() {
 
       resetForm();
     } catch (saveError) {
-      const message = saveError instanceof Error ? saveError.message : "Failed to save tutor.";
+      const message = saveError instanceof Error ? saveError.message : tx("errors.saveFailed", "Failed to save tutor.");
       setError(message);
     } finally {
       setSaving(false);
@@ -244,7 +232,7 @@ export default function AdminTutorsPage() {
   };
 
   const onDelete = async (tutor: User) => {
-    const confirmed = window.confirm(`Delete tutor "${tutor.name}"?`);
+    const confirmed = window.confirm(tx("confirm.deleteTutor", `Delete tutor "${tutor.name}"?`));
     if (!confirmed) {
       return;
     }
@@ -256,7 +244,7 @@ export default function AdminTutorsPage() {
     try {
       await deleteAdminTutor(tutor.id);
       setTutors((current) => current.filter((candidate) => candidate.id !== tutor.id));
-      setAssignedCourseCountByTutor((current) => {
+      setAssignedCoursesByTutor((current) => {
         const next = { ...current };
         delete next[tutor.id];
         return next;
@@ -272,9 +260,10 @@ export default function AdminTutorsPage() {
         // Keep UI usable even if integrity refresh fails after successful delete.
       }
 
-      setNotice("Tutor removed.");
+      setNotice(tx("notices.removed", "Tutor removed."));
     } catch (deleteError) {
-      const message = deleteError instanceof Error ? deleteError.message : "Failed to remove tutor.";
+      const message =
+        deleteError instanceof Error ? deleteError.message : tx("errors.removeFailed", "Failed to remove tutor.");
       setError(message);
     } finally {
       setDeletingTutorId(null);
@@ -290,62 +279,66 @@ export default function AdminTutorsPage() {
               href="/admin/courses"
               className="rounded-full border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:bg-slate-100"
             >
-              Courses
+              {tx("tabs.courses", "Courses")}
             </Link>
             <Link
               href="/admin/tutors"
-              className="rounded-full bg-[#2d3e50] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
+              className="rounded-full bg-sky-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white"
             >
-              Tutors
+              {tx("tabs.tutors", "Tutors")}
             </Link>
             <Link
               href="/admin/users"
               className="rounded-full border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:bg-slate-100"
             >
-              Users
+              {tx("tabs.users", "Users")}
             </Link>
           </div>
-          <h1 className="text-3xl font-black text-slate-900">Admin Tutor Management</h1>
+          <h1 className="text-3xl font-black text-slate-900">{tx("title", "Admin Tutor Management")}</h1>
           <p className="text-sm text-slate-600">
-            Add, edit, and remove tutor records while keeping the current frontend tutor cards and profile style intact.
+            {tx(
+              "subtitle",
+              "Add, edit, and remove tutor records while keeping the current frontend tutor cards and profile style intact."
+            )}
           </p>
         </header>
 
         <section className="grid gap-4 md:grid-cols-4">
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">All Tutors</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{tx("stats.allTutors", "All Tutors")}</p>
             <p className="mt-2 text-3xl font-black text-slate-900">{totals.totalTutors}</p>
           </article>
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Login Ready</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{tx("stats.loginReady", "Login Ready")}</p>
             <p className="mt-2 text-3xl font-black text-emerald-600">{totals.tutorsWithLogin}</p>
           </article>
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Average Rating</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{tx("stats.averageRating", "Average Rating")}</p>
             <p className="mt-2 text-3xl font-black text-amber-600">
               {totals.avgRating > 0 ? totals.avgRating.toFixed(2) : "-"}
             </p>
           </article>
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Total Students</p>
-            <p className="mt-2 text-3xl font-black text-indigo-600">{totals.totalStudents.toLocaleString()}</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{tx("stats.totalStudents", "Total Students")}</p>
+            <p className="mt-2 text-3xl font-black text-indigo-600">{numberFormatter.format(totals.totalStudents)}</p>
           </article>
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Tutors On Courses</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{tx("stats.tutorsOnCourses", "Tutors On Courses")}</p>
             <p className="mt-2 text-3xl font-black text-sky-700">{totals.distinctTutorIdsInCourses}</p>
           </article>
           <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Unassigned Tutors</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{tx("stats.unassignedTutors", "Unassigned Tutors")}</p>
             <p className="mt-2 text-3xl font-black text-fuchsia-700">{totals.unassignedTutorCount}</p>
           </article>
         </section>
 
         {integrity?.status === "warning" ? (
           <section className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4">
-            <p className="text-sm font-black uppercase tracking-wider text-amber-700">Tutor Integrity Warning</p>
+            <p className="text-sm font-black uppercase tracking-wider text-amber-700">{tx("integrity.warningTitle", "Tutor Integrity Warning")}</p>
             <p className="mt-1 text-sm text-amber-900">
-              Some courses reference tutor IDs that are not valid tutor records. Run
-              <span className="font-bold"> npm run ops:uat:tutors</span> and repair assignments.
+              {tx("integrity.warningBodyPrefix", "Some courses reference tutor IDs that are not valid tutor records. Run")}
+              <span className="font-bold"> npm run ops:uat:tutors</span>
+              {tx("integrity.warningBodySuffix", " and repair assignments.")}
             </p>
           </section>
         ) : null}
@@ -354,7 +347,7 @@ export default function AdminTutorsPage() {
           <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-black text-slate-900">
-                {editingTutorId ? "Edit Tutor" : "Add New Tutor"}
+                {editingTutorId ? tx("form.editTutor", "Edit Tutor") : tx("form.addNewTutor", "Add New Tutor")}
               </h2>
               {editingTutorId ? (
                 <button
@@ -362,7 +355,7 @@ export default function AdminTutorsPage() {
                   className="text-xs font-bold text-slate-500 hover:text-slate-700"
                   type="button"
                 >
-                  Cancel edit
+                  {tx("form.cancelEdit", "Cancel edit")}
                 </button>
               ) : null}
             </div>
@@ -371,7 +364,7 @@ export default function AdminTutorsPage() {
               <input
                 value={form.name}
                 onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                placeholder="Tutor name"
+                placeholder={tx("form.placeholders.tutorName", "Tutor name")}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 required
               />
@@ -379,7 +372,7 @@ export default function AdminTutorsPage() {
                 value={form.email}
                 type="email"
                 onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-                placeholder="Tutor email"
+                placeholder={tx("form.placeholders.tutorEmail", "Tutor email")}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 required
               />
@@ -387,7 +380,11 @@ export default function AdminTutorsPage() {
                 value={form.password}
                 type="password"
                 onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-                placeholder={editingTutorId ? "New password (optional)" : "Password (min 8 chars)"}
+                placeholder={
+                  editingTutorId
+                    ? tx("form.placeholders.newPasswordOptional", "New password (optional)")
+                    : tx("form.placeholders.passwordMin", "Password (min 8 chars)")
+                }
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 minLength={editingTutorId ? undefined : 8}
                 required={!editingTutorId}
@@ -395,32 +392,16 @@ export default function AdminTutorsPage() {
               <input
                 value={form.avatarUrl}
                 onChange={(event) => setForm((current) => ({ ...current, avatarUrl: event.target.value }))}
-                placeholder="Avatar URL"
+                placeholder={tx("form.placeholders.avatarUrl", "Avatar URL")}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
               />
               <textarea
                 value={form.bio}
                 onChange={(event) => setForm((current) => ({ ...current, bio: event.target.value }))}
-                placeholder="Tutor bio"
+                placeholder={tx("form.placeholders.tutorBio", "Tutor bio")}
                 rows={5}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
               />
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                <input
-                  value={form.studentCount}
-                  onChange={(event) => setForm((current) => ({ ...current, studentCount: event.target.value }))}
-                  placeholder="Student count"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
-                  inputMode="numeric"
-                />
-                <input
-                  value={form.coursesAuthored}
-                  onChange={(event) => setForm((current) => ({ ...current, coursesAuthored: event.target.value }))}
-                  placeholder="Courses authored"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
-                  inputMode="numeric"
-                />
-              </div>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <select
                   value={form.tutorApprovalStatus}
@@ -432,9 +413,9 @@ export default function AdminTutorsPage() {
                   }
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 >
-                  <option value="PENDING">Approval: Pending</option>
-                  <option value="APPROVED">Approval: Approved</option>
-                  <option value="REJECTED">Approval: Rejected</option>
+                  <option value="PENDING">{tx("form.approval.pending", "Approval: Pending")}</option>
+                  <option value="APPROVED">{tx("form.approval.approved", "Approval: Approved")}</option>
+                  <option value="REJECTED">{tx("form.approval.rejected", "Approval: Rejected")}</option>
                 </select>
                 <input
                   value={form.tutorApprovalNotes}
@@ -444,7 +425,7 @@ export default function AdminTutorsPage() {
                       tutorApprovalNotes: event.target.value,
                     }))
                   }
-                  placeholder="Approval notes"
+                  placeholder={tx("form.placeholders.approvalNotes", "Approval notes")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 />
               </div>
@@ -455,23 +436,31 @@ export default function AdminTutorsPage() {
               <button
                 disabled={saving || loading}
                 type="submit"
-                className="w-full rounded-xl bg-[#2d3e50] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1a2530] disabled:cursor-not-allowed disabled:opacity-70"
+                className="w-full rounded-xl bg-sky-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {saving ? "Saving..." : editingTutorId ? "Update Tutor" : "Create Tutor"}
+                {saving
+                  ? tx("form.saving", "Saving...")
+                  : editingTutorId
+                  ? tx("form.updateTutor", "Update Tutor")
+                  : tx("form.createTutor", "Create Tutor")}
               </button>
             </form>
           </article>
 
           <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-3">
-            <h2 className="mb-4 text-lg font-black text-slate-900">Tutors</h2>
+            <h2 className="mb-4 text-lg font-black text-slate-900">{tx("list.title", "Tutors")}</h2>
             {loading ? (
-              <p className="text-sm text-slate-500">Loading tutor list...</p>
+              <p className="text-sm text-slate-500">{tx("list.loading", "Loading tutor list...")}</p>
             ) : tutors.length === 0 ? (
-              <p className="text-sm text-slate-500">No tutors found.</p>
+              <p className="text-sm text-slate-500">{tx("list.empty", "No tutors found.")}</p>
             ) : (
               <div className="space-y-3">
                 {tutors.map((tutor) => {
-                  const assignedCourses = assignedCourseCountByTutor[tutor.id] ?? 0;
+                  const assignedCourses = assignedCoursesByTutor[tutor.id] ?? [];
+                  const assignedCourseCount = assignedCourses.length;
+                  const assignedStudentCount = assignedCourses.reduce((sum, course) => {
+                    return sum + (Number.isFinite(course.studentCount) ? course.studentCount : 0);
+                  }, 0);
 
                   return (
                     <div
@@ -488,14 +477,30 @@ export default function AdminTutorsPage() {
                           <p className="truncate text-sm font-black text-slate-900">{tutor.name}</p>
                           <p className="truncate text-xs font-medium text-slate-500">{tutor.email}</p>
                           <p className="mt-1 text-xs text-slate-400">
-                            Rating: {tutor.rating ?? "-"} · Students: {(tutor.studentCount ?? 0).toLocaleString()} ·
-                            Courses: {assignedCourses}
+                            {tx("list.rating", "Rating")}: {tutor.rating ?? "-"} · {tx("list.students", "Students")}:{" "}
+                            {numberFormatter.format(assignedStudentCount)} · {tx("list.courses", "Courses")}: {assignedCourseCount}
+                          </p>
+                          {assignedCourses.length > 0 ? (
+                            <div className="mt-2 space-y-1">
+                              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                                {tx("list.coursesAuthored", "Courses authored")}
+                              </p>
+                              {assignedCourses.map((course) => (
+                                <p key={course.id} className="truncate text-xs text-slate-500">
+                                  {course.title} ({numberFormatter.format(course.studentCount ?? 0)}{" "}
+                                  {tx("list.studentsInline", "students")})
+                                </p>
+                              ))}
+                            </div>
+                          ) : null}
+                          <p className="mt-1 text-xs text-slate-400">
+                            {tx("list.login", "Login")}:{" "}
+                            {tutor.hasPassword
+                              ? tx("list.loginConfigured", "Configured")
+                              : tx("list.loginMissingPassword", "Missing password")}
                           </p>
                           <p className="mt-1 text-xs text-slate-400">
-                            Login: {tutor.hasPassword ? "Configured" : "Missing password"}
-                          </p>
-                          <p className="mt-1 text-xs text-slate-400">
-                            Approval: {tutor.tutorApprovalStatus ?? "PENDING"}
+                            {tx("list.approval", "Approval")}: {formatTutorApprovalStatus(tutor.tutorApprovalStatus)}
                           </p>
                         </div>
                       </div>
@@ -505,7 +510,7 @@ export default function AdminTutorsPage() {
                           className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100"
                           type="button"
                         >
-                          Edit Tutor
+                          {tx("actions.editTutor", "Edit Tutor")}
                         </button>
                         <button
                           onClick={() => onDelete(tutor)}
@@ -513,7 +518,9 @@ export default function AdminTutorsPage() {
                           className="rounded-lg border border-rose-200 px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-70"
                           type="button"
                         >
-                          {deletingTutorId === tutor.id ? "Removing..." : "Remove"}
+                          {deletingTutorId === tutor.id
+                            ? tx("actions.removing", "Removing...")
+                            : tx("actions.remove", "Remove")}
                         </button>
                       </div>
                     </div>

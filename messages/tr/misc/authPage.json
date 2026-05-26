@@ -1,0 +1,35 @@
+{
+  "authPage": {
+    "login": {
+      "title": "Giriş",
+      "subtitle": "Öğrenci, eğitmen veya yönetici sayfalarına erişmek için hesabınızla giriş yapın.",
+      "email": "E-posta",
+      "password": "Parola",
+      "signingIn": "Giriş yapılıyor...",
+      "signIn": "Giriş yap",
+      "noAccount": "Henüz hesabınız yok mu?",
+      "createOne": "Bir hesap oluştur",
+      "requestFailed": "İstek başarısız oldu. Lütfen tekrar deneyin.",
+      "loginFailed": "Giriş başarısız",
+      "loginSuccess": "Giriş başarılı"
+    },
+    "register": {
+      "title": "Hesap oluştur",
+      "subtitle": "Platform için yeni bir öğrenci hesabı oluşturun.",
+      "name": "Ad",
+      "email": "E-posta",
+      "password": "Parola",
+      "confirmPassword": "Parolayı doğrulayın",
+      "creatingAccount": "Hesap oluşturuluyor...",
+      "createAccount": "Hesap oluştur",
+      "alreadyRegistered": "Zaten kayıtlı mısınız?",
+      "signIn": "Giriş yap",
+      "passwordMismatch": "Parola doğrulaması eşleşmiyor.",
+      "registrationFailed": "Kayıt başarısız",
+      "registrationSuccess": "Kayıt başarılı. Giriş öncesi e-posta doğrulaması yapın.",
+      "registeredSuccessfully": "Kayıt tamamlandı",
+      "requestFailed": "İstek başarısız oldu. Lütfen tekrar deneyin.",
+      "verificationTokenPrefix": "Doğrulama anahtarı (dev/test)"
+    }
+  }
+}

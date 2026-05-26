@@ -1,0 +1,52 @@
+{
+  "dashboard": {
+    "adminLayout": {
+      "tabs": {
+        "settings": "Ayarlar"
+      }
+    },
+    "studentMyLearning": {
+      "actions": {
+        "personalInfo": "Kişisel bilgiler"
+      }
+    },
+    "tutorMyCourses": {
+      "actions": {
+        "personalInfo": "Kişisel bilgiler"
+      }
+    },
+    "settings": {
+      "title": "Kişisel bilgiler",
+      "subtitle": "Takma adınızı, avatarınızı ve temel profil bilgilerinizi güncelleyin.",
+      "loading": "Kişisel bilgi ayarları yükleniyor...",
+      "actions": {
+        "backToDashboard": "Panele geri dön",
+        "goToLogin": "Girişe git",
+        "save": "Değişiklikleri kaydet",
+        "saving": "Kaydediliyor..."
+      },
+      "fields": {
+        "avatarLink": "Avatar bağlantısı",
+        "avatarUpload": "Avatar görseli yükle",
+        "nickname": "Takma ad",
+        "email": "E-posta",
+        "bio": "Biyografi"
+      },
+      "avatar": {
+        "alt": "Profil avatar önizlemesi"
+      },
+      "status": {
+        "saved": "Kişisel bilgiler güncellendi.",
+        "uploadReady": "Avatar yüklendi. Uygulamak için değişiklikleri kaydedin."
+      },
+      "errors": {
+        "loadFailed": "Kişisel ayarlar yüklenemedi.",
+        "saveFailed": "Kişisel bilgiler kaydedilemedi.",
+        "unauthorized": "Ayarları yönetmek için giriş yapmalısınız.",
+        "invalidFileType": "Lütfen bir görsel dosyası seçin.",
+        "fileTooLarge": "Avatar görseli 2 MB veya daha küçük olmalı.",
+        "uploadFailed": "Yüklenen görsel okunamadı."
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "pages": {
+    "about": {
+      "title": "Hakkımızda",
+      "description": "About görünümü için Next.js rota iskeleti."
+    },
+    "courses": {
+      "title": "Kurslar",
+      "description": "Kurs kataloğu için Next.js rota iskeleti."
+    },
+    "privacy": {
+      "title": "Gizlilik politikası",
+      "intro": "LinguistPro, dil öğrenme hizmetlerini, güvenlik kontrollerini ve operasyonel desteği sunmak için hesap, kurs ve öğrenme etkinliği verilerini işler.",
+      "dataUseTitle": "Veri kullanımı",
+      "dataUseBody": "Veriler kimlik doğrulama, kurs kaydı, eğitmen/öğrenci operasyonları, analitik ve olay müdahalesi için kullanılır. Hassas gizli bilgiler ve entegrasyon anahtarları onaylı güvenlik kontrolleriyle korunur.",
+      "dataAccessTitle": "Veri erişimi",
+      "dataAccessBody": "Erişim, rol tabanlı yetkilendirme ve operasyonel ihtiyaç ile sınırlıdır. Kullanıcılar veri erişimi ve düzeltme talepleri için destekle iletişime geçebilir."
+    },
+    "refundPolicy": {
+      "title": "İade politikası",
+      "intro": "İade süreçleri destek incelemesi ve ödeme sağlayıcısı kısıtlarıyla yürütülür. Talepler satın alma zamanı, ders/oturum kullanımı ve dolandırıcılık kontrollerine göre değerlendirilir.",
+      "requestWindowTitle": "Talep süresi",
+      "requestWindowBody": "Kullanıcılar iade taleplerini destek sayfasında belirtilen kanal üzerinden mümkün olan en kısa sürede iletmelidir.",
+      "disputeHandlingTitle": "Uyuşmazlık yönetimi",
+      "disputeHandlingBody": "Ödeme itirazları olay olarak izlenir ve faturalama kanıtları, kurs erişim kayıtları ve politika incelemesiyle çözülür."
+    },
+    "support": {
+      "title": "Destek ve olay iletişimi",
+      "intro": "Hesap, öğrenme, eğitmen operasyonları ve faturalama sorunları için hesap e-postanız, kurs bağlamı ve sorun zaman çizelgesiyle destekle iletişime geçin.",
+      "channelsTitle": "İletişim kanalları",
+      "supportEmail": "Destek e-postası: support@linguistpro.local",
+      "incidentEscalation": "Olay eskalasyonu: incidents@linguistpro.local",
+      "responseSla": "Yanıt SLA: docs/SUPPORT_INCIDENT_RUNBOOK.md"
+    },
+    "terms": {
+      "title": "Hizmet şartları",
+      "intro": "LinguistPro'yu kullanarak platformu yasal şekilde kullanmayı, doğru hesap bilgileri vermeyi ve eğitmen/öğrenci/yönetici topluluk standartlarına uymayı kabul edersiniz.",
+      "accountResponsibilityTitle": "Hesap sorumluluğu",
+      "accountResponsibilityBody": "Kullanıcılar hesap kimlik bilgileri, hesap altındaki etkinlik ve yayımlanan tüm platform politikalarına uyumdan sorumludur.",
+      "serviceChangesTitle": "Hizmet değişiklikleri",
+      "serviceChangesBody": "Güvenlik, hukuki veya ürün nedenleriyle özellikleri ve politikaları güncelleyebiliriz. Önemli politika değişiklikleri kayıtlı kullanıcılara duyurulur."
+    },
+    "unauthorized": {
+      "title": "Yetkisiz",
+      "description": "Bu rotaya erişim izniniz yok."
+    }
+  }
+}

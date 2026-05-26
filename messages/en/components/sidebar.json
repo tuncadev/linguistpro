@@ -1,0 +1,13 @@
+{
+  "sidebar": {
+    "mainMenu": "Main Menu",
+    "administration": "Administration",
+    "adminCoursesPage": "Courses Page",
+    "adminTutorsPage": "Tutors Page",
+    "adminManageUsers": "Manage Users",
+    "adminTaxonomies": "Taxonomies",
+    "goPro": "Go Pro",
+    "goProDescription": "Unlock advanced learning tools and certificates.",
+    "upgradeNow": "Upgrade Now"
+  }
+}

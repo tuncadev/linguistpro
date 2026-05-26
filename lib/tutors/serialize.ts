@@ -152,7 +152,7 @@ export function serializeTutor(tutor: PublicTutorRecord) {
     bio: tutor.bio,
     rating: tutor.rating,
     studentCount: tutor.studentCount,
-    coursesAuthored: tutor.coursesAuthored ?? tutor._count.authoredCourses,
+    coursesAuthored: tutor._count.authoredCourses,
     location: tutor.location ?? DEFAULT_TUTOR_LOCATION,
     languagesSpoken: tutor.languagesSpoken ?? DEFAULT_TUTOR_LANGUAGES,
     profileHighlights: normalizeStringArray(

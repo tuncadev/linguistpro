@@ -1,0 +1,78 @@
+{
+  "content": {
+    "tutors": {
+      "cmofwwxvb0001s62gircqzeyf": {
+        "name": "Prof. Elena Rodriguez",
+        "bio": "Updated governance bio",
+        "location": "Barcelona, Spain HQ",
+        "languagesSpoken": "Trilingual (ES, EN, FR)",
+        "profileHighlights": [
+          "Accredited by National Board",
+          "Linguistic Research Fellow",
+          "Catalina Impact Award 2023",
+          "Advanced Curriculum Designer"
+        ],
+        "profileStats": [
+          {
+            "id": "stat-graduates",
+            "label": "Graduates",
+            "value": "15400"
+          },
+          {
+            "id": "stat-rating",
+            "label": "Rating",
+            "value": "4.9"
+          }
+        ],
+        "pedagogicalModules": [
+          {
+            "id": "module-visual-integration",
+            "title": "Visual Integration",
+            "description": "Leveraging the latest in cognitive visual learning to create memory anchors that last a lifetime."
+          },
+          {
+            "id": "module-active-fluency",
+            "title": "Active Fluency",
+            "description": "Focusing on high-output conversation practice from day one, rather than passive absorption."
+          }
+        ]
+      },
+      "cmohdtjow000ds6hkqn38k47p": {
+        "name": "Kateryna Tunca",
+        "bio": null,
+        "location": "Barcelona, Spain HQ",
+        "languagesSpoken": "Trilingual (ES, EN, FR)",
+        "profileHighlights": [
+          "Accredited by National Board",
+          "Linguistic Research Fellow",
+          "Catalina Impact Award 2023",
+          "Advanced Curriculum Designer"
+        ],
+        "profileStats": [
+          {
+            "id": "stat-graduates",
+            "label": "Graduates",
+            "value": "15400"
+          },
+          {
+            "id": "stat-rating",
+            "label": "Rating",
+            "value": "4.9"
+          }
+        ],
+        "pedagogicalModules": [
+          {
+            "id": "module-visual-integration",
+            "title": "Visual Integration",
+            "description": "Leveraging the latest in cognitive visual learning to create memory anchors that last a lifetime."
+          },
+          {
+            "id": "module-active-fluency",
+            "title": "Active Fluency",
+            "description": "Focusing on high-output conversation practice from day one, rather than passive absorption."
+          }
+        ]
+      }
+    }
+  }
+}

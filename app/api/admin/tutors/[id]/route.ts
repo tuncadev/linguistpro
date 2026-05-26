@@ -8,6 +8,9 @@ import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth/password";
 import { adminTutorSelect, serializeTutorForAdmin } from "@/lib/tutors/serialize";
+import { resolveLocaleFromRequest } from "@/lib/i18n/api-messages";
+import { loadLocaleMessagesRaw } from "@/lib/i18n/translation-registry";
+import { localizeTutorFromMessages } from "@/lib/tutors/localization";
 
 const updateTutorSchema = z
   .object({
@@ -17,8 +20,6 @@ const updateTutorSchema = z
     avatarUrl: z.string().trim().url().nullable().optional(),
     bio: z.string().trim().max(5000).nullable().optional(),
     rating: z.number().min(0).max(5).nullable().optional(),
-    studentCount: z.number().int().min(0).max(1_000_000).nullable().optional(),
-    coursesAuthored: z.number().int().min(0).max(1_000_000).nullable().optional(),
     location: z.string().trim().max(200).nullable().optional(),
     languagesSpoken: z.string().trim().max(240).nullable().optional(),
     profileHighlights: z.array(z.string().trim().min(1).max(240)).max(50).optional(),
@@ -53,8 +54,6 @@ const updateTutorSchema = z
       value.avatarUrl !== undefined ||
       value.bio !== undefined ||
       value.rating !== undefined ||
-      value.studentCount !== undefined ||
-      value.coursesAuthored !== undefined ||
       value.location !== undefined ||
       value.languagesSpoken !== undefined ||
       value.profileHighlights !== undefined ||
@@ -77,6 +76,8 @@ export const GET = withApiHandler(async (req: NextRequest, { params }: Params) =
     return auth.response;
   }
 
+  const locale = resolveLocaleFromRequest(req);
+  const localeMessages = await loadLocaleMessagesRaw(locale);
   const { id } = await params;
   const tutor = await prisma.user.findFirst({
     where: { id, role: Role.TUTOR },
@@ -87,7 +88,9 @@ export const GET = withApiHandler(async (req: NextRequest, { params }: Params) =
     notFound("Tutor not found");
   }
 
-  return NextResponse.json({ data: serializeTutorForAdmin(tutor) });
+  return NextResponse.json({
+    data: localizeTutorFromMessages(serializeTutorForAdmin(tutor), localeMessages),
+  });
 });
 
 export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params) => {
@@ -129,8 +132,6 @@ export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params)
       avatarUrl: payload.avatarUrl,
       bio: payload.bio,
       rating: payload.rating,
-      studentCount: payload.studentCount,
-      coursesAuthored: payload.coursesAuthored,
       location: payload.location,
       languagesSpoken: payload.languagesSpoken,
       profileHighlights:

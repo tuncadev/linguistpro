@@ -2,17 +2,20 @@ import { SignJWT, jwtVerify } from "jose";
 import type { NextRequest } from "next/server";
 import { SESSION_COOKIE_NAME, SESSION_TTL_SECONDS } from "@/lib/auth/constants";
 import type { AppRole } from "@/lib/auth/rbac";
+import { isSupportedLocale, type AppLocale } from "@/i18n/routing";
 
 export type SessionUser = {
   id: string;
   email: string;
   role: AppRole;
+  preferredLocale?: AppLocale;
 };
 
 type SessionClaims = {
   sub: string;
   email: string;
   role: AppRole;
+  preferredLocale?: AppLocale;
 };
 
 function getSessionSecret(): Uint8Array {
@@ -32,6 +35,7 @@ export async function createSessionToken(user: SessionUser): Promise<string> {
   return new SignJWT({
     email: user.email,
     role: user.role,
+    preferredLocale: user.preferredLocale,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(user.id)
@@ -57,6 +61,7 @@ export async function verifySessionToken(token: string): Promise<SessionUser | n
       id: claims.sub,
       email: claims.email,
       role: claims.role,
+      preferredLocale: isSupportedLocale(claims.preferredLocale) ? claims.preferredLocale : undefined,
     };
   } catch {
     return null;
@@ -86,7 +91,7 @@ function resolveCookieSecureFlag(isHttps: boolean): boolean {
   return process.env.NODE_ENV === "production" ? isHttps : false;
 }
 
-export function sessionCookieOptions(isHttps: boolean) {
+export function sessionCookieOptions(isHttps = process.env.NODE_ENV === "production") {
   return {
     httpOnly: true,
     secure: resolveCookieSecureFlag(isHttps),
@@ -96,7 +101,7 @@ export function sessionCookieOptions(isHttps: boolean) {
   };
 }
 
-export function clearSessionCookieOptions(isHttps: boolean) {
+export function clearSessionCookieOptions(isHttps = process.env.NODE_ENV === "production") {
   return {
     httpOnly: true,
     secure: resolveCookieSecureFlag(isHttps),

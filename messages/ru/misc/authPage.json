@@ -1,0 +1,35 @@
+{
+  "authPage": {
+    "login": {
+      "title": "Вход",
+      "subtitle": "Войдите в аккаунт для доступа к маршрутам студента, преподавателя или администратора.",
+      "email": "Email",
+      "password": "Пароль",
+      "signingIn": "Вход...",
+      "signIn": "Войти",
+      "noAccount": "Еще нет аккаунта?",
+      "createOne": "Создать",
+      "requestFailed": "Ошибка запроса. Повторите попытку.",
+      "loginFailed": "Не удалось войти",
+      "loginSuccess": "Вход выполнен"
+    },
+    "register": {
+      "title": "Создать аккаунт",
+      "subtitle": "Зарегистрируйте новый студенческий аккаунт на платформе.",
+      "name": "Имя",
+      "email": "Email",
+      "password": "Пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "creatingAccount": "Создание аккаунта...",
+      "createAccount": "Создать аккаунт",
+      "alreadyRegistered": "Уже зарегистрированы?",
+      "signIn": "Войти",
+      "passwordMismatch": "Подтверждение пароля не совпадает.",
+      "registrationFailed": "Ошибка регистрации",
+      "registrationSuccess": "Регистрация успешна. Подтвердите email перед входом.",
+      "registeredSuccessfully": "Регистрация завершена",
+      "requestFailed": "Ошибка запроса. Повторите попытку.",
+      "verificationTokenPrefix": "Токен подтверждения (dev/test)"
+    }
+  }
+}

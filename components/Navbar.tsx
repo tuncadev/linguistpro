@@ -1,301 +1,312 @@
+"use client";
 
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../App';
-import { UserRole } from '../types';
-import { LayoutGrid, Info, Menu } from 'lucide-react';
-import { loginUser, logoutUser, registerUser } from '../services/authApiService';
+import { useEffect, useMemo, useState } from "react";
+import { Info, LayoutGrid, Menu, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { createPortal } from "react-dom";
+import {
+  fetchSessionUser,
+  logoutUser,
+  updatePreferredLocale,
+} from "@/services/authApiService";
+import {
+  isSupportedLocale,
+  normalizeLocale,
+  SUPPORTED_LOCALES,
+  type AppLocale,
+} from "@/i18n/routing";
+import { localizePath } from "@/i18n/locale-path";
+import type { User } from "@/types";
+import AuthCard from "@/components/auth/AuthCard";
 
-const Navbar: React.FC = () => {
-  const { user, setUser, setView, view, demoUsers } = useContext(AppContext);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [authNotice, setAuthNotice] = useState<string | null>(null);
-  const [authLoading, setAuthLoading] = useState(false);
+const LOCALE_AUTONYMS: Record<AppLocale, string> = {
+  uk: "Українська",
+  en: "English",
+  es: "Español",
+  tr: "Türkçe",
+  ru: "Язык",
+};
 
-  const resetAuthForm = () => {
-    setName('');
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    setAuthError(null);
-    setAuthNotice(null);
-  };
+function roleDashboardPath(role: User["role"]): string {
+  if (role === "ADMIN") {
+    return "/admin/courses";
+  }
+  if (role === "TUTOR") {
+    return "/tutor/my-courses";
+  }
+  return "/student/my-learning";
+}
 
-  const openAuthModal = (mode: 'login' | 'register') => {
-    setAuthMode(mode);
-    resetAuthForm();
-    setShowAuthModal(true);
-  };
+function isCoursesPath(pathname: string): boolean {
+  return /\/(courses)(\/|$)/.test(pathname);
+}
 
-  const closeAuthModal = () => {
-    setShowAuthModal(false);
-    resetAuthForm();
-  };
+function isAboutPath(pathname: string): boolean {
+  return /\/(about)(\/|$)/.test(pathname);
+}
 
-  const onSubmitAuth = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setAuthError(null);
-    setAuthNotice(null);
-    setAuthLoading(true);
+function isDashboardPath(pathname: string): boolean {
+  return /\/(admin|student|tutor)(\/|$)/.test(pathname);
+}
 
-    try {
-      if (authMode === 'register') {
-        if (password !== confirmPassword) {
-          setAuthError('Password confirmation does not match.');
-          return;
-        }
-        const registered = await registerUser(name.trim(), email.trim(), password);
-        if (registered.verificationRequired) {
-          const devTokenHint = registered.verificationToken ? ` Verification token: ${registered.verificationToken}` : '';
-          setAuthNotice(
-            `${registered.message ?? 'Registration successful. Verify email before login.'}${devTokenHint}`
-          );
-          setAuthMode('login');
-          setPassword('');
-          setConfirmPassword('');
-          return;
-        }
+export default function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const localeRaw = useLocale();
+  const locale = normalizeLocale(localeRaw);
+  const tCommon = useTranslations("common");
 
-        if (registered.user) {
-          setUser(registered.user);
-          setView('dashboard');
-          closeAuthModal();
-        }
-      } else {
-        const loggedInUser = await loginUser(email.trim(), password);
-        setUser(loggedInUser);
-        setView('dashboard');
-        closeAuthModal();
+  const [user, setUser] = useState<User | null>(null);
+  const [localeLoading, setLocaleLoading] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadSession = async () => {
+      const sessionUser = await fetchSessionUser();
+      if (!active) {
+        return;
       }
-    } catch (error) {
-      setAuthError(error instanceof Error ? error.message : 'Authentication failed.');
+      setUser(sessionUser);
+    };
+
+    void loadSession();
+
+    return () => {
+      active = false;
+    };
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!loginModalOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setLoginModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [loginModalOpen]);
+
+  const activeCourses = useMemo(() => isCoursesPath(pathname), [pathname]);
+  const activeAbout = useMemo(() => isAboutPath(pathname), [pathname]);
+  const activeDashboard = useMemo(() => isDashboardPath(pathname), [pathname]);
+
+  const goTo = (path: string) => {
+    router.push(localizePath(path, locale));
+  };
+
+  const onSignOut = async () => {
+    await logoutUser();
+    setUser(null);
+    router.push(localizePath("/", locale));
+    router.refresh();
+  };
+
+  const onLocaleChange = async (nextLocaleRaw: string) => {
+    if (!isSupportedLocale(nextLocaleRaw)) {
+      return;
+    }
+
+    const nextLocale = nextLocaleRaw as AppLocale;
+    if (nextLocale === locale) {
+      return;
+    }
+
+    setLocaleLoading(true);
+    try {
+      document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+
+      if (user) {
+        const updated = await updatePreferredLocale(nextLocale);
+        if (updated) {
+          setUser(updated);
+        }
+      }
+    } catch {
+      // Switch route anyway.
     } finally {
-      setAuthLoading(false);
+      const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      const parts = current.split("?");
+      const currentPathname = parts[0];
+      const suffix = current.slice(currentPathname.length);
+      const segments = currentPathname.split("/").filter(Boolean);
+      const hasLocalePrefix = segments.length > 0 && isSupportedLocale(segments[0]);
+      const nextPath = hasLocalePrefix
+        ? `/${[nextLocale, ...segments.slice(1)].join("/")}`
+        : `/${[nextLocale, ...segments].join("/")}`;
+      window.location.href = `${nextPath}${suffix}`;
     }
   };
 
-  const onGuestClick = async () => {
-    await logoutUser();
-    setUser(null);
-    setView('home');
-  };
-
   return (
-    <>
-      <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200 h-20 flex items-center justify-between px-6 lg:px-12 sticky top-0 z-50">
-        <div className="flex items-center gap-12">
-          <div 
-            className="flex items-center gap-3 cursor-pointer group" 
-            onClick={() => { setView('home'); window.scrollTo(0,0); }}
+    <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200 h-20 flex items-center justify-between px-6 lg:px-12 sticky top-0 z-50">
+      <div className="flex items-center gap-12">
+        <button
+          className="flex items-center gap-3 cursor-pointer group"
+          onClick={() => {
+            goTo("/");
+            window.scrollTo(0, 0);
+          }}
+        >
+          <div className="relative w-10 h-10 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <path d="M70,30 C70,15 55,5 35,5 C15,5 0,15 0,30 C0,40 8,50 20,55 L15,75 L40,60 L40,60 C55,60 70,50 70,35" fill="#2d3e50" />
+              <text x="14" y="42" className="text-[32px] font-black fill-white select-none" style={{ fontFamily: "Inter, sans-serif" }}>C</text>
+              <path d="M50,45 L75,45 L100,95 L75,95 L68,80 L57,80 L50,95 L25,95 Z" fill="#f47361" />
+              <text x="62" y="75" className="text-[24px] font-bold fill-white select-none" style={{ fontFamily: "Inter, sans-serif" }}>A</text>
+            </svg>
+          </div>
+          <div className="flex flex-col -space-y-1">
+            <span className="text-xl font-black text-[#2d3e50] tracking-tighter uppercase">
+              {tCommon("brandPrimary")}
+            </span>
+            <span className="text-[10px] font-bold text-[#f47361] tracking-[0.2em] uppercase">
+              {tCommon("brandSecondary")}
+            </span>
+          </div>
+        </button>
+
+        <div className="hidden lg:flex items-center gap-8">
+          <button
+            onClick={() => goTo("/courses")}
+            className={`flex items-center gap-2 text-sm font-bold transition-colors ${
+              activeCourses ? "text-[#f47361]" : "text-slate-600 hover:text-[#2d3e50]"
+            }`}
           >
-            <div className="relative w-10 h-10 flex items-center justify-center">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                <path d="M70,30 C70,15 55,5 35,5 C15,5 0,15 0,30 C0,40 8,50 20,55 L15,75 L40,60 L40,60 C55,60 70,50 70,35" fill="#2d3e50" />
-                <text x="14" y="42" className="text-[32px] font-black fill-white select-none" style={{ fontFamily: 'Inter, sans-serif' }}>C</text>
-                <path d="M50,45 L75,45 L100,95 L75,95 L68,80 L57,80 L50,95 L25,95 Z" fill="#f47361" />
-                <text x="62" y="75" className="text-[24px] font-bold fill-white select-none" style={{ fontFamily: 'Inter, sans-serif' }}>A</text>
-              </svg>
-            </div>
-            <div className="flex flex-col -space-y-1">
-              <span className="text-xl font-black text-[#2d3e50] tracking-tighter uppercase">Catalina</span>
-              <span className="text-[10px] font-bold text-[#f47361] tracking-[0.2em] uppercase">Academy</span>
-            </div>
-          </div>
-
-          <div className="hidden lg:flex items-center gap-8">
-            <button 
-              onClick={() => setView('catalog')}
-              className={`flex items-center gap-2 text-sm font-bold transition-colors ${view === 'catalog' ? 'text-[#f47361]' : 'text-slate-600 hover:text-[#2d3e50]'}`}
-            >
-              <LayoutGrid className="w-4 h-4" /> Courses
-            </button>
-            <button 
-              onClick={() => setView('about')}
-              className={`flex items-center gap-2 text-sm font-bold transition-colors ${view === 'about' ? 'text-[#f47361]' : 'text-slate-600 hover:text-[#2d3e50]'}`}
-            >
-              <Info className="w-4 h-4" /> About Us
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex items-center gap-4 bg-slate-100 p-1.5 rounded-full border border-slate-200">
-            <button
-              onClick={onGuestClick}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${!user ? 'bg-white text-[#f47361] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              Guest
-            </button>
-            {demoUsers.map((u) => (
-              <button
-                key={u.id}
-                onClick={() => {
-                  setUser(u);
-                  setView('catalog');
-                }}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-                  user?.id === u.id 
-                    ? 'bg-white text-[#f47361] shadow-sm' 
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
-              >
-                {u.role}
-              </button>
-            ))}
-          </div>
-
-          {user ? (
-            <div className="flex items-center gap-4 border-l border-slate-200 pl-6">
-              <button onClick={() => setView('dashboard')} className="hidden sm:block text-right group">
-                <p className="text-sm font-black text-slate-800 group-hover:text-[#f47361] transition-colors">{user.name}</p>
-                <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest">{user.role}</p>
-              </button>
-              <img 
-                src={user.avatar ?? 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200'} 
-                className="w-11 h-11 rounded-full border-2 border-[#f47361] object-cover shadow-lg" 
-                alt="User avatar" 
-              />
-              <button
-                onClick={onGuestClick}
-                className="text-xs font-bold px-3 py-2 rounded-lg border border-slate-200 text-slate-600 hover:text-[#2d3e50] hover:border-slate-300 transition-colors"
-              >
-                Sign out
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => openAuthModal('login')}
-                className="text-slate-600 font-bold text-sm px-4 py-2 hover:text-[#2d3e50] transition-colors"
-              >
-                Log In
-              </button>
-              <button
-                onClick={() => openAuthModal('register')}
-                className="bg-[#2d3e50] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#1a2530] transition-all shadow-xl shadow-slate-200"
-              >
-                Start Free Trial
-              </button>
-            </div>
-          )}
-          
-          <button className="lg:hidden p-2 text-slate-600">
-            <Menu className="w-6 h-6" />
+            <LayoutGrid className="w-4 h-4" />
+            <span>{tCommon("courses")}</span>
+          </button>
+          <button
+            onClick={() => goTo("/about")}
+            className={`flex items-center gap-2 text-sm font-bold transition-colors ${
+              activeAbout ? "text-[#f47361]" : "text-slate-600 hover:text-[#2d3e50]"
+            }`}
+          >
+            <Info className="w-4 h-4" />
+            <span>{tCommon("about")}</span>
           </button>
         </div>
-      </nav>
+      </div>
 
-      {showAuthModal ? (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
-          <button
-            aria-label="Close authentication modal"
-            className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
-            onClick={closeAuthModal}
-          />
-          <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-black text-[#2d3e50]">
-                {authMode === 'login' ? 'Welcome back' : 'Create your account'}
-              </h2>
-              <button
-                onClick={closeAuthModal}
-                className="text-slate-400 hover:text-slate-700 text-sm font-bold"
-              >
-                Close
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl mb-5">
-              <button
-                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-colors ${
-                  authMode === 'login' ? 'bg-white text-[#f47361] shadow-sm' : 'text-slate-500'
-                }`}
-                onClick={() => {
-                  setAuthMode('login');
-                  setAuthError(null);
-                }}
-              >
-                Log In
-              </button>
-              <button
-                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-colors ${
-                  authMode === 'register' ? 'bg-white text-[#f47361] shadow-sm' : 'text-slate-500'
-                }`}
-                onClick={() => {
-                  setAuthMode('register');
-                  setAuthError(null);
-                }}
-              >
-                Register
-              </button>
-            </div>
-
-            <form className="space-y-3" onSubmit={onSubmitAuth}>
-              {authMode === 'register' ? (
-                <input
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  placeholder="Full name"
-                  required
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium outline-none focus:border-[#f47361]"
-                />
-              ) : null}
-              <input
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                type="email"
-                placeholder="Email address"
-                required
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium outline-none focus:border-[#f47361]"
-              />
-              <input
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                type="password"
-                placeholder="Password"
-                required
-                minLength={8}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium outline-none focus:border-[#f47361]"
-              />
-              {authMode === 'register' ? (
-                <input
-                  value={confirmPassword}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
-                  type="password"
-                  placeholder="Confirm password"
-                  required
-                  minLength={8}
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium outline-none focus:border-[#f47361]"
-                />
-              ) : null}
-
-              {authError ? (
-                <p className="text-sm font-bold text-red-600">{authError}</p>
-              ) : null}
-              {authNotice ? (
-                <p className="text-xs font-bold text-emerald-700 break-all">{authNotice}</p>
-              ) : null}
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full bg-[#2d3e50] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-[#1a2530] transition-all shadow-xl shadow-slate-200 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {authLoading
-                  ? (authMode === 'login' ? 'Signing in...' : 'Creating account...')
-                  : (authMode === 'login' ? 'Log In' : 'Create Account')}
-              </button>
-            </form>
-          </div>
+      <div className="flex items-center gap-6">
+        <div className="hidden md:flex items-center">
+          <select
+            value={locale}
+            onChange={(event) => {
+              void onLocaleChange(event.target.value);
+            }}
+            aria-label={tCommon("language")}
+            disabled={localeLoading}
+            className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-bold text-slate-700 outline-none"
+          >
+            {SUPPORTED_LOCALES.map((item) => (
+              <option key={item} value={item}>
+                {LOCALE_AUTONYMS[item]}
+              </option>
+            ))}
+          </select>
         </div>
-      ) : null}
-    </>
-  );
-};
 
-export default Navbar;
+        {user ? (
+          <>
+            <div className="hidden md:flex items-center gap-4 bg-slate-100 p-1.5 rounded-full border border-slate-200">
+              <button
+                onClick={() => goTo(roleDashboardPath(user.role))}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                  activeDashboard
+                    ? "bg-white text-[#f47361] shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                {tCommon("dashboard")}
+              </button>
+              <button
+                onClick={() => goTo("/settings")}
+                className="px-4 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-700 transition-all"
+              >
+                {tCommon.has("settings") ? tCommon("settings") : "Settings"}
+              </button>
+            </div>
+            <div className="flex items-center gap-4 border-l border-slate-200 pl-6">
+              <div className="hidden sm:block text-right">
+                <p className="text-sm font-black text-slate-800">{user.name}</p>
+                <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest">{user.role}</p>
+              </div>
+              <img
+                src={user.avatar ?? "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"}
+                className="w-11 h-11 rounded-full border-2 border-[#f47361] object-cover shadow-lg"
+                alt={tCommon("userAvatarAlt")}
+              />
+              <button
+                onClick={onSignOut}
+                className="text-xs font-bold px-3 py-2 rounded-lg border border-slate-200 text-slate-600 hover:text-[#2d3e50] hover:border-slate-300 transition-colors"
+              >
+                {tCommon("signOut")}
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setLoginModalOpen(true)}
+              className="text-slate-600 font-bold text-sm px-4 py-2 hover:text-[#2d3e50] transition-colors"
+            >
+              {tCommon("logIn")}
+            </button>
+            <button
+              onClick={() => goTo("/register")}
+              className="bg-sky-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-sky-700 transition-all shadow-xl shadow-slate-200"
+            >
+              {tCommon("startFreeTrial")}
+            </button>
+          </div>
+        )}
+
+        <button className="lg:hidden p-2 text-slate-600" aria-label="menu">
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
+
+      {loginModalOpen && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/55 p-4 backdrop-blur-sm"
+              role="dialog"
+              aria-modal="true"
+              onClick={() => setLoginModalOpen(false)}
+            >
+              <div className="absolute inset-0" />
+              <div
+                className="relative z-[201] w-full max-w-2xl"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => setLoginModalOpen(false)}
+                  className="absolute top-3 right-3 z-[202] inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-slate-900/70 text-white hover:bg-slate-800"
+                  aria-label={tCommon.has("closeAuthModal") ? tCommon("closeAuthModal") : tCommon("close")}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                <AuthCard onSuccess={() => setLoginModalOpen(false)} initialTab="login" />
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
+    </nav>
+  );
+}

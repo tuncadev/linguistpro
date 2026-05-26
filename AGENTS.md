@@ -95,6 +95,13 @@ Before making edits, read in this order:
 `AppContext` keys in `App.tsx` are tightly coupled to many components.
 If you change names/shapes, update all consumers in `components/` and `views/`.
 
+Avatar policy enforcement contract:
+- Applies to avatar links and uploaded avatar images.
+- Violation 1: reject image, remove avatar to placeholder/default, issue warning.
+- Violation 2: block account for 1 month.
+- Violation 3: permanent ban.
+- Enforcement must track both account/email and source IP context.
+
 Selection flow invariants:
 - `setSelectedLang(...)` should precede `view = 'language-landing'`
 - `setSelectedCourse(...)` should precede `view = 'course-details'`

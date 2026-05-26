@@ -14,6 +14,22 @@ import { parseJsonBody } from "@/lib/http/validation";
 import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 import { requireApprovedTutor } from "@/lib/tutors/governance";
+import { resolveLocaleFromRequest } from "@/lib/i18n/api-messages";
+import { localizeCourseFromMessages } from "@/lib/courses/localization";
+import { loadLocaleMessagesRaw } from "@/lib/i18n/translation-registry";
+
+const dataImageUrlPattern = /^data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=\s]+$/;
+const imageUrlSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .refine(
+    (value) =>
+      value.startsWith("http://") ||
+      value.startsWith("https://") ||
+      dataImageUrlPattern.test(value),
+    "Invalid image URL format"
+  );
 
 const updateCourseSchema = z.object({
   title: z.string().trim().min(3).max(160).optional(),
@@ -21,8 +37,7 @@ const updateCourseSchema = z.object({
   price: z.number().min(0).max(100000).optional(),
   rating: z.number().min(0).max(5).optional(),
   reviews: z.number().int().min(0).max(1_000_000).optional(),
-  studentCount: z.number().int().min(0).max(1_000_000).optional(),
-  imageUrl: z.string().trim().url().nullable().optional(),
+  imageUrl: z.union([imageUrlSchema, z.null()]).optional(),
   languageId: z.string().trim().min(1).optional(),
   levelId: z.string().trim().min(1).optional(),
   tutorId: z.string().trim().min(1).optional(),
@@ -75,6 +90,8 @@ type Params = {
 
 export const GET = withApiHandler(async (req: NextRequest, { params }: Params) => {
   const { id } = await params;
+  const locale = resolveLocaleFromRequest(req);
+  const localeMessages = await loadLocaleMessagesRaw(locale);
   const course = await prisma.course.findUnique({
     where: { id },
     include: courseInclude,
@@ -94,7 +111,9 @@ export const GET = withApiHandler(async (req: NextRequest, { params }: Params) =
     notFound("Course not found");
   }
 
-  return NextResponse.json({ data: serializeCourse(course) });
+  return NextResponse.json({
+    data: localizeCourseFromMessages(serializeCourse(course), localeMessages),
+  });
 });
 
 export const PATCH = withApiHandler(async (req: NextRequest, { params }: Params) => {

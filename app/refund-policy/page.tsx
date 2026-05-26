@@ -1,24 +1,30 @@
-export default function RefundPolicyPage() {
+import { getLocale, getTranslations } from "next-intl/server";
+import { buildPageMetadata } from "@/lib/i18n/seo";
+
+export async function generateMetadata() {
+  const locale = await getLocale();
+  return buildPageMetadata("refundPolicy", locale, "/refund-policy");
+}
+
+export default async function RefundPolicyPage() {
+  const t = await getTranslations("pages.refundPolicy");
   return (
     <main style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem 4rem" }}>
-      <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#2d3e50" }}>Refund Policy</h1>
+      <h1 style={{ fontSize: "2rem", fontWeight: 900, color: "#2d3e50" }}>{t("title")}</h1>
       <p style={{ marginTop: "1rem", color: "#334155", lineHeight: 1.7 }}>
-        Refund handling is processed through support review and billing provider constraints. Requests are evaluated
-        against purchase timing, class/session usage, and fraud checks.
+        {t("intro")}
       </p>
       <h2 style={{ marginTop: "1.5rem", fontSize: "1.25rem", fontWeight: 800, color: "#2d3e50" }}>
-        Request Window
+        {t("requestWindowTitle")}
       </h2>
       <p style={{ marginTop: "0.5rem", color: "#334155", lineHeight: 1.7 }}>
-        Users should submit refund requests as early as possible through the support channel listed on the Support
-        page.
+        {t("requestWindowBody")}
       </p>
       <h2 style={{ marginTop: "1.5rem", fontSize: "1.25rem", fontWeight: 800, color: "#2d3e50" }}>
-        Dispute Handling
+        {t("disputeHandlingTitle")}
       </h2>
       <p style={{ marginTop: "0.5rem", color: "#334155", lineHeight: 1.7 }}>
-        Charge disputes are tracked as incidents and resolved with billing evidence, course access logs, and policy
-        review.
+        {t("disputeHandlingBody")}
       </p>
     </main>
   );

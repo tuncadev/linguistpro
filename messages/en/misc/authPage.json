@@ -1,0 +1,35 @@
+{
+  "authPage": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in with your account to access student, tutor, or admin routes.",
+      "email": "Email",
+      "password": "Password",
+      "signingIn": "Signing in...",
+      "signIn": "Sign in",
+      "noAccount": "No account yet?",
+      "createOne": "Create one",
+      "requestFailed": "Request failed. Please try again.",
+      "loginFailed": "Login failed",
+      "loginSuccess": "Login successful"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Register a new student account for the platform.",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "creatingAccount": "Creating account...",
+      "createAccount": "Create account",
+      "alreadyRegistered": "Already registered?",
+      "signIn": "Sign in",
+      "passwordMismatch": "Password confirmation does not match.",
+      "registrationFailed": "Registration failed",
+      "registrationSuccess": "Registration successful. Verify email before login.",
+      "registeredSuccessfully": "Registered successfully",
+      "requestFailed": "Request failed. Please try again.",
+      "verificationTokenPrefix": "Verification token (dev/test)"
+    }
+  }
+}

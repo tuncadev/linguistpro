@@ -1,0 +1,22 @@
+{
+  "common": {
+    "brandPrimary": "Catalina",
+    "brandSecondary": "Academy",
+    "courses": "Kurslar",
+    "about": "Hakkımızda",
+    "dashboard": "Panel",
+    "signOut": "Çıkış yap",
+    "logIn": "Giriş yap",
+    "startFreeTrial": "Ücretsiz başla",
+    "close": "Kapat",
+    "register": "Kayıt ol",
+    "guest": "Misafir",
+    "language": "Dil",
+    "translationEditMode": "Metni düzenle",
+    "on": "Açık",
+    "off": "Kapalı",
+    "userAvatarAlt": "Kullanıcı avatarı",
+    "closeAuthModal": "Kimlik doğrulama penceresini kapat",
+    "settings": "Ayarlar"
+  }
+}

@@ -130,12 +130,9 @@ export const PATCH = withApiHandler(async (req: NextRequest) => {
           data: {
             courseId: targetCourse.id,
             studentId,
+            trial: false,
           },
           select: { id: true, courseId: true, createdAt: true },
-        });
-        await tx.course.update({
-          where: { id: targetCourse.id },
-          data: { studentCount: { increment: 1 } },
         });
         return created;
       });

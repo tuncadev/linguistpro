@@ -53,6 +53,34 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - [ ] Add accessibility audit and WCAG fixes.
 - [ ] Add i18n foundation.
 
+## Multilingual Rollout Program (UA Default)
+
+Scope target:
+- Default locale: `uk` (Ukrainian).
+- Additional locales: `en`, `es`, `tr`, `ru`.
+- Applies to: public pages, legacy App shell views, auth flows, dashboard surfaces, admin surfaces, API messages, and SEO metadata.
+
+Execution order and task list:
+- [x] `ML-01` Finalize localization architecture decision (`next-intl` vs custom dictionary layer) and document route strategy.
+- [x] `ML-02` Define locale contract (`uk`, `en`, `es`, `tr`, `ru`) and implement locale resolver with `uk` fallback.
+- [x] `ML-03` Add locale-aware URL strategy (`/uk/...`, `/en/...`, `/es/...`, `/tr/...`, `/ru/...`) and redirect root `/` to `/uk`.
+- [x] `ML-04` Create translation resource structure (`messages/{locale}/{namespace}.json`) with strict key naming conventions.
+- [x] `ML-05` Extract hardcoded UI copy from shared chrome (`Navbar`, `Sidebar`, footer/CTA) into translation keys.
+- [x] `ML-06` Extract and localize marketing/public views (`home`, `about`, catalog, language landing, tutor profile/public course cards).
+- [x] `ML-07` Extract and localize auth UX copy (login/register modal/pages, validation copy, notices, errors).
+- [x] `ML-08` Extract and localize role dashboards (`student`, `tutor`, `admin`) and dashboard-specific status labels.
+- [x] `ML-09` Localize Next.js dashboard route pages under `app/(dashboard)` including headings, form labels, table headers, and empty states.
+- [x] `ML-10` Localize API-originated user-visible messages (`/api/auth/*`, `/api/enroll`, onboarding responses) using locale-aware response helpers.
+- [x] `ML-11` Add locale persistence (cookie/session preference) with explicit language switcher component and safe server/client sync.
+- [x] `ML-12` Implement locale-aware SEO metadata (`title`, `description`, canonical/alternate hreflang, OpenGraph locales).
+- [x] `ML-13` Add locale-aware formatting utilities for dates, numbers, and currency; replace direct `toLocale*` calls with centralized helpers.
+- [x] `ML-14` Add translation quality gates in CI (missing key detection, unused key detection, fallback key audit).
+- [x] `ML-15` Add automated tests for locale routing + fallback behavior + key critical flows in all locales.
+- [x] `ML-16` Complete multilingual UAT checklist and freeze release criteria for production rollout.
+
+Suggested immediate Next Step for multilingual stream:
+1. Multilingual rollout complete. Maintain translations as new UI/API text is added and monitor `ops:i18n:check` warnings.
+
 ## P2 Post-Launch Growth
 
 - [ ] Add course recommendations.
@@ -127,3 +155,4 @@ Future Codex instances should read this file first, execute the `Next Step`, the
 - 2026-04-28: Added tutor-course data integrity guardrails with reusable snapshot helper (`lib/tutors/integrity.ts`), protected diagnostics endpoint (`GET /api/admin/tutors/integrity`), and admin tutor dashboard integrity metrics/warnings.
 - 2026-04-28: Added safe tutor-course backfill tooling (`ops/data/backfill-tutor-assignments.mjs`) and operator runbook (`docs/TUTOR_BACKFILL_RUNBOOK.md`) with dry-run/apply modes and post-fix QA steps.
 - 2026-04-28: Completed tutor consistency end-to-end QA card with passing runtime+tutor checks, authenticated admin/public API parity validation, and evidence report `ops/uat/reports/qa-tutor-consistency-20260428T111658Z.md`.
+- 2026-05-24: Completed multilingual rollout ML-01..ML-16: `next-intl` integration, locale-prefixed URL proxy routing, profile+cookie locale persistence, shared translation resources for `uk/en/es/tr/ru`, localized shared chrome + auth/public/legal pages, locale-aware SEO metadata helpers, centralized date/number/currency formatting, i18n QA checker script (`ops:i18n:check`), and locale routing unit tests.

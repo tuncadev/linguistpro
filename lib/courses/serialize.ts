@@ -10,6 +10,15 @@ import {
 export const courseInclude = {
   language: true,
   level: true,
+  _count: {
+    select: {
+      enrollments: {
+        where: {
+          trial: false,
+        },
+      },
+    },
+  },
   tutor: {
     select: {
       id: true,
@@ -74,7 +83,7 @@ export function serializeCourse(course: CourseWithRelations) {
     tutorId: course.tutorId,
     languageId: course.languageId,
     levelId: course.levelId,
-    studentCount: course.studentCount,
+    studentCount: course._count.enrollments,
     rating: course.rating,
     reviews: course.reviews,
     learningObjectives: toStringArray(

@@ -1,0 +1,31 @@
+{
+  "views": {
+    "courseDetails": {
+      "breadcrumb": {
+        "courses": "Kurslar"
+      },
+      "learningObjectives": "Öğrenme hedefleri",
+      "curriculumBreakdown": "Müfredat dökümü",
+      "enrollmentIncludes": "Kayıt şunları içerir:",
+      "verifiedReviews": "doğrulanmış yorum",
+      "verifiedReviewsCount": "{count, plural, =0 {0 doğrulanmış yorum} one {# doğrulanmış yorum} other {# doğrulanmış yorum}}",
+      "currentlyLearning": "şu anda öğreniyor",
+      "currentlyLearningCount": "{count, plural, =0 {0 şu anda öğreniyor} one {# şu anda öğreniyor} other {# şu anda öğreniyor}}",
+      "level": "Seviye",
+      "levels": {
+        "beginner": "Başlangıç",
+        "elementary": "Temel",
+        "pre_intermediate": "Alt-orta",
+        "intermediate": "Orta",
+        "upper_intermediate": "Üst-orta",
+        "advanced": "İleri",
+        "expert": "Uzman",
+        "unknown": "Bilinmiyor"
+      },
+      "actions": {
+        "enrollToday": "Bugün kaydol"
+      },
+      "previewImageAlt": "Kurs önizleme görseli"
+    }
+  }
+}

@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth/password";
 import { clearAuthTokensByType, issueAuthToken } from "@/lib/auth/tokens";
 import { checkRateLimit } from "@/lib/security/rate-limit";
+import { normalizeLocale } from "@/i18n/routing";
+import { apiMessage } from "@/lib/i18n/api-messages";
 
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
     if (!rate.allowed) {
       return NextResponse.json(
         {
-          error: "Too many registration attempts. Please retry later.",
+          error: apiMessage(req, "auth.tooManyRegistrationAttempts"),
           retryAfterSeconds: rate.retryAfterSeconds,
         },
         { status: 429 }
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid registration payload", details: parsed.error.flatten() },
+        { error: apiMessage(req, "auth.invalidRegistrationPayload"), details: parsed.error.flatten() },
         { status: 400 }
       );
     }
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
     const existing = await prisma.user.findUnique({ where: { email } });
 
     if (existing) {
-      return NextResponse.json({ error: "Email is already registered" }, { status: 409 });
+      return NextResponse.json({ error: apiMessage(req, "auth.emailAlreadyRegistered") }, { status: 409 });
     }
 
     const passwordHash = await hashPassword(parsed.data.password);
@@ -57,6 +59,7 @@ export async function POST(req: NextRequest) {
         passwordHash,
         role: "STUDENT",
         emailVerifiedAt: null,
+        preferredLocale: normalizeLocale(req.headers.get("x-next-intl-locale")),
       },
       select: {
         id: true,
@@ -68,6 +71,7 @@ export async function POST(req: NextRequest) {
         tutorApprovalStatus: true,
         tutorApprovedAt: true,
         tutorApprovalNotes: true,
+        preferredLocale: true,
         avatarUrl: true,
         bio: true,
         rating: true,
@@ -89,7 +93,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Registration successful. Verify your email before signing in.",
+        message: apiMessage(req, "auth.registrationSuccessful"),
         verificationRequired: true,
         verificationToken: process.env.NODE_ENV === "production" ? undefined : verificationToken,
         user,
@@ -98,6 +102,6 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("register error", error);
-    return NextResponse.json({ error: "Registration failed" }, { status: 500 });
+    return NextResponse.json({ error: apiMessage(req, "auth.registrationFailed") }, { status: 500 });
   }
 }

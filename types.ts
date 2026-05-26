@@ -24,7 +24,9 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  preferredLocale?: "uk" | "en" | "es" | "tr" | "ru";
   avatar?: string;
+  avatarUrl?: string;
   bio?: string;
   rating?: number;
   studentCount?: number;

@@ -1,0 +1,136 @@
+{
+  "public": {
+    "hero": {
+      "badge": "Офіційна мовна школа Catalina Academy",
+      "titleLine1": "Розкрийте свій",
+      "titleLine2": "Глобальний потенціал.",
+      "description": "Відчуйте новий підхід до вивчення мов. Від розмовної впевненості до професійної сертифікації разом із нашими експертними викладачами.",
+      "browseCourses": "Переглянути курси",
+      "meetFaculty": "Переглянути програми",
+      "joinLabel": "Приєднуйтесь до",
+      "joinSuffix": "випускників у світі",
+      "accredited": "Акредитовано",
+      "accreditedSub": "Глобальні мовні стандарти",
+      "studentAvatarAltPrefix": "Студент",
+      "classroomImageAlt": "Інтерактивне навчальне середовище Catalina Academy"
+    },
+    "languageCard": {
+      "description": "Програми з викладачами-експертами для всіх рівнів.",
+      "departmentDetails": "Деталі програми"
+    },
+    "home": {
+      "languageFacultiesTitle": "Курси іноземних мов",
+      "languageFacultiesSubtitle": "Досліджуйте наші мовні програми та досягайте справжньої вільності.",
+      "culturalTitleLine1": "Більше, ніж просто слова:",
+      "culturalTitleLine2": "Культурна вільність.",
+      "culturalDescription": "У Catalina Academy ми навчаємо не лише граматики. Ми готуємо вас до нюансів культурної комунікації у глобальному світі.",
+      "steps": {
+        "step1": {
+          "title": "Індивідуальні програми",
+          "desc": "Знайдіть спеціалізовані курси для подорожей, бізнесу або академічної сертифікації."
+        },
+        "step2": {
+          "title": "Імерсивне навчання",
+          "desc": "Практикуйтесь із носіями мови в реальних сценаріях через наш віртуальний кампус."
+        },
+        "step3": {
+          "title": "Досвідчені викладачі",
+          "desc": "Кожен викладач Catalina сертифікований і має багаторічний досвід викладання."
+        },
+        "step4": {
+          "title": "Глобальна сертифікація",
+          "desc": "Отримуйте визнані дипломи, що відкривають міжнародні можливості."
+        }
+      },
+      "readyTitle": "Готові до наступного набору?",
+      "enrollToday": "Записатися на курс сьогодні",
+      "certificationIncluded": "Офіційна сертифікація Catalina Academy включена",
+      "studyImageAlt": "Зосереджене навчання в Catalina Academy"
+    },
+    "catalog": {
+      "title": "Огляд курсів",
+      "subtitle": "Опануйте нові мови з найкращими викладачами з усього світу.",
+      "allLanguages": "Усі мови",
+      "reviews": "Відгуків",
+      "viewDetails": "Деталі",
+      "allLevels": "Усі рівні",
+      "languages": {
+        "uk": "Українська",
+        "en": "Англійська",
+        "es": "Іспанська",
+        "tr": "Турецька",
+        "ru": "Язык",
+        "fr": "Французька",
+        "de": "Німецька",
+        "jp": "Японська",
+        "ja": "Японська"
+      }
+    },
+    "about": {
+      "missionLabel": "Наша місія",
+      "titleLine1": "Мова — це міст",
+      "titleLine2": "до людського зв'язку.",
+      "intro": "Заснований у 2024 році, LinguistPro з'явився через просте розчарування: вивчення мов здавалося самотнім і відірваним від реального застосування. Ми створили платформу, яка ставить людську взаємодію в центр і використовує ШІ для пришвидшення прогресу.",
+      "values": {
+        "inclusion": {
+          "title": "Інклюзія насамперед",
+          "desc": "Ми вважаємо, що кожен має мати доступ до якісної освіти незалежно від місця проживання."
+        },
+        "goal": {
+          "title": "Орієнтація на цілі",
+          "desc": "Ми навчаємо не просто словам, а вмінню спілкуватися впевнено та цілеспрямовано."
+        },
+        "quality": {
+          "title": "Гарантія якості",
+          "desc": "Кожен викладач платформи проходить ретельний відбір, щоб забезпечити високий рівень навчання."
+        }
+      },
+      "team": {
+        "title": "Познайомтесь із нашими провідними викладачами",
+        "subtitle": "Глобальна спільнота лінгвістів, поліглотів і технологів, що працюють для вашого розвитку.",
+        "joinFaculty": "Приєднатися як викладач",
+        "members": {
+          "member1": {
+            "name": "Dr. Sarah Miller",
+            "role": "Head of English Pedagogy",
+            "bio": "PhD in Applied Linguistics with 15 years experience in ESL."
+          },
+          "member2": {
+            "name": "Mateo Garcia",
+            "role": "Spanish Curriculum Director",
+            "bio": "Award-winning educator focused on conversational fluency."
+          },
+          "member3": {
+            "name": "Yuki Sato",
+            "role": "Asian Languages Lead",
+            "bio": "Expert in JLPT preparation and cultural immersion techniques."
+          },
+          "member4": {
+            "name": "Amelie Dubois",
+            "role": "European Operations",
+            "bio": "Polyglot fluent in 6 languages, specializing in French phonetics."
+          }
+        }
+      }
+    },
+    "languageLanding": {
+      "breadcrumbHome": "Головна",
+      "department": "Програма",
+      "masterPrefix": "Опануйте",
+      "masterSuffix": "Вільно.",
+      "descriptionPrefix": "Catalina Academy пропонує найструктурованіший шлях до",
+      "descriptionSuffix": "володіння мовою через культурне занурення та академічну дисципліну.",
+      "viewCurriculum": "Переглянути повну програму",
+      "topRatedDepartment": "Найкраща програма",
+      "academicPathTitle": "Академічний шлях",
+      "academicPathSubtitle": "Структуровано відповідно до Загальноєвропейських рекомендацій з мовної освіти (CEFR).",
+      "availableCourses": "Доступні курси",
+      "browsePrograms": "Переглянути всі програми",
+      "diploma": "Диплом",
+      "liveMentoring": "Живе менторство",
+      "startTrial": "Почати пробний період",
+      "curriculumRefreshingPrefix": "Наша програма для",
+      "curriculumRefreshingSuffix": "зараз оновлюється. Набір скоро буде відкрито."
+    }
+  }
+}

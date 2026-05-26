@@ -3,8 +3,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../App';
 import { generateCourseDetails } from '../services/geminiService';
 import { Course } from '../types';
+import { useTranslations } from 'next-intl';
 
 const TutorDashboard: React.FC = () => {
+  const t = useTranslations('dashboard.tutor');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const { user, courses, languages, levels, setCourses } = useContext(AppContext);
   const [isGenerating, setIsGenerating] = useState(false);
   const [topic, setTopic] = useState('');
@@ -31,7 +34,11 @@ const TutorDashboard: React.FC = () => {
     const langObj = languages.find(l => l.id === selectedLang);
     const levelObj = levels.find(v => v.id === selectedLevel);
     
-    const result = await generateCourseDetails(topic, langObj?.name || 'English', levelObj?.name || 'A1');
+    const result = await generateCourseDetails(
+      topic,
+      langObj?.name || tx('defaults.language', 'English'),
+      levelObj?.name || tx('defaults.level', 'A1')
+    );
     
     if (result) {
       // FIX: Added missing properties 'rating', 'reviews', and 'syllabus' to comply with the Course interface.
@@ -55,7 +62,12 @@ const TutorDashboard: React.FC = () => {
       };
       setCourses(prev => [newCourse, ...prev]);
     } else {
-      alert("AI draft generation is unavailable. Ensure the server API endpoint is running and configured.");
+      alert(
+        tx(
+          'errors.aiDraftUnavailable',
+          'AI draft generation is unavailable. Ensure the server API endpoint is running and configured.'
+        )
+      );
     }
     setIsGenerating(false);
     setTopic('');
@@ -65,12 +77,14 @@ const TutorDashboard: React.FC = () => {
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900">Tutor Dashboard</h1>
-          <p className="text-slate-500">Welcome back, {user?.name}. Manage your courses and students.</p>
+          <h1 className="text-3xl font-extrabold text-slate-900">{tx('title', 'Tutor Dashboard')}</h1>
+          <p className="text-slate-500">
+            {tx('subtitlePrefix', 'Welcome back')}, {user?.name}. {tx('subtitleSuffix', 'Manage your courses and students.')}
+          </p>
         </div>
         <div className="flex items-center gap-4 p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
           <div className="text-right">
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest">Revenue</p>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest">{tx('revenue', 'Revenue')}</p>
             <p className="text-2xl font-black text-slate-900">$12,450</p>
           </div>
           <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white">
@@ -86,11 +100,11 @@ const TutorDashboard: React.FC = () => {
           <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          AI Course Architect
+          {tx('aiCourseArchitect', 'AI Course Architect')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-1">
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Language</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">{tx('form.language', 'Language')}</label>
             <select 
               value={selectedLang} 
               onChange={(e) => setSelectedLang(e.target.value)}
@@ -100,7 +114,7 @@ const TutorDashboard: React.FC = () => {
             </select>
           </div>
           <div className="md:col-span-1">
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Level</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">{tx('form.level', 'Level')}</label>
             <select 
               value={selectedLevel} 
               onChange={(e) => setSelectedLevel(e.target.value)}
@@ -110,10 +124,10 @@ const TutorDashboard: React.FC = () => {
             </select>
           </div>
           <div className="md:col-span-1">
-            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Topic or Theme</label>
+            <label className="block text-xs font-bold text-slate-500 uppercase mb-2">{tx('form.topicTheme', 'Topic or Theme')}</label>
             <input 
               type="text" 
-              placeholder="e.g. Cooking for Beginners" 
+              placeholder={tx('form.topicPlaceholder', 'e.g. Cooking for Beginners')}
               className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
@@ -132,14 +146,14 @@ const TutorDashboard: React.FC = () => {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Generate Draft Course
+              {tx('form.generateDraftCourse', 'Generate Draft Course')}
             </>
           )}
         </button>
       </section>
 
       <section>
-        <h2 className="text-xl font-bold mb-4">My Published Courses</h2>
+        <h2 className="text-xl font-bold mb-4">{tx('publishedCourses', 'My Published Courses')}</h2>
         <div className="grid grid-cols-1 gap-4">
           {myCourses.map(course => (
             <div key={course.id} className="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -147,7 +161,9 @@ const TutorDashboard: React.FC = () => {
               <div className="flex-1">
                 <h3 className="font-bold text-slate-900">{course.title}</h3>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-xs text-slate-500">{course.studentCount} Students</span>
+                  <span className="text-xs text-slate-500">
+                    {course.studentCount} {tx('students', 'Students')}
+                  </span>
                   <span className="text-xs text-slate-500">•</span>
                   <span className="text-xs text-slate-500">${course.price}</span>
                 </div>

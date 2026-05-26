@@ -1,8 +1,11 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AppContext } from '../App';
 import { fetchMyEnrollmentCourseIds } from '../services/enrollmentApiService';
+import { useTranslations } from 'next-intl';
 
 const StudentDashboard: React.FC = () => {
+  const t = useTranslations('dashboard.student');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const { user, courses, tutors, setSelectedCourse, setActiveLesson, setView } = useContext(AppContext);
   const [enrollmentCourseIds, setEnrollmentCourseIds] = useState<string[] | null>(null);
 
@@ -53,21 +56,21 @@ const StudentDashboard: React.FC = () => {
   const upcomingTutor = upcomingCourse
     ? tutors.find((candidate) => candidate.id === upcomingCourse.tutorId) || null
     : null;
-  const upcomingTutorName = upcomingTutor?.name || 'Catalina Tutor';
+  const upcomingTutorName = upcomingTutor?.name || tx('defaults.catalinaTutor', 'Catalina Tutor');
   const upcomingTutorAvatar =
     upcomingTutor?.avatar || 'https://picsum.photos/seed/tutor/50';
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-6">
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">My Learning</h1>
-        <p className="text-slate-500">Pick up where you left off, {user?.name}.</p>
+        <h1 className="text-3xl font-extrabold text-slate-900">{tx('title', 'My Learning')}</h1>
+        <p className="text-slate-500">{tx('subtitlePrefix', 'Pick up where you left off')}, {user?.name}.</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-            <h2 className="text-lg font-bold mb-6">In Progress</h2>
+            <h2 className="text-lg font-bold mb-6">{tx('inProgress.title', 'In Progress')}</h2>
             <div className="space-y-6">
               {inProgressCourses.length > 0 ? inProgressCourses.map((course, idx) => (
                 <div 
@@ -81,20 +84,26 @@ const StudentDashboard: React.FC = () => {
                     <div className="mt-3 w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                       <div className={`bg-indigo-600 h-full ${idx === 0 ? 'w-[65%]' : 'w-[20%]'}`}></div>
                     </div>
-                    <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">{idx === 0 ? '65%' : '20%'} Complete</p>
+                    <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">
+                      {idx === 0 ? '65%' : '20%'} {tx('inProgress.complete', 'Complete')}
+                    </p>
                   </div>
                 </div>
               )) : (
-                <div className="text-sm text-slate-500">No courses in progress yet.</div>
+                <div className="text-sm text-slate-500">{tx('inProgress.empty', 'No courses in progress yet.')}</div>
               )}
             </div>
           </div>
           
           <div className="bg-indigo-600 p-10 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl shadow-indigo-200">
             <div className="relative z-10">
-              <h2 className="text-3xl font-black mb-2">7 Day Streak! 🔥</h2>
-              <p className="text-indigo-100 mb-8 max-w-sm text-lg">You are on fire! Practice today to keep your streak going and earn a 10% discount on your next course.</p>
-              <button className="bg-white text-indigo-600 font-bold px-8 py-3 rounded-2xl hover:bg-indigo-50 transition-colors shadow-lg shadow-indigo-900/20">Resume Last Lesson</button>
+              <h2 className="text-3xl font-black mb-2">{tx('streak.title', '7 Day Streak! 🔥')}</h2>
+              <p className="text-indigo-100 mb-8 max-w-sm text-lg">
+                {tx('streak.description', 'You are on fire! Practice today to keep your streak going and earn a 10% discount on your next course.')}
+              </p>
+              <button className="bg-white text-indigo-600 font-bold px-8 py-3 rounded-2xl hover:bg-indigo-50 transition-colors shadow-lg shadow-indigo-900/20">
+                {tx('streak.resume', 'Resume Last Lesson')}
+              </button>
             </div>
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
           </div>
@@ -102,7 +111,7 @@ const StudentDashboard: React.FC = () => {
 
         <div className="space-y-6">
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-            <h2 className="text-lg font-bold mb-6">Achievements</h2>
+            <h2 className="text-lg font-bold mb-6">{tx('achievements.title', 'Achievements')}</h2>
             <div className="grid grid-cols-3 gap-3">
               {[1,2,3,4,5,6].map(i => (
                 <div key={i} className="aspect-square bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100">
@@ -115,13 +124,17 @@ const StudentDashboard: React.FC = () => {
           </div>
 
           <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-            <h2 className="text-lg font-bold mb-6">Upcoming Class</h2>
+            <h2 className="text-lg font-bold mb-6">{tx('upcoming.title', 'Upcoming Class')}</h2>
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
               <p className="text-xs font-bold text-indigo-600 uppercase mb-2">
-                {upcomingCourse ? 'Next in your learning track' : 'No class scheduled'}
+                {upcomingCourse
+                  ? tx('upcoming.nextTrack', 'Next in your learning track')
+                  : tx('upcoming.noneScheduled', 'No class scheduled')}
               </p>
               <h4 className="font-bold text-slate-900 leading-tight mb-4">
-                {upcomingCourse ? upcomingCourse.title : 'Enroll in a course to unlock your next class'}
+                {upcomingCourse
+                  ? upcomingCourse.title
+                  : tx('upcoming.emptyMessage', 'Enroll in a course to unlock your next class')}
               </h4>
               <div className="flex items-center gap-3">
                 <img src={upcomingTutorAvatar} className="w-8 h-8 rounded-full shadow-sm" />
@@ -136,7 +149,7 @@ const StudentDashboard: React.FC = () => {
                 disabled={!upcomingCourse}
                 className="w-full mt-6 bg-slate-900 text-white py-3 rounded-xl text-sm font-bold hover:bg-indigo-600 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {upcomingCourse ? 'Open Course' : 'No Course Available'}
+                {upcomingCourse ? tx('upcoming.openCourse', 'Open Course') : tx('upcoming.noCourse', 'No Course Available')}
               </button>
             </div>
           </div>

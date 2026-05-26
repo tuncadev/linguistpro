@@ -44,6 +44,29 @@ async function parseJsonSafe<T>(response: Response): Promise<T> {
   }
 }
 
+type ApiErrorPayload = {
+  error?:
+    | string
+    | {
+        message?: string | null;
+      };
+};
+
+function extractApiErrorMessage(payload: ApiErrorPayload, fallback: string): string {
+  if (typeof payload.error === "string" && payload.error.trim().length > 0) {
+    return payload.error;
+  }
+  if (
+    payload.error &&
+    typeof payload.error === "object" &&
+    typeof payload.error.message === "string" &&
+    payload.error.message.trim().length > 0
+  ) {
+    return payload.error.message;
+  }
+  return fallback;
+}
+
 export async function fetchAdminCourses(): Promise<Course[] | null> {
   try {
     const response = await fetch("/api/courses?includeUnpublished=true&take=100", {
@@ -64,56 +87,66 @@ export async function fetchAdminCourses(): Promise<Course[] | null> {
 }
 
 export async function createAdminCourse(payload: CourseMutationPayload): Promise<Course | null> {
-  try {
-    const response = await fetch("/api/courses", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
+  const response = await fetch("/api/courses", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
-    if (!response.ok) {
-      return null;
-    }
-
-    const json = (await response.json()) as { data?: ApiCourse };
-    if (!json.data) {
-      return null;
-    }
-
-    return mapApiCourseToFrontendCourse(json.data);
-  } catch (error) {
-    console.error("createAdminCourse error", error);
-    return null;
+  if (!response.ok) {
+    const payload = await parseJsonSafe<ApiErrorPayload>(response);
+    throw new Error(extractApiErrorMessage(payload, "Course creation failed."));
   }
+
+  const json = await parseJsonSafe<{ data?: ApiCourse }>(response);
+  if (!json.data) {
+    throw new Error("Course creation failed.");
+  }
+
+  return mapApiCourseToFrontendCourse(json.data);
 }
 
 export async function updateAdminCourse(
   courseId: string,
   payload: CourseMutationPayload
 ): Promise<Course | null> {
-  try {
-    const response = await fetch(`/api/courses/${courseId}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
+  const response = await fetch(`/api/courses/${courseId}`, {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
-    if (!response.ok) {
-      return null;
-    }
+  if (!response.ok) {
+    const payload = await parseJsonSafe<ApiErrorPayload>(response);
+    throw new Error(extractApiErrorMessage(payload, "Course update failed."));
+  }
 
-    const json = (await response.json()) as { data?: ApiCourse };
-    if (!json.data) {
-      return null;
-    }
+  const json = await parseJsonSafe<{ data?: ApiCourse }>(response);
+  if (!json.data) {
+    throw new Error("Course update failed.");
+  }
 
-    return mapApiCourseToFrontendCourse(json.data);
-  } catch (error) {
-    console.error("updateAdminCourse error", error);
+  return mapApiCourseToFrontendCourse(json.data);
+}
+
+export async function fetchAdminCourseById(courseId: string): Promise<Course | null> {
+  const response = await fetch(`/api/courses/${courseId}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
     return null;
   }
+
+  const json = await parseJsonSafe<{ data?: ApiCourse }>(response);
+  if (!json.data) {
+    return null;
+  }
+
+  return mapApiCourseToFrontendCourse(json.data);
 }
 
 export async function deleteAdminCourse(courseId: string): Promise<boolean> {

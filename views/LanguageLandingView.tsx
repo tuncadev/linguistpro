@@ -2,6 +2,8 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../App';
 import { CheckCircle2, Star, BookOpen, MessageCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import EditableText from '../components/i18n/EditableText';
 
 const LANGUAGE_HEADER_IMAGES: Record<string, string> = {
   en: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
@@ -14,6 +16,7 @@ const LANGUAGE_HEADER_IMAGES: Record<string, string> = {
 
 const LanguageLandingView: React.FC = () => {
   const { selectedLang, levels, setView, setSelectedCourse, courses } = useContext(AppContext);
+  const t = useTranslations('public.languageLanding');
 
   if (!selectedLang) return null;
 
@@ -29,27 +32,27 @@ const LanguageLandingView: React.FC = () => {
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="md:w-3/5 space-y-6">
               <nav className="flex items-center gap-2 text-sm font-bold text-slate-400 mb-4">
-                <button onClick={() => setView('home')} className="hover:text-[#f47361]">Home</button>
+                <button onClick={() => setView('home')} className="hover:text-[#f47361]"><EditableText translationKey="public.languageLanding.breadcrumbHome" text={t('breadcrumbHome')} as="span" /></button>
                 <span>/</span>
-                <span className="text-[#2d3e50]">{selectedLang.name} Department</span>
+                <span className="text-[#2d3e50]">{selectedLang.name} <EditableText translationKey="public.languageLanding.department" text={t('department')} as="span" /></span>
               </nav>
               <h1 className="text-5xl md:text-6xl font-black text-[#2d3e50]">
-                Master {selectedLang.name} <br /> 
-                <span className="text-[#f47361] underline decoration-[#f47361]/20 decoration-8 underline-offset-4">Fluently.</span>
+                <EditableText translationKey="public.languageLanding.masterPrefix" text={t('masterPrefix')} as="span" /> {selectedLang.name} <br /> 
+                <span className="text-[#f47361] underline decoration-[#f47361]/20 decoration-8 underline-offset-4"><EditableText translationKey="public.languageLanding.masterSuffix" text={t('masterSuffix')} as="span" /></span>
               </h1>
               <p className="text-xl text-slate-600 leading-relaxed max-w-2xl">
-                Catalina Academy provides the most structured path to {selectedLang.name} proficiency through cultural immersion and academic rigor.
+                <EditableText translationKey="public.languageLanding.descriptionPrefix" text={t('descriptionPrefix')} as="span" /> {selectedLang.name} <EditableText translationKey="public.languageLanding.descriptionSuffix" text={t('descriptionSuffix')} as="span" />
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
                 <button 
                   onClick={() => setView('catalog')}
-                  className="bg-[#2d3e50] text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-slate-200 hover:bg-[#1a2530] transition-all"
+                  className="bg-sky-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-slate-200 hover:bg-sky-700 transition-all"
                 >
-                  View Full Curriculum
+                  <EditableText translationKey="public.languageLanding.viewCurriculum" text={t('viewCurriculum')} as="span" />
                 </button>
                 <div className="flex items-center gap-2 px-6 py-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <Star className="w-5 h-5 text-[#ffb821] fill-[#ffb821]" />
-                  <span className="font-bold text-[#2d3e50]">Top Rated Department</span>
+                  <span className="font-bold text-[#2d3e50]"><EditableText translationKey="public.languageLanding.topRatedDepartment" text={t('topRatedDepartment')} as="span" /></span>
                 </div>
               </div>
             </div>
@@ -70,8 +73,8 @@ const LanguageLandingView: React.FC = () => {
       <section className="py-24 bg-slate-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-black text-[#2d3e50] mb-4 uppercase tracking-wider">The Academic Path</h2>
-            <p className="text-slate-500">Structured according to the Common European Framework of Reference (CEFR).</p>
+            <h2 className="text-3xl font-black text-[#2d3e50] mb-4 uppercase tracking-wider"><EditableText translationKey="public.languageLanding.academicPathTitle" text={t('academicPathTitle')} as="span" /></h2>
+            <p className="text-slate-500"><EditableText translationKey="public.languageLanding.academicPathSubtitle" text={t('academicPathSubtitle')} as="span" /></p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {levels.map(level => (
@@ -88,9 +91,9 @@ const LanguageLandingView: React.FC = () => {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-black text-[#2d3e50]">Available Courses</h2>
+            <h2 className="text-3xl font-black text-[#2d3e50]"><EditableText translationKey="public.languageLanding.availableCourses" text={t('availableCourses')} as="span" /></h2>
             <button onClick={() => setView('catalog')} className="text-[#f47361] font-bold flex items-center gap-1 hover:underline">
-              Browse All Programs <BookOpen className="w-4 h-4" />
+              <EditableText translationKey="public.languageLanding.browsePrograms" text={t('browsePrograms')} as="span" /> <BookOpen className="w-4 h-4" />
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -105,19 +108,19 @@ const LanguageLandingView: React.FC = () => {
                   <div className="p-4">
                     <h3 className="text-xl font-bold text-[#2d3e50] mb-2 group-hover:text-[#f47361] transition-colors">{course.title}</h3>
                     <div className="flex items-center gap-4 text-[10px] font-black uppercase text-slate-400 mb-6 tracking-widest">
-                      <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Diploma</span>
-                      <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3 text-[#f47361]" /> Live Mentoring</span>
+                      <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> <EditableText translationKey="public.languageLanding.diploma" text={t('diploma')} as="span" /></span>
+                      <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3 text-[#f47361]" /> <EditableText translationKey="public.languageLanding.liveMentoring" text={t('liveMentoring')} as="span" /></span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-black text-[#2d3e50]">${course.price}</span>
-                      <button className="bg-[#f47361] text-white px-6 py-2 rounded-xl font-bold hover:bg-[#e06352] transition-colors">Start Trial</button>
+                      <button className="bg-[#f47361] text-white px-6 py-2 rounded-xl font-bold hover:bg-[#e06352] transition-colors"><EditableText translationKey="public.languageLanding.startTrial" text={t('startTrial')} as="span" /></button>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
               <div className="col-span-full py-20 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                <p className="text-slate-500 font-medium italic">Our curriculum for {selectedLang.name} is currently being refreshed. <br /> Admissions reopen soon.</p>
+                <p className="text-slate-500 font-medium italic"><EditableText translationKey="public.languageLanding.curriculumRefreshingPrefix" text={t('curriculumRefreshingPrefix')} as="span" /> {selectedLang.name}. <br /> <EditableText translationKey="public.languageLanding.curriculumRefreshingSuffix" text={t('curriculumRefreshingSuffix')} as="span" /></p>
               </div>
             )}
           </div>

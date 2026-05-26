@@ -6,6 +6,9 @@ import { withApiHandler } from "@/lib/http/with-api-handler";
 import { prisma } from "@/lib/prisma";
 import { ensureDefaultTutorAndRepairCourses } from "@/lib/tutors/ensure-default-tutor";
 import { publicTutorSelect, serializeTutor } from "@/lib/tutors/serialize";
+import { resolveLocaleFromRequest } from "@/lib/i18n/api-messages";
+import { loadLocaleMessagesRaw } from "@/lib/i18n/translation-registry";
+import { localizeTutorFromMessages } from "@/lib/tutors/localization";
 
 const querySchema = z.object({
   q: z.string().trim().max(160).optional(),
@@ -15,6 +18,8 @@ const querySchema = z.object({
 
 export const GET = withApiHandler(async (req: NextRequest) => {
   const query = parseQuery(req, querySchema);
+  const locale = resolveLocaleFromRequest(req);
+  const localeMessages = await loadLocaleMessagesRaw(locale);
   await ensureDefaultTutorAndRepairCourses();
 
   const tutors = await prisma.user.findMany({
@@ -34,7 +39,9 @@ export const GET = withApiHandler(async (req: NextRequest) => {
   });
 
   return NextResponse.json({
-    data: tutors.map(serializeTutor),
+    data: tutors.map((tutor) =>
+      localizeTutorFromMessages(serializeTutor(tutor), localeMessages)
+    ),
     meta: {
       count: tutors.length,
       take: query.take ?? 50,

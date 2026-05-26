@@ -1,9 +1,12 @@
-export default function CoursesPage() {
-  return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Courses</h1>
-      <p>Next.js route scaffold for catalog listing.</p>
-    </main>
-  );
+import App from "@/App";
+import { getLocale } from "next-intl/server";
+import { buildPageMetadata } from "@/lib/i18n/seo";
+
+export async function generateMetadata() {
+  const locale = await getLocale();
+  return buildPageMetadata("courses", locale, "/courses");
 }
 
+export default function CoursesPage() {
+  return <App initialView="catalog" />;
+}

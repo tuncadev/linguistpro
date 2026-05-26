@@ -1,0 +1,52 @@
+{
+  "dashboard": {
+    "adminLayout": {
+      "tabs": {
+        "settings": "Settings"
+      }
+    },
+    "studentMyLearning": {
+      "actions": {
+        "personalInfo": "Personal Information"
+      }
+    },
+    "tutorMyCourses": {
+      "actions": {
+        "personalInfo": "Personal Information"
+      }
+    },
+    "settings": {
+      "title": "Personal Information",
+      "subtitle": "Update your nickname, avatar, and basic profile details.",
+      "loading": "Loading personal information settings...",
+      "actions": {
+        "backToDashboard": "Back to dashboard",
+        "goToLogin": "Go to login",
+        "save": "Save Changes",
+        "saving": "Saving..."
+      },
+      "fields": {
+        "avatarLink": "Avatar link",
+        "avatarUpload": "Upload avatar image",
+        "nickname": "Nickname",
+        "email": "Email",
+        "bio": "Bio"
+      },
+      "avatar": {
+        "alt": "Profile avatar preview"
+      },
+      "status": {
+        "saved": "Personal information updated.",
+        "uploadReady": "Avatar uploaded. Save changes to apply."
+      },
+      "errors": {
+        "loadFailed": "Unable to load personal settings.",
+        "saveFailed": "Failed to save personal information.",
+        "unauthorized": "You must be logged in to manage settings.",
+        "invalidFileType": "Please select an image file.",
+        "fileTooLarge": "Avatar image must be 2MB or smaller.",
+        "uploadFailed": "Unable to read uploaded image."
+      }
+    }
+  }
+}

@@ -86,6 +86,7 @@ model User {
   tutorApprovalStatus TutorApprovalStatus @default(PENDING)
   tutorApprovedAt DateTime?
   tutorApprovalNotes String?
+  preferredLocale String?
   avatarUrl       String?
   bio             String?
   rating          Float?
@@ -253,6 +254,7 @@ model Enrollment {
 
   student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String
+  trial     Boolean @default(false)
 
   createdAt DateTime @default(now())
 

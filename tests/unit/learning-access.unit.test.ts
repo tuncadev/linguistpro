@@ -8,7 +8,7 @@ describe("learning access policy", () => {
       sessionUserId: "admin-1",
       courseTutorId: "tutor-1",
       courseStatus: "ARCHIVED",
-      hasEnrollment: false,
+      enrollmentAccessType: null,
     });
 
     expect(decision.allowed).toBe(true);
@@ -21,14 +21,14 @@ describe("learning access policy", () => {
       sessionUserId: "tutor-1",
       courseTutorId: "tutor-1",
       courseStatus: "PUBLISHED",
-      hasEnrollment: false,
+      enrollmentAccessType: null,
     });
     const foreignDecision = evaluateLearningAccess({
       role: "TUTOR",
       sessionUserId: "tutor-2",
       courseTutorId: "tutor-1",
       courseStatus: "PUBLISHED",
-      hasEnrollment: false,
+      enrollmentAccessType: null,
     });
 
     expect(ownerDecision.allowed).toBe(true);
@@ -42,21 +42,29 @@ describe("learning access policy", () => {
       sessionUserId: "student-1",
       courseTutorId: "tutor-1",
       courseStatus: "PUBLISHED",
-      hasEnrollment: false,
+      enrollmentAccessType: null,
     });
     const draftBlocked = evaluateLearningAccess({
       role: "STUDENT",
       sessionUserId: "student-1",
       courseTutorId: "tutor-1",
       courseStatus: "DRAFT",
-      hasEnrollment: true,
+      enrollmentAccessType: "PAID",
     });
     const allowed = evaluateLearningAccess({
       role: "STUDENT",
       sessionUserId: "student-1",
       courseTutorId: "tutor-1",
       courseStatus: "PUBLISHED",
-      hasEnrollment: true,
+      enrollmentAccessType: "PAID",
+    });
+    const trialLimited = evaluateLearningAccess({
+      role: "STUDENT",
+      sessionUserId: "student-1",
+      courseTutorId: "tutor-1",
+      courseStatus: "PUBLISHED",
+      enrollmentAccessType: "TRIAL",
+      trialLessonLimitReached: true,
     });
 
     expect(noEnrollment.allowed).toBe(false);
@@ -65,5 +73,7 @@ describe("learning access policy", () => {
     expect(draftBlocked.reason).toBe("COURSE_NOT_PUBLISHED");
     expect(allowed.allowed).toBe(true);
     expect(allowed.reason).toBe("ALLOWED");
+    expect(trialLimited.allowed).toBe(false);
+    expect(trialLimited.reason).toBe("TRIAL_LIMIT_REACHED");
   });
 });

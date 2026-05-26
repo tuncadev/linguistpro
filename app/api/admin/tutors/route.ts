@@ -9,6 +9,9 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth/password";
 import { ensureDefaultTutorAndRepairCourses } from "@/lib/tutors/ensure-default-tutor";
 import { adminTutorSelect, serializeTutorForAdmin } from "@/lib/tutors/serialize";
+import { resolveLocaleFromRequest } from "@/lib/i18n/api-messages";
+import { loadLocaleMessagesRaw } from "@/lib/i18n/translation-registry";
+import { localizeTutorFromMessages } from "@/lib/tutors/localization";
 
 const listQuerySchema = z.object({
   q: z.string().trim().max(160).optional(),
@@ -23,8 +26,6 @@ const createTutorSchema = z.object({
   avatarUrl: z.string().trim().url().nullable().optional(),
   bio: z.string().trim().max(5000).nullable().optional(),
   rating: z.number().min(0).max(5).nullable().optional(),
-  studentCount: z.number().int().min(0).max(1_000_000).nullable().optional(),
-  coursesAuthored: z.number().int().min(0).max(1_000_000).nullable().optional(),
   location: z.string().trim().max(200).nullable().optional(),
   languagesSpoken: z.string().trim().max(240).nullable().optional(),
   profileHighlights: z.array(z.string().trim().min(1).max(240)).max(50).optional(),
@@ -60,6 +61,8 @@ export const GET = withApiHandler(async (req: NextRequest) => {
 
   await ensureDefaultTutorAndRepairCourses();
 
+  const locale = resolveLocaleFromRequest(req);
+  const localeMessages = await loadLocaleMessagesRaw(locale);
   const query = parseQuery(req, listQuerySchema);
   const tutors = await prisma.user.findMany({
     where: {
@@ -79,7 +82,9 @@ export const GET = withApiHandler(async (req: NextRequest) => {
   });
 
   return NextResponse.json({
-    data: tutors.map(serializeTutorForAdmin),
+    data: tutors.map((tutor) =>
+      localizeTutorFromMessages(serializeTutorForAdmin(tutor), localeMessages)
+    ),
     meta: {
       count: tutors.length,
       take: query.take ?? 50,
@@ -120,8 +125,6 @@ export const POST = withApiHandler(async (req: NextRequest) => {
       avatarUrl: payload.avatarUrl ?? null,
       bio: payload.bio ?? null,
       rating: payload.rating ?? null,
-      studentCount: payload.studentCount ?? null,
-      coursesAuthored: payload.coursesAuthored ?? null,
       location: payload.location ?? null,
       languagesSpoken: payload.languagesSpoken ?? null,
       profileHighlights: payload.profileHighlights

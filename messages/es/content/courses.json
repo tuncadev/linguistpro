@@ -1,0 +1,296 @@
+{
+  "content": {
+    "courses": {
+      "cmoh1rw09000zs6ydg19wq4gg": {
+        "title": "Gastronomía Francesa e Idioma",
+        "description": "Aprende francés a través de las artes culinarias y la cultura del vino. Domina el vocabulario de cocina mientras dominas el idioma.",
+        "tuitionLabel": "Matrícula",
+        "discountLabel": "65% de descuento en inscripción",
+        "courseDirectorLabel": "Tutor del curso",
+        "learningObjectives": [
+          "Dominar modismos conversacionales esenciales",
+          "Habilidades de comunicación profesional y formal",
+          "Inmersión cultural profunda e historia",
+          "Dominio fonético y reducción de acento",
+          "Vocabulario práctico para la vida diaria",
+          "Certificación oficial de Catalina Academy"
+        ],
+        "enrollmentIncludes": [
+          "Acceso de por vida al plan de estudios",
+          "Certificado profesional de Catalina",
+          "Comunidad privada de Discord"
+        ],
+        "syllabus": [
+          {
+            "title": "Fundamentos y saludos",
+            "lessons": [
+              {
+                "title": "El alfabeto español y la fonética",
+                "content": "Base fonética y calentamiento de pronunciación."
+              },
+              {
+                "title": "Saludos e introducciones esenciales",
+                "content": "Cómo presentarte con confianza en situaciones reales."
+              },
+              {
+                "title": "Quiz: saludos básicos",
+                "content": "Breve comprobación de comprensión y memoria."
+              },
+              {
+                "title": "Nueva lección",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Vocabulario de la vida diaria",
+            "lessons": [
+              {
+                "title": "En el restaurante: pedir comida",
+                "content": "Frases prácticas para comer y hacer pedidos."
+              },
+              {
+                "title": "Números, hora y fechas",
+                "content": "Gramática de alta frecuencia y patrones de comunicación diaria."
+              },
+              {
+                "title": "Lectura: Un día en Madrid",
+                "content": "Lectura contextual con énfasis en vocabulario."
+              },
+              {
+                "title": "Nueva lección",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Módulo 3",
+            "lessons": [
+              {
+                "title": "Nueva lección",
+                "content": null
+              }
+            ]
+          }
+        ]
+      },
+      "cmohdtm0x000fs6hkplirs3y8": {
+        "title": "Borrador de Gobernanza",
+        "description": "Descripción de borrador para revisión de gobernanza.",
+        "tuitionLabel": "Costo de matrícula",
+        "discountLabel": "65% de descuento en la inscripción",
+        "courseDirectorLabel": "Tutor del curso",
+        "learningObjectives": [
+          "Domina expresiones conversacionales esenciales",
+          "Habilidades de comunicación profesional y formal",
+          "Inmersión profunda en cultura e historia",
+          "Dominio fonético y reducción de acento",
+          "Vocabulario práctico para la vida diaria",
+          "Certificación oficial de Catalina Academy"
+        ],
+        "enrollmentIncludes": [
+          "Acceso vitalicio al plan de estudios",
+          "Certificado profesional de Catalina",
+          "Comunidad privada de Discord"
+        ],
+        "syllabus": [
+          {
+            "title": "Módulo 1",
+            "lessons": [
+              {
+                "title": "Lección 1",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Módulo 2",
+            "lessons": [
+              {
+                "title": "Nueva lección",
+                "content": null
+              }
+            ]
+          },
+          {
+            "title": "Módulo 3",
+            "lessons": [
+              {
+                "title": "Nueva lección",
+                "content": null
+              }
+            ]
+          }
+        ]
+      },
+      "cmoh1rw01000ps6ydlj5w6mum": {
+        "title": "Inglés de Negocios para Profesionales",
+        "description": "Mejora tu comunicación corporativa, tus presentaciones y tu redacción profesional. Ideal para hablantes no nativos en entornos globales.",
+        "tuitionLabel": "Costo de matrícula",
+        "discountLabel": "65% de descuento en la inscripción",
+        "courseDirectorLabel": "Tutor del curso",
+        "learningObjectives": [
+          "Domina expresiones conversacionales esenciales",
+          "Habilidades de comunicación profesional y formal",
+          "Inmersión profunda en cultura e historia",
+          "Dominio fonético y reducción de acento",
+          "Vocabulario práctico para la vida diaria",
+          "Certificación oficial de Catalina Academy"
+        ],
+        "enrollmentIncludes": [
+          "Acceso vitalicio al plan de estudios",
+          "Certificado profesional de Catalina",
+          "Comunidad privada de Discord"
+        ],
+        "syllabus": [
+          {
+            "title": "Fundamentos y saludos",
+            "lessons": [
+              {
+                "title": "El alfabeto español y fonética",
+                "content": "Práctica base de fonética y pronunciación."
+              },
+              {
+                "title": "Saludos e introducciones esenciales",
+                "content": "Cómo presentarte con confianza en situaciones reales."
+              },
+              {
+                "title": "Quiz: saludos básicos",
+                "content": "Breve control de comprensión y memoria."
+              }
+            ]
+          },
+          {
+            "title": "Vocabulario de la vida diaria",
+            "lessons": [
+              {
+                "title": "En el restaurante: pedir comida",
+                "content": "Frases prácticas para comer y pedir."
+              },
+              {
+                "title": "Números, hora y fechas",
+                "content": "Gramática de alta frecuencia y patrones de comunicación diaria."
+              },
+              {
+                "title": "Lectura: un día en Madrid",
+                "content": "Lectura contextual con enfoque en vocabulario."
+              }
+            ]
+          }
+        ]
+      },
+      "cmoh1rvzq000fs6ydg9q1m308": {
+        "title": "Dominio del Español Conversacional",
+        "description": "Profundiza en diálogos cotidianos en español y gramática esencial para viajeros. Aprende a desenvolverte en situaciones reales con confianza y matiz cultural.",
+        "tuitionLabel": "Costo de matrícula",
+        "discountLabel": "65% de descuento en la inscripción",
+        "courseDirectorLabel": "Tutor del curso",
+        "learningObjectives": [
+          "Domina expresiones conversacionales esenciales",
+          "Habilidades de comunicación profesional y formal",
+          "Inmersión profunda en cultura e historia",
+          "Dominio fonético y reducción de acento",
+          "Vocabulario práctico para la vida diaria",
+          "Certificación oficial de Catalina Academy"
+        ],
+        "enrollmentIncludes": [
+          "Acceso vitalicio al plan de estudios",
+          "Certificado profesional de Catalina",
+          "Comunidad privada de Discord"
+        ],
+        "syllabus": [
+          {
+            "title": "Fundamentos y saludos",
+            "lessons": [
+              {
+                "title": "El alfabeto español y fonética",
+                "content": "Práctica base de fonética y pronunciación."
+              },
+              {
+                "title": "Saludos e introducciones esenciales",
+                "content": "Cómo presentarte con confianza en situaciones reales."
+              },
+              {
+                "title": "Quiz: saludos básicos",
+                "content": "Breve control de comprensión y memoria."
+              }
+            ]
+          },
+          {
+            "title": "Vocabulario de la vida diaria",
+            "lessons": [
+              {
+                "title": "En el restaurante: pedir comida",
+                "content": "Frases prácticas para comer y pedir."
+              },
+              {
+                "title": "Números, hora y fechas",
+                "content": "Gramática de alta frecuencia y patrones de comunicación diaria."
+              },
+              {
+                "title": "Lectura: un día en Madrid",
+                "content": "Lectura contextual con enfoque en vocabulario."
+              }
+            ]
+          }
+        ]
+      },
+      "cmofwwyhp000as62gf9dqicct": {
+        "title": "Conversación Práctica en Inglés",
+        "description": "Un curso práctico de conversación en inglés centrado en comunicación diaria, pronunciación y confianza.",
+        "tuitionLabel": "Costo de matrícula",
+        "discountLabel": "65% de descuento en la inscripción",
+        "courseDirectorLabel": "Tutor del curso",
+        "learningObjectives": [
+          "Domina expresiones conversacionales esenciales",
+          "Habilidades de comunicación profesional y formal",
+          "Inmersión profunda en cultura e historia",
+          "Dominio fonético y reducción de acento",
+          "Vocabulario práctico para la vida diaria",
+          "Certificación oficial de Catalina Academy"
+        ],
+        "enrollmentIncludes": [
+          "Acceso vitalicio al plan de estudios",
+          "Certificado profesional de Catalina",
+          "Comunidad privada de Discord"
+        ],
+        "syllabus": [
+          {
+            "title": "Fundamentos y saludos",
+            "lessons": [
+              {
+                "title": "El alfabeto español y fonética",
+                "content": "Práctica base de fonética y pronunciación."
+              },
+              {
+                "title": "Saludos e introducciones esenciales",
+                "content": "Cómo presentarte con confianza en situaciones reales."
+              },
+              {
+                "title": "Quiz: saludos básicos",
+                "content": "Breve control de comprensión y memoria."
+              }
+            ]
+          },
+          {
+            "title": "Vocabulario de la vida diaria",
+            "lessons": [
+              {
+                "title": "En el restaurante: pedir comida",
+                "content": "Frases prácticas para comer y pedir."
+              },
+              {
+                "title": "Números, hora y fechas",
+                "content": "Gramática de alta frecuencia y patrones de comunicación diaria."
+              },
+              {
+                "title": "Lectura: un día en Madrid",
+                "content": "Lectura contextual con enfoque en vocabulario."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

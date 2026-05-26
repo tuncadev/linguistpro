@@ -1,0 +1,35 @@
+{
+  "authPage": {
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "Inicia sesión para acceder a rutas de estudiante, tutor o administrador.",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "signingIn": "Iniciando sesión...",
+      "signIn": "Entrar",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "createOne": "Crear una",
+      "requestFailed": "La solicitud falló. Inténtalo de nuevo.",
+      "loginFailed": "Error al iniciar sesión",
+      "loginSuccess": "Inicio de sesión correcto"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Registra una nueva cuenta de estudiante en la plataforma.",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "creatingAccount": "Creando cuenta...",
+      "createAccount": "Crear cuenta",
+      "alreadyRegistered": "¿Ya estás registrado?",
+      "signIn": "Iniciar sesión",
+      "passwordMismatch": "La confirmación de contraseña no coincide.",
+      "registrationFailed": "No se pudo completar el registro",
+      "registrationSuccess": "Registro completado. Verifica tu correo antes de iniciar sesión.",
+      "registeredSuccessfully": "Registro completado",
+      "requestFailed": "La solicitud falló. Inténtalo de nuevo.",
+      "verificationTokenPrefix": "Token de verificación (dev/test)"
+    }
+  }
+}

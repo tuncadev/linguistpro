@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { fetchAdminCourses } from "@/services/adminCourseCrudApiService";
 import { fetchAdminTutorById, updateAdminTutor } from "@/services/adminTutorCrudApiService";
 import { Course } from "@/types";
@@ -16,8 +17,6 @@ type TutorFormState = {
   password: string;
   avatarUrl: string;
   bio: string;
-  studentCount: string;
-  coursesAuthored: string;
   tutorApprovalStatus: "PENDING" | "APPROVED" | "REJECTED";
   tutorApprovalNotes: string;
 };
@@ -28,27 +27,13 @@ const EMPTY_FORM: TutorFormState = {
   password: "",
   avatarUrl: "",
   bio: "",
-  studentCount: "",
-  coursesAuthored: "",
   tutorApprovalStatus: "PENDING",
   tutorApprovalNotes: "",
 };
 
-function toOptionalNonNegativeInt(raw: string): number | null | undefined {
-  const normalized = raw.trim();
-  if (!normalized) {
-    return undefined;
-  }
-
-  const parsed = Number(normalized);
-  if (!Number.isInteger(parsed) || parsed < 0) {
-    return null;
-  }
-
-  return parsed;
-}
-
 export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
+  const t = useTranslations("dashboard.adminTutorDetail");
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const [tutorId, setTutorId] = useState<string>("");
   const [form, setForm] = useState<TutorFormState>(EMPTY_FORM);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -82,14 +67,6 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
           password: "",
           avatarUrl: tutor.avatar?.trim() || "",
           bio: tutor.bio?.trim() || "",
-          studentCount:
-            typeof tutor.studentCount === "number" && Number.isFinite(tutor.studentCount)
-              ? String(tutor.studentCount)
-              : "",
-          coursesAuthored:
-            typeof tutor.coursesAuthored === "number" && Number.isFinite(tutor.coursesAuthored)
-              ? String(tutor.coursesAuthored)
-              : "",
           tutorApprovalStatus: tutor.tutorApprovalStatus ?? "PENDING",
           tutorApprovalNotes: tutor.tutorApprovalNotes ?? "",
         });
@@ -129,18 +106,10 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
     setError(null);
     setNotice(null);
 
-    const studentCount = toOptionalNonNegativeInt(form.studentCount);
-    const coursesAuthored = toOptionalNonNegativeInt(form.coursesAuthored);
-    if (studentCount === null || coursesAuthored === null) {
-      setSaving(false);
-      setError("Student count and authored courses must be non-negative integers.");
-      return;
-    }
-
     const password = form.password.trim();
     if (password && password.length < 8) {
       setSaving(false);
-      setError("New password must be at least 8 characters.");
+      setError(tx("errors.invalidPassword", "New password must be at least 8 characters."));
       return;
     }
 
@@ -151,16 +120,14 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
         password: password || undefined,
         avatarUrl: form.avatarUrl.trim() || null,
         bio: form.bio.trim() || null,
-        studentCount,
-        coursesAuthored,
         tutorApprovalStatus: form.tutorApprovalStatus,
         tutorApprovalNotes: form.tutorApprovalNotes.trim() || null,
       });
 
       setForm((current) => ({ ...current, password: "" }));
-      setNotice("Tutor updated.");
+      setNotice(tx("notices.updated", "Tutor updated."));
     } catch (saveError) {
-      const message = saveError instanceof Error ? saveError.message : "Failed to update tutor.";
+      const message = saveError instanceof Error ? saveError.message : tx("errors.updateFailed", "Failed to update tutor.");
       setError(message);
     } finally {
       setSaving(false);
@@ -171,27 +138,27 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
     <main className="p-4 lg:p-6">
       <div className="mx-auto max-w-6xl space-y-6">
         <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-xs font-black uppercase tracking-widest text-slate-400">Tutor Page</p>
-          <h1 className="mt-2 text-3xl font-black text-slate-900">Edit Tutor</h1>
+          <p className="text-xs font-black uppercase tracking-widest text-slate-400">{tx("header.badge", "Tutor Page")}</p>
+          <h1 className="mt-2 text-3xl font-black text-slate-900">{tx("header.title", "Edit Tutor")}</h1>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Link
               href="/admin/tutors"
               className="rounded-full border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:bg-slate-100"
             >
-              Back to Tutors
+              {tx("header.backToTutors", "Back to Tutors")}
             </Link>
             <Link
               href="/admin/courses"
               className="rounded-full border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 hover:bg-slate-100"
             >
-              Go to Courses
+              {tx("header.goToCourses", "Go to Courses")}
             </Link>
           </div>
         </header>
 
         {loading ? (
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <p className="text-sm text-slate-500">Loading tutor...</p>
+            <p className="text-sm text-slate-500">{tx("loading", "Loading tutor...")}</p>
           </section>
         ) : (
           <section className="grid gap-6 lg:grid-cols-5">
@@ -200,7 +167,7 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                 <input
                   value={form.name}
                   onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                  placeholder="Tutor name"
+                  placeholder={tx("form.placeholders.tutorName", "Tutor name")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                   required
                 />
@@ -208,7 +175,7 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                   value={form.email}
                   type="email"
                   onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-                  placeholder="Tutor email"
+                  placeholder={tx("form.placeholders.tutorEmail", "Tutor email")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                   required
                 />
@@ -216,38 +183,22 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                   value={form.password}
                   type="password"
                   onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-                  placeholder="New password (optional)"
+                  placeholder={tx("form.placeholders.newPasswordOptional", "New password (optional)")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 />
                 <input
                   value={form.avatarUrl}
                   onChange={(event) => setForm((current) => ({ ...current, avatarUrl: event.target.value }))}
-                  placeholder="Avatar URL"
+                  placeholder={tx("form.placeholders.avatarUrl", "Avatar URL")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 />
                 <textarea
                   value={form.bio}
                   onChange={(event) => setForm((current) => ({ ...current, bio: event.target.value }))}
-                  placeholder="Tutor bio"
+                  placeholder={tx("form.placeholders.tutorBio", "Tutor bio")}
                   rows={6}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                 />
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <input
-                    value={form.studentCount}
-                    onChange={(event) => setForm((current) => ({ ...current, studentCount: event.target.value }))}
-                    placeholder="Student count"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
-                    inputMode="numeric"
-                  />
-                  <input
-                    value={form.coursesAuthored}
-                    onChange={(event) => setForm((current) => ({ ...current, coursesAuthored: event.target.value }))}
-                    placeholder="Courses authored"
-                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
-                    inputMode="numeric"
-                  />
-                </div>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <select
                     value={form.tutorApprovalStatus}
@@ -259,9 +210,9 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                     }
                     className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                   >
-                    <option value="PENDING">Approval: Pending</option>
-                    <option value="APPROVED">Approval: Approved</option>
-                    <option value="REJECTED">Approval: Rejected</option>
+                    <option value="PENDING">{tx("form.approval.pending", "Approval: Pending")}</option>
+                    <option value="APPROVED">{tx("form.approval.approved", "Approval: Approved")}</option>
+                    <option value="REJECTED">{tx("form.approval.rejected", "Approval: Rejected")}</option>
                   </select>
                   <input
                     value={form.tutorApprovalNotes}
@@ -271,7 +222,7 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                         tutorApprovalNotes: event.target.value,
                       }))
                     }
-                    placeholder="Approval notes"
+                    placeholder={tx("form.placeholders.approvalNotes", "Approval notes")}
                     className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium outline-none focus:border-[#f47361]"
                   />
                 </div>
@@ -282,24 +233,26 @@ export default function AdminTutorEditPage({ params }: TutorEditPageProps) {
                 <button
                   disabled={saving}
                   type="submit"
-                  className="w-full rounded-xl bg-[#2d3e50] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1a2530] disabled:cursor-not-allowed disabled:opacity-70"
+                  className="w-full rounded-xl bg-sky-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {saving ? "Saving..." : "Update Tutor"}
+                  {saving ? tx("form.saving", "Saving...") : tx("form.updateTutor", "Update Tutor")}
                 </button>
               </form>
             </article>
 
             <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
-              <h2 className="text-lg font-black text-slate-900">Assigned Courses</h2>
+              <h2 className="text-lg font-black text-slate-900">{tx("assignedCourses.title", "Assigned Courses")}</h2>
               {assignedCourses.length === 0 ? (
-                <p className="mt-3 text-sm text-slate-500">No courses are currently assigned to this tutor.</p>
+                <p className="mt-3 text-sm text-slate-500">
+                  {tx("assignedCourses.empty", "No courses are currently assigned to this tutor.")}
+                </p>
               ) : (
                 <div className="mt-4 space-y-2">
                   {assignedCourses.map((course) => (
                     <div key={course.id} className="rounded-xl border border-slate-200 px-3 py-2">
                       <p className="text-sm font-bold text-slate-800">{course.title}</p>
                       <p className="text-xs text-slate-500">
-                        ${course.price} · {course.studentCount} students
+                        ${course.price} · {course.studentCount} {tx("assignedCourses.students", "students")}
                       </p>
                     </div>
                   ))}

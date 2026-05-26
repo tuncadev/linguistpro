@@ -3,6 +3,7 @@ import { AppContext } from '../App';
 import { Star, Video, BookOpen, MapPin, Globe, CheckCircle, Plus, Trash2 } from 'lucide-react';
 import { TutorPedagogicalModule, TutorStatModule, UserRole } from '../types';
 import { updateAdminTutor } from '../services/adminTutorCrudApiService';
+import { useTranslations } from 'next-intl';
 import {
   DEFAULT_TUTOR_LANGUAGES,
   DEFAULT_TUTOR_LOCATION,
@@ -120,6 +121,8 @@ function deriveRating(modules: TutorStatModule[]): number | undefined {
 }
 
 const TutorProfileView: React.FC = () => {
+  const t = useTranslations('views.tutorProfile');
+  const tx = (key: string, fallback: string) => (t.has(key) ? t(key) : fallback);
   const { selectedTutor, courses, setView, setSelectedCourse, user, setTutors, setSelectedTutor } = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -138,13 +141,14 @@ const TutorProfileView: React.FC = () => {
   }, [selectedTutor?.id]);
 
   if (!selectedTutor || !draft) return null;
+  const canInlineEdit = false;
 
   const tutorCourses = courses.filter(c => c.tutorId === selectedTutor.id);
   const avatarPreview =
     draft.avatarUrl.trim() || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200';
 
   const handleSave = async () => {
-    if (user?.role !== UserRole.ADMIN) {
+    if (!canInlineEdit) {
       return;
     }
 
@@ -153,12 +157,12 @@ const TutorProfileView: React.FC = () => {
     const password = draft.password.trim();
 
     if (!name || !email) {
-      setEditError('Name and email are required.');
+      setEditError(tx('errors.nameEmailRequired', 'Name and email are required.'));
       return;
     }
 
     if (password && password.length < 8) {
-      setEditError('New password must be at least 8 characters.');
+      setEditError(tx('errors.passwordLength', 'New password must be at least 8 characters.'));
       return;
     }
 
@@ -179,12 +183,12 @@ const TutorProfileView: React.FC = () => {
       .filter((module) => module.title && module.description);
 
     if (profileStats.length === 0) {
-      setEditError('Add at least one stats module.');
+      setEditError(tx('errors.addStatsModule', 'Add at least one stats module.'));
       return;
     }
 
     if (pedagogicalModules.length === 0) {
-      setEditError('Add at least one pedagogical module.');
+      setEditError(tx('errors.addPedagogicalModule', 'Add at least one pedagogical module.'));
       return;
     }
 
@@ -212,7 +216,7 @@ const TutorProfileView: React.FC = () => {
     setIsSaving(false);
 
     if (!updated) {
-      setEditError('Save failed. Check admin session and tutor values.');
+      setEditError(tx('errors.saveFailed', 'Save failed. Check admin session and tutor values.'));
       return;
     }
 
@@ -243,8 +247,10 @@ const TutorProfileView: React.FC = () => {
             ) : (
               <h1 className="text-4xl font-black text-[#2d3e50] mb-2 tracking-tight">{selectedTutor.name}</h1>
             )}
-            <p className="text-[#f47361] font-black uppercase tracking-[0.2em] text-xs mb-6">Catalina Senior Fellow</p>
-            {user?.role === UserRole.ADMIN ? (
+            <p className="text-[#f47361] font-black uppercase tracking-[0.2em] text-xs mb-6">
+              {tx('seniorFellow', 'Catalina Senior Fellow')}
+            </p>
+            {canInlineEdit ? (
               <div className="mb-6 flex flex-wrap gap-2">
                 {!isEditing ? (
                   <button
@@ -253,9 +259,9 @@ const TutorProfileView: React.FC = () => {
                       setIsEditing(true);
                       setEditError(null);
                     }}
-                    className="rounded-xl border border-[#2d3e50] px-4 py-2 text-xs font-black uppercase tracking-widest text-[#2d3e50] transition-colors hover:bg-[#2d3e50] hover:text-white"
+                    className="rounded-xl border border-sky-300 px-4 py-2 text-xs font-black uppercase tracking-widest text-sky-700 transition-colors hover:bg-sky-600 hover:text-white"
                   >
-                    Edit Tutor
+                    {tx('actions.editTutor', 'Edit Tutor')}
                   </button>
                 ) : (
                   <>
@@ -264,9 +270,9 @@ const TutorProfileView: React.FC = () => {
                         void handleSave();
                       }}
                       disabled={isSaving}
-                      className="rounded-xl bg-[#2d3e50] px-4 py-2 text-xs font-black uppercase tracking-widest text-white transition-colors hover:bg-[#1a2530] disabled:opacity-70"
+                      className="rounded-xl bg-sky-600 px-4 py-2 text-xs font-black uppercase tracking-widest text-white transition-colors hover:bg-sky-700 disabled:opacity-70"
                     >
-                      {isSaving ? 'Saving...' : 'Save Changes'}
+                      {isSaving ? tx('actions.saving', 'Saving...') : tx('actions.saveChanges', 'Save Changes')}
                     </button>
                     <button
                       onClick={() => {
@@ -276,7 +282,7 @@ const TutorProfileView: React.FC = () => {
                       }}
                       className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-black uppercase tracking-widest text-slate-600 transition-colors hover:bg-slate-100"
                     >
-                      Cancel
+                      {tx('actions.cancel', 'Cancel')}
                     </button>
                   </>
                 )}
@@ -289,7 +295,7 @@ const TutorProfileView: React.FC = () => {
                   onChange={(event) =>
                     setDraft((current) => (current ? { ...current, email: event.target.value } : current))
                   }
-                  placeholder="Tutor email"
+                  placeholder={tx('form.tutorEmail', 'Tutor email')}
                   className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 outline-none focus:border-[#f47361]"
                 />
                 <input
@@ -297,7 +303,7 @@ const TutorProfileView: React.FC = () => {
                   onChange={(event) =>
                     setDraft((current) => (current ? { ...current, avatarUrl: event.target.value } : current))
                   }
-                  placeholder="Avatar URL"
+                  placeholder={tx('form.avatarUrl', 'Avatar URL')}
                   className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 outline-none focus:border-[#f47361]"
                 />
                 <input
@@ -306,7 +312,7 @@ const TutorProfileView: React.FC = () => {
                   onChange={(event) =>
                     setDraft((current) => (current ? { ...current, password: event.target.value } : current))
                   }
-                  placeholder="New password (optional)"
+                  placeholder={tx('form.newPasswordOptional', 'New password (optional)')}
                   className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 outline-none focus:border-[#f47361]"
                 />
               </div>
@@ -384,7 +390,7 @@ const TutorProfileView: React.FC = () => {
                         className="mx-auto inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-rose-500"
                       >
                         <Trash2 className="w-3 h-3" />
-                        Remove
+                        {tx('actions.remove', 'Remove')}
                       </button>
                     </div>
                   ) : (
@@ -405,7 +411,7 @@ const TutorProfileView: React.FC = () => {
                           ...current,
                           profileStats: [
                             ...current.profileStats,
-                            { id: createRowId('stat'), label: 'New Stat', value: '0' },
+                            { id: createRowId('stat'), label: tx('defaults.newStatLabel', 'New Stat'), value: tx('defaults.newStatValue', '0') },
                           ],
                         }
                       : current
@@ -414,14 +420,16 @@ const TutorProfileView: React.FC = () => {
                 className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#f47361]"
               >
                 <Plus className="w-3 h-3" />
-                Add Stat Module
+                {tx('actions.addStatModule', 'Add Stat Module')}
               </button>
             ) : null}
           </div>
 
           <div className="bg-[#2d3e50] p-10 rounded-[3rem] text-white space-y-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-24 h-24 bg-[#f47361]/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
-            <h3 className="text-xl font-black uppercase tracking-widest relative z-10">Tutor Profile</h3>
+            <h3 className="text-xl font-black uppercase tracking-widest relative z-10">
+              {tx('tutorProfile', 'Tutor Profile')}
+            </h3>
             {isEditing ? (
               <textarea
                 value={draft.bio}
@@ -430,10 +438,10 @@ const TutorProfileView: React.FC = () => {
                 }
                 rows={5}
                 className="relative z-10 w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-sm leading-relaxed text-slate-200 outline-none focus:border-[#f47361]"
-                placeholder="Brief tutor description"
+                placeholder={tx('form.briefDescription', 'Brief tutor description')}
               />
             ) : (
-              <p className="text-slate-300 text-sm leading-relaxed relative z-10">{selectedTutor.bio || 'Tutor profile details are being updated.'}</p>
+              <p className="text-slate-300 text-sm leading-relaxed relative z-10">{selectedTutor.bio || tx('bioFallback', 'Tutor profile details are being updated.')}</p>
             )}
             <ul className="space-y-4 pt-6 border-t border-white/5 relative z-10">
               {draft.profileHighlights.map((item, index) => (
@@ -466,7 +474,7 @@ const TutorProfileView: React.FC = () => {
                         className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-rose-300"
                       >
                         <Trash2 className="w-3 h-3" />
-                        Remove
+                        {tx('actions.remove', 'Remove')}
                       </button>
                     </div>
                   ) : (
@@ -487,7 +495,7 @@ const TutorProfileView: React.FC = () => {
                 className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#f47361]"
               >
                 <Plus className="w-3 h-3" />
-                Add Profile Item
+                {tx('actions.addProfileItem', 'Add Profile Item')}
               </button>
             ) : null}
           </div>
@@ -499,12 +507,14 @@ const TutorProfileView: React.FC = () => {
         <div className="lg:w-2/3 space-y-16">
           <section>
             <div className="flex items-center justify-between mb-10 border-b border-slate-100 pb-5">
-              <h2 className="text-2xl font-black text-[#2d3e50] uppercase tracking-wide">Course Offerings</h2>
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{tutorCourses.length} Curriculums</span>
+              <h2 className="text-2xl font-black text-[#2d3e50] uppercase tracking-wide">
+                {tx('courseOfferings', 'Course Offerings')}
+              </h2>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{tutorCourses.length} {tx('curriculums', 'Curriculums')}</span>
             </div>
             {tutorCourses.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
-                This tutor does not have assigned courses yet.
+                {tx('emptyCourses', 'This tutor does not have assigned courses yet.')}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -535,7 +545,9 @@ const TutorProfileView: React.FC = () => {
 
           <section className="bg-slate-50 p-12 rounded-[3.5rem] border border-slate-200 shadow-inner">
             <div className="mb-10 flex items-center justify-between">
-              <h2 className="text-2xl font-black text-[#2d3e50] uppercase tracking-wide">Pedagogical Approach</h2>
+              <h2 className="text-2xl font-black text-[#2d3e50] uppercase tracking-wide">
+                {tx('pedagogicalApproach', 'Pedagogical Approach')}
+              </h2>
               {isEditing ? (
                 <button
                   onClick={() =>
@@ -547,8 +559,8 @@ const TutorProfileView: React.FC = () => {
                               ...current.pedagogicalModules,
                               {
                                 id: createRowId('pedagogy'),
-                                title: 'New Module',
-                                description: 'Describe this pedagogical module.',
+                                title: tx('defaults.newModuleTitle', 'New Module'),
+                                description: tx('defaults.newModuleDescription', 'Describe this pedagogical module.'),
                               },
                             ],
                           }
@@ -558,7 +570,7 @@ const TutorProfileView: React.FC = () => {
                   className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#f47361]"
                 >
                   <Plus className="w-3 h-3" />
-                  Add Module
+                  {tx('actions.addModule', 'Add Module')}
                 </button>
               ) : null}
             </div>
@@ -612,7 +624,7 @@ const TutorProfileView: React.FC = () => {
                           className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-rose-500"
                         >
                           <Trash2 className="w-3 h-3" />
-                          Remove
+                          {tx('actions.remove', 'Remove')}
                         </button>
                       </div>
                     ) : (

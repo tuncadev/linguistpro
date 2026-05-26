@@ -7,6 +7,7 @@ type BackendUser = {
   name?: string | null;
   email: string;
   role: BackendRole;
+  preferredLocale?: "uk" | "en" | "es" | "tr" | "ru" | null;
   avatarUrl?: string | null;
   bio?: string | null;
   rating?: number | null;
@@ -61,6 +62,17 @@ type SessionResponse = {
   user?: BackendUser;
 };
 
+type LocaleResponse = {
+  locale?: "uk" | "en" | "es" | "tr" | "ru";
+  user?: BackendUser;
+  error?: string;
+};
+
+type ProfileResponse = {
+  data?: BackendUser;
+  error?: string | { message?: string } | null;
+};
+
 const DEFAULT_AVATAR_BY_ROLE: Record<BackendRole, string> = {
   ADMIN: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
   TUTOR: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
@@ -77,7 +89,9 @@ function mapBackendUser(user: BackendUser): User {
     name: user.name?.trim() || user.email,
     email: user.email,
     role: user.role as UserRole,
+    preferredLocale: user.preferredLocale ?? undefined,
     avatar: user.avatarUrl || avatarByRole(user.role),
+    avatarUrl: user.avatarUrl ?? undefined,
     bio: user.bio || undefined,
     rating: user.rating ?? undefined,
     studentCount: user.studentCount ?? undefined,
@@ -111,6 +125,26 @@ async function parseJson<T>(response: Response): Promise<T> {
   } catch {
     return {} as T;
   }
+}
+
+function extractApiErrorMessage(error: unknown, fallback: string): string {
+  if (typeof error === "string" && error.trim().length > 0) {
+    return error;
+  }
+
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof (error as { message?: unknown }).message === "string"
+  ) {
+    const message = (error as { message: string }).message.trim();
+    if (message.length > 0) {
+      return message;
+    }
+  }
+
+  return fallback;
 }
 
 export async function fetchSessionUser(): Promise<User | null> {
@@ -237,4 +271,56 @@ export async function logoutUser(): Promise<void> {
     method: "POST",
     credentials: "include",
   });
+}
+
+export async function updatePreferredLocale(
+  locale: "uk" | "en" | "es" | "tr" | "ru"
+): Promise<User | null> {
+  const response = await fetch("/api/auth/locale", {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ locale }),
+  });
+
+  const payload = await parseJson<LocaleResponse>(response);
+  if (!response.ok) {
+    throw new Error(payload.error || "Failed to update preferred locale");
+  }
+
+  return payload.user ? mapBackendUser(payload.user) : null;
+}
+
+export async function fetchPersonalProfile(): Promise<User | null> {
+  const response = await fetch("/api/auth/profile", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const payload = await parseJson<ProfileResponse>(response);
+  if (!response.ok || !payload.data) {
+    return null;
+  }
+
+  return mapBackendUser(payload.data);
+}
+
+export async function updatePersonalProfile(input: {
+  name?: string | null;
+  bio?: string | null;
+  avatarUrl?: string | null;
+}): Promise<User> {
+  const response = await fetch("/api/auth/profile", {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+
+  const payload = await parseJson<ProfileResponse>(response);
+  if (!response.ok || !payload.data) {
+    throw new Error(extractApiErrorMessage(payload.error, "Failed to update profile"));
+  }
+
+  return mapBackendUser(payload.data);
 }
